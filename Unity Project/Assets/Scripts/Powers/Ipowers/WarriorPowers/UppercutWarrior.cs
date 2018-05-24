@@ -11,6 +11,7 @@ public class UppercutWarrior : Ipower {
     float _damage = 10;
     float _radius = 2.5f;
     float _force2 = 9;
+    float _cdTime = 5;
 
     public void Ipower()
     {
@@ -31,6 +32,8 @@ public class UppercutWarrior : Ipower {
 
             }
         }
+        _player.StartCoroutine(_player.PowerColdown(_cdTime, 3));
+        _player.StartCoroutine(_player.InActionDelay(2));
     }
 
     public void Ipower2()

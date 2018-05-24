@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CamController : MonoBehaviour {
 
-    //THIS IS A TEST!
     public Transform player;
 
     public float distance;
@@ -12,8 +11,10 @@ public class CamController : MonoBehaviour {
     float currentY = 0;
     public float sensitivityX;
     public float sensitivityY;
+    public float smooth;
     public bool invertY;
     public bool cameraActivate;
+    public bool blockMouse;
 
     void Start () {
         if (invertY)
@@ -21,6 +22,10 @@ public class CamController : MonoBehaviour {
     }
 
     void Update () {
+
+        if (blockMouse) Cursor.visible = false;
+        
+        else Cursor.visible = true;
 
         if (!cameraActivate)
         {
@@ -31,11 +36,12 @@ public class CamController : MonoBehaviour {
     }
 	
 	void FixedUpdate () {
+
         if (!cameraActivate)
         {
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
-            transform.position = player.position + rotation * direction;
+            transform.position =Vector3.Lerp(player.position, player.position + rotation * direction,Time.deltaTime * smooth);
             transform.LookAt(player.position);
         }
 	}

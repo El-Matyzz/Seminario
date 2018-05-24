@@ -12,6 +12,7 @@ public class JumpAttackWarrior :  Ipower {
     CamController _mainCamera;
 	float _currentTime;
 	float _jumpTime=1f;
+    float _yPos;
 	bool _jumpActivator;
     bool _aux;
     bool _aux2;
@@ -22,16 +23,28 @@ public class JumpAttackWarrior :  Ipower {
 
 	public void Ipower()
 	{
+        _mainCamera.distance += 35 * Time.deltaTime;
+        if (_mainCamera.distance >= 17) _mainCamera.distance = 17;
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
+        {           
+            _player.jumpAttackWarriorState = true;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) _mousePosition = hit.point;
             _mousePosition.y = _playerTransform.position.y;
             _aux = true;
             _mainCamera.sensitivityY = 1;
+            _mainCamera.blockMouse = true;
             _player.AnimSaltoyGolpe2();
         }
-        if (_aux==true)
-        {            
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            _player.jumpAttackWarriorState = false;
+            _mainCamera.distance = 3;
+            
+        }
+        if (_aux == true)
+        {
             _currentTime += Time.deltaTime;
             if (_jumpActivator == true)
             {
@@ -44,32 +57,33 @@ public class JumpAttackWarrior :  Ipower {
                     _currentTime = _jumpTime;
                     _jumpActivator = false;
                 }
+                _mainCamera.distance = 3;
             }
+
+            if (_aux2 == true)
+            {
+                _dir = _mainCamera.transform.forward;
+                _dir.y = 0;
+                _playerTransform.forward = Vector3.Lerp(_playerTransform.forward, _dir, 0.2f);
+            }
+
         }
-
-        if (_aux2==true)
-        {
-            _dir = _mainCamera.transform.forward;
-            _dir.y = 0;
-            _playerTransform.forward =Vector3.Lerp(_playerTransform.forward,_dir,0.2f);
-        }
-
-
 
     }
 
     public void Ipower2()
-    {
-        _mainCamera.cameraActivate = false;
-        Collider[] col = Physics.OverlapSphere(_playerTransform.position, _radius);
+    {      
+      _mainCamera.cameraActivate = false;
+      Collider[] col = Physics.OverlapSphere(_playerTransform.position, _radius);
+
         foreach (var item in col)
         {
-            if (item.GetComponent<EnemyClass>())
-            {
-                _rb = item.GetComponent<Rigidbody>();
-                _rb.AddExplosionForce(_force, _playerTransform.position, _radius, 2, ForceMode.Impulse);
-                item.GetComponent<EnemyClass>().GetDamage(_damage);
-            }
+           if (item.GetComponent<EnemyClass>())
+           {
+            _rb = item.GetComponent<Rigidbody>();
+            _rb.AddExplosionForce(_force, _playerTransform.position, _radius, 2, ForceMode.Impulse);
+            item.GetComponent<EnemyClass>().GetDamage(_damage);
+           }
         }
     }
 
@@ -82,9 +96,9 @@ public class JumpAttackWarrior :  Ipower {
 		_playerTransform =t;
         _aux2 = true;
         _jumpActivator = true;
-        _player.jumpAttackWarriorState = true;
         _player.AnimSaltoyGolpe1();
-        
+        _mainCamera.blockMouse = false;
+        _yPos = _player.transform.position.y;
 
     }
 }

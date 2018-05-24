@@ -28,7 +28,7 @@ public class Slame : Ipower
             {
                 _rb = item.GetComponent<Rigidbody>();
 				_rb.AddExplosionForce(_force, _actualPosition, _radius, 2, ForceMode.Impulse);
-				item.GetComponent<EnemyClass>().GetDamage(_damage);
+				//item.GetComponent<EnemyClass>().GetDamage(_damage);
                 
             }
         }

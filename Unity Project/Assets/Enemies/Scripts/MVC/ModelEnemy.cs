@@ -11,6 +11,10 @@ public class ModelEnemy :  EnemyClass
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
+    public bool isDead;
+    public bool isOcuped;
+
+    public SpatialGrid grid;
 
     public List<ModelEnemy> myFriends = new List<ModelEnemy>();
 
@@ -23,12 +27,22 @@ public class ModelEnemy :  EnemyClass
     public float viewAngleFollow;
     public float viewDistanceFollow;
     public float distanceToTraget;
-    public float distanceToAttack;
+    public float viewDistanceAttack;
+    public float viewAngleAttack;
     public float speed;
     public float life;
     public float bleedingDamage;
     
     public ESMovemnt currentMovement;
+
+    public IEnumerator FillFriends()
+    {
+        grid.aux = false;
+        yield return new WaitForSeconds(0.25f);
+        myFriends.Clear();
+        StartCoroutine(FillFriends());
+    }
+
 
     public override IEnumerator Stuned(float stunedTime)
     {
@@ -55,23 +69,25 @@ public class ModelEnemy :  EnemyClass
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        FillMyFriendsList();
+        StartCoroutine(FillFriends());
     }
 
     // Update is called once per frame
     void Update()
     {
-        distanceToTraget = Vector3.Distance(transform.position, target.transform.position);
+        WrapperStates();
 
-        if (currentMovement != null) currentMovement.ESMove();
+        if(target !=null && !isOcuped) distanceToTraget = Vector3.Distance(transform.position, target.transform.position);
 
-        if (!isAttack) isFollow = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
-        else isFollow = false;
+        if (currentMovement != null && !isOcuped) currentMovement.ESMove();
 
-        if (distanceToTraget <= distanceToAttack) isAttack = true;
-        else isAttack = false;
+        if (!isAttack && target != null && !isOcuped) isFollow = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
+        
+        else if (isAttack && target != null && !isOcuped) isFollow = false;
+        
+        if (target != null && !isOcuped) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
 
-        if (isBleeding) life -= bleedingDamage * Time.deltaTime;
+        if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
 
     }
 
@@ -94,20 +110,6 @@ public class ModelEnemy :  EnemyClass
         }   
     }
 
-
-
-    public void FillMyFriendsList()
-    {
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, 9999999999999999);
-        foreach (Collider hit in colliders)
-        {
-            if (hit.gameObject.GetComponent(typeof(ModelEnemy))) 
-            {
-                myFriends.Add(hit.GetComponent<ModelEnemy>());
-            }  
-        }
-    }
-
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -118,12 +120,33 @@ public class ModelEnemy :  EnemyClass
 
         Vector3 leftLimit = Quaternion.AngleAxis(-viewAngleFollow, transform.up) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistanceFollow));
+
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, viewDistanceAttack);
+
+        
+    }
+
+    public override void GetMeleDamage(float damage, Transform player)
+    {
+        life -= damage;
+        rb.AddForce(player.forward * 5, ForceMode.Impulse);
+        if (life <= 0) isDead = true;
     }
 
     public override void GetDamage(float damage)
     {
+        dileyToAttack += 0.8f;
         life -= damage;
+        if (life <= 0) isDead = true;
     }
 
-    
+    public void WrapperStates()
+    {
+        if (isDead || isKnocked || isStuned) isOcuped = true;
+        else isOcuped = false;
+    }
+
+   
 }

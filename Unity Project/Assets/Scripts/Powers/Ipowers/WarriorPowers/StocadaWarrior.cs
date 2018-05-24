@@ -15,9 +15,11 @@ public class StocadaWarrior : Ipower {
     float _force = 5;
     float _damage = 10;
     float _radius = 3;
+    float _cdTime = 5;
     IDecorator _decorator;
     bool _decoratorActivator;
     bool aux;
+    bool corrutineActivate;
     int amountTimes;
     int counterEnemies;
     public void Ipower()
@@ -27,8 +29,14 @@ public class StocadaWarrior : Ipower {
         if (_currentTime < _totalTime)
         {
             _player.rb.MovePosition(_player.transform.position + dir * _speed * Time.deltaTime);
+            if (!corrutineActivate)
+            {
+                _player.StartCoroutine(_player.PowerColdown(_cdTime, 1));
+                corrutineActivate = true;
+            }
         }
         else  _player.stocadaState = false;
+        
 
     }
 
@@ -60,9 +68,10 @@ public class StocadaWarrior : Ipower {
                 var enemy = item.GetComponent<ModelEnemy>();
                 enemy.bleedingDamage = 15;
                 enemy.StartCoroutine(enemy.Bleeding(1));
+                enemy.StartCoroutine(enemy.Knocked(1));
                 _rb = item.GetComponent<Rigidbody>();
-                _rb.AddExplosionForce(_force, _player.transform.position, _radius, 2, ForceMode.Impulse);
-                item.GetComponent<EnemyClass>().GetDamage(_damage);
+                _rb.AddForce(-_player.transform.forward * _force, ForceMode.Impulse);
+                enemy.GetDamage(_damage);
             }
         }
 

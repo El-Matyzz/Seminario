@@ -36,7 +36,7 @@ public class ChargeTanke : Ipower
         {
             modelEnemy.StartCoroutine(modelEnemy.Knocked(0.5f));
             rbEnemy.AddExplosionForce(_force, _player.transform.position, _radius, 2, ForceMode.Impulse);
-            enemy.GetDamage(_damage);
+            //enemy.GetDamage(_damage);
             enemy.StartCoroutine(enemy.Stuned(_stunedTime));
         }
     }

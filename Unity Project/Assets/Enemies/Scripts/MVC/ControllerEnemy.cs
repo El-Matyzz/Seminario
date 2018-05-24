@@ -8,7 +8,6 @@ public class ControllerEnemy : MonoBehaviour {
 
 	void Awake () {
 		
-
 	}
 	
 	void Update () {

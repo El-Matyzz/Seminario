@@ -12,12 +12,10 @@ public class Controller : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-
-        model.Idle += view.Idel;
-        model.Trot += view.Trot;
-        model.Run += view.Run;
+        
+        model.Attack += view.BasicAttack;
         model.Estocada += view.Estocada;
-        model.GolpeGiratorio += view.GolpeGiratorio;
+        model.RotateAttack += view.GolpeGiratorio;
         model.SaltoyGolpe1 += view.SaltoyGolpe1;
         model.SaltoyGolpe2 += view.SaltoyGolpe2;
     }
@@ -33,64 +31,26 @@ public class Controller : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
-        if (Input.GetKeyDown(KeyCode.Q)) view.RockThrow();
+        if (Input.GetKeyUp(KeyCode.Space)) model.NormalAttack();
 
-        if (Input.GetKeyDown(KeyCode.Alpha5)) view.ReciveDamage();
+        if (Input.GetKeyUp(KeyCode.Alpha5)) view.Attack2();
 
-        if (Input.GetKeyDown(KeyCode.Alpha6)) view.OpenChest();
-
-        if (Input.GetKeyDown(KeyCode.Alpha7)) view.SacarEspada();
-
-        if (Input.GetKeyDown(KeyCode.Alpha8)) view.StopAttack();
-
-        if (Input.GetKeyDown(KeyCode.Mouse0)) view.BasicAttack();
-
-        if (Input.GetKeyDown(KeyCode.Mouse1)) view.Attack2();
-
-        if (Input.GetKeyDown(KeyCode.Alpha9)) view.UseSword();
-
-        if (Input.GetKeyDown(KeyCode.F)) view.Dead();
-
-        if (Input.GetKeyDown(KeyCode.G)) view.SwordDead();
-
-        if (Input.GetKeyDown(KeyCode.H)) view.TakeDamageSword();
-
-        if (Input.GetKeyDown(KeyCode.J)) view.Fall();
-
-        if (Input.GetKeyDown(KeyCode.K)) view.Fall2();
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            if (!aux)
-            {
-                text.SetActive(true);
-                aux = true;
-            }
-
-            else
-            {
-                text.SetActive(false);
-                aux = false;
-            }
-
-        }
+        if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
+     
+        if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;      
 
     }
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W)) model.MoveForward();
+        if (Input.GetKey(KeyCode.W)) model.Movement(model.mainCamera.forward);
       
-        if (Input.GetKey(KeyCode.S)) model.MoveBackward();
+        if (Input.GetKey(KeyCode.S)) model.Movement(-model.mainCamera.forward);
 
-        if (Input.GetKey(KeyCode.D)) model.MoveRight();
+        if (Input.GetKey(KeyCode.D)) model.Movement(model.mainCamera.right);
 
-        if (Input.GetKey(KeyCode.A)) model.MoveLeft();
+        if (Input.GetKey(KeyCode.A)) model.Movement(-model.mainCamera.right);
 
-        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A)) model.AnimIdel();
-
-        if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
-        if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
-
+     
     }
 }

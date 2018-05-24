@@ -21,8 +21,17 @@ public class EnemyMeleAttack : ESMovemnt {
             _dirToTarget.y = 0;
             _model.transform.forward = _dirToTarget;
             _rb.AddForce(_model.transform.forward * _attackMeleForce, ForceMode.Impulse);
-            _model.dileyToAttack = Random.Range(1.5f, 2.5f);
+            _model.dileyToAttack = Random.Range(4f, 5f);
             _model.myTimeToAttack = false;
+            foreach (var item in _model.myFriends)
+            {
+                if (item.myTimeToAttack == false)
+                {
+                    item.myTimeToAttack = true;
+                    break;
+                }
+            }
+            _model.currentMovement = null;
         }
     }
 

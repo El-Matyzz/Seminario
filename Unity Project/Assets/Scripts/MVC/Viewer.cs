@@ -6,20 +6,26 @@ public class Viewer : MonoBehaviour {
 
     public Model model;
     public Animator anim;
+    bool turn;
+    public float animTrotSpeedZ;
+    public float animTrotSpeedX;
 
-    public void Idel()
+    public void Update()
     {
-        anim.Play("Idel");
-    }
-
-    public void Trot()
-    {
-        anim.Play("Trot");
-    }
-
-    public void Run()
-    {
-        anim.Play("Run");
+         
+        if (!model.isRuning)
+        {
+            animTrotSpeedZ = Input.GetAxis("Vertical")*1.2f;
+            animTrotSpeedX = Input.GetAxis("Horizontal")*1.2f;
+            
+        }
+        if(model.isRuning)
+        {
+            animTrotSpeedZ += Input.GetAxis("Vertical")/10; 
+            animTrotSpeedX += Input.GetAxis("Horizontal")/10;
+        }
+        anim.SetFloat("VelZ", animTrotSpeedZ);
+        anim.SetFloat("VelX", animTrotSpeedX);
     }
 
     public void Estocada()

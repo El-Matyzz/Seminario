@@ -71,7 +71,7 @@ public class StocadaWarrior : Ipower {
                 enemy.StartCoroutine(enemy.Knocked(1));
                 _rb = item.GetComponent<Rigidbody>();
                 _rb.AddForce(-_player.transform.forward * _force, ForceMode.Impulse);
-                enemy.GetDamage(_damage);
+                enemy.GetDamage(_damage, enemy.transform);
             }
         }
 

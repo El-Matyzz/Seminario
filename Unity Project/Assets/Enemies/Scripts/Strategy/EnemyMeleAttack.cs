@@ -7,7 +7,7 @@ public class EnemyMeleAttack : ESMovemnt {
 
     Rigidbody _rb;
     float _attackMeleForce;
-    ModelEnemy _model;
+    EnemyClass _model;
     GameObject _player;
     Vector3 _dirToTarget;
 
@@ -23,6 +23,7 @@ public class EnemyMeleAttack : ESMovemnt {
             _rb.AddForce(_model.transform.forward * _attackMeleForce, ForceMode.Impulse);
             _model.dileyToAttack = Random.Range(4f, 5f);
             _model.myTimeToAttack = false;
+            _model.createAttack= true;
             foreach (var item in _model.myFriends)
             {
                 if (item.myTimeToAttack == false)
@@ -35,7 +36,7 @@ public class EnemyMeleAttack : ESMovemnt {
         }
     }
 
-    public EnemyMeleAttack(Rigidbody rb , float attackforce, ModelEnemy model, GameObject player)
+    public EnemyMeleAttack(Rigidbody rb , float attackforce, EnemyClass model, GameObject player)
     {
         _rb = rb;
         _attackMeleForce = attackforce;

@@ -82,7 +82,7 @@ public class JumpAttackWarrior :  Ipower {
            {
             _rb = item.GetComponent<Rigidbody>();
             _rb.AddExplosionForce(_force, _playerTransform.position, _radius, 2, ForceMode.Impulse);
-            item.GetComponent<EnemyClass>().GetDamage(_damage);
+            item.GetComponent<EnemyClass>().GetDamage(_damage, item.transform);
            }
         }
     }

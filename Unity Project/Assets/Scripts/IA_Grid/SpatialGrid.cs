@@ -219,7 +219,7 @@ public class SpatialGrid : MonoBehaviour
                     connections++;
                 }
                 if (showLogs)
-                    Debug.Log("tengo " + connections + " conexiones por individuo");
+
                 connections = 0;
             }
         }
@@ -237,23 +237,22 @@ public class SpatialGrid : MonoBehaviour
                         Gizmos.DrawLine(ent.transform.position, n.transform.position);
                         if (!aux)
                         {
-                            if (ent.GetComponent<ModelEnemy>())
+                            if (ent.GetComponent<EnemyClass>())
                             {
-                                var enemy = ent.GetComponent<ModelEnemy>();
+                                var enemy = ent.GetComponent<EnemyClass>();
 
                                 if (n.GetComponent<Model>())
                                 {
                                     enemy.target = n.gameObject;
-                                    enemy.viewAngleFollow = 360;
                                 }
 
-                                if (n.GetComponent<ModelEnemy>()) enemy.myFriends.Add(n.GetComponent<ModelEnemy>());
+                                if (n.GetComponent<EnemyClass>()) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
                             }
                         }
                         connections++;
                     }
                     if (showLogs)
-                        Debug.Log("tengo " + connections + " conexiones por individuo");
+
                     connections = 0;
                 }
                 

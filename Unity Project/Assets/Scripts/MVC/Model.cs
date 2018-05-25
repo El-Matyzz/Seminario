@@ -167,9 +167,14 @@ public class Model : MonoBehaviour {
             Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
             foreach (var item in col)
             {
-                if (item.GetComponent<EnemyClass>()) item.GetComponent<EnemyClass>().GetMeleDamage(10, transform);
+                if (item.GetComponent<EnemyClass>()) item.GetComponent<EnemyClass>().GetDamage(10, transform);
             }
         }
+    }
+
+    public void GetDamage(float damage)
+    {
+        life -= damage;
     }
 
     public Powers PowersFactory()
@@ -239,4 +244,6 @@ public class Model : MonoBehaviour {
         if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState) InAction = true;
         else InAction = false;
     }
+
+
 }

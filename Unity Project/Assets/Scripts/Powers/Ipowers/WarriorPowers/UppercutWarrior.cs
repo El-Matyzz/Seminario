@@ -27,7 +27,7 @@ public class UppercutWarrior : Ipower {
                 if (angle < 90)
                 {
                     _rbEnemy.AddForce(new Vector3(0, 1, 0) * _force, ForceMode.Impulse);
-                    item.GetComponent<EnemyClass>().GetDamage(_damage);
+                    item.GetComponent<EnemyClass>().GetDamage(_damage, item.transform);
                 }
 
             }

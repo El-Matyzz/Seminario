@@ -27,7 +27,7 @@ public class RotateAttackWarrior : Ipower {
 
                 enemy.StartCoroutine(enemy.Stuned(1));
 
-                enemy.GetDamage(_damage);
+                enemy.GetDamage(_damage, item.transform);
 
             }
         }
@@ -48,7 +48,7 @@ public class RotateAttackWarrior : Ipower {
             if (item.GetComponent<EnemyClass>()) {
                 _rb = item.GetComponent<Rigidbody>();
                 _rb.AddForce(-item.transform.forward * _force*1.5f, ForceMode.Impulse);
-                item.GetComponent<EnemyClass>().GetDamage(_damage);
+                item.GetComponent<EnemyClass>().GetDamage(_damage, item.transform);
                 if (_model.mySkills.healRotateAttack)
                 {
                     _model.life += (_damage * 30) / 100;

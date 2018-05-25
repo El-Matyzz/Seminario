@@ -24,4 +24,10 @@ public class EnemyAmmo : MonoBehaviour {
         newArrow.transform.SetParent(this.transform);
         return newArrow;
     }
+
+    public void ReturnBulletToPool(Arrow arrow)
+    {
+        arrow.timer = 0;
+        arrowsPool.DisablePoolObject(arrow);
+    }
 }

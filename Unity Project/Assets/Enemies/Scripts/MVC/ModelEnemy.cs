@@ -40,6 +40,7 @@ public class ModelEnemy :  EnemyClass
 
     public override IEnumerator FillFriends()
     {
+        grid = FindObjectOfType<SpatialGrid>();
         grid.aux = false;
         yield return new WaitForSeconds(0.25f);
         myFriends.Clear();

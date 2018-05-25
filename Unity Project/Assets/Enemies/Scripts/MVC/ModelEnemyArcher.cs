@@ -121,7 +121,12 @@ public class ModelEnemyArcher : EnemyClass {
         if (!isReloading)
         {
             Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
+            newArrow.ammoAmount = munition;
             newArrow.transform.position = attackPivot.position;
+            newArrow.transform.forward = transform.forward;
+            Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
+            arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.3f, transform.forward.z) * 700 * Time.deltaTime, ForceMode.Impulse);
+
             StartCoroutine(Reloading());
         }
     }

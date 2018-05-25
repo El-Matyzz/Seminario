@@ -13,7 +13,7 @@ public class EnemyMeleAttack : ESMovemnt {
 
     public void ESMove()
     {
-
+        _model.transform.LookAt(_player.transform.position);
         if (_model.myTimeToAttack == true) _model.dileyToAttack -= Time.deltaTime;
         if (_model.dileyToAttack <= 0)
         {

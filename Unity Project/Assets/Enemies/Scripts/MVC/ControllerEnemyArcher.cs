@@ -15,5 +15,6 @@ public class ControllerEnemyArcher : MonoBehaviour {
     {
       if (_model.isAttack) _model.Attack();
       if (_model.isFollow) _model.Follow();
+      if (_model.startScape) _model.Scape();
     }
 }

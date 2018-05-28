@@ -13,13 +13,15 @@ public class EnemyMeleAttack : ESMovemnt {
 
     public void ESMove()
     {
-        _model.transform.LookAt(_player.transform.position);
+
+        _dirToTarget = (_player.transform.position - _model.transform.position).normalized;
+        _dirToTarget.y = 0;
+        _model.transform.forward = _dirToTarget;
+
         if (_model.myTimeToAttack == true) _model.dileyToAttack -= Time.deltaTime;
         if (_model.dileyToAttack <= 0)
         {
-            _dirToTarget = (_player.transform.position - _model.transform.position).normalized;
-            _dirToTarget.y = 0;
-            _model.transform.forward = _dirToTarget;
+          
             _rb.AddForce(_model.transform.forward * _attackMeleForce, ForceMode.Impulse);
             _model.dileyToAttack = Random.Range(4f, 5f);
             _model.myTimeToAttack = false;

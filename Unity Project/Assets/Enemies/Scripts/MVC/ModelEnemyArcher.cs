@@ -11,6 +11,8 @@ public class ModelEnemyArcher : EnemyClass {
     public bool isDead;
     public bool isOcuped;
     public bool isReloading;
+    public bool isScape;
+    public bool startScape;
     bool startSearch;
     bool increaseFollowRadio;
 
@@ -23,12 +25,11 @@ public class ModelEnemyArcher : EnemyClass {
     public LayerMask obstacle;
 
     public float radObst;
-    public float attackForce;
     public float sightSpeed;
-    public float radiusAttack;
     public float viewAngleFollow;
     public float viewDistanceFollow;
-    public float distanceToTraget;
+    public float viewAngleScape;
+    public float viewDistanceScape;
     public float viewDistanceAttack;
     public float viewAngleAttack;
     public float speed;
@@ -92,6 +93,14 @@ public class ModelEnemyArcher : EnemyClass {
         isStuned = false;
     }
 
+    public IEnumerator ScapeTime()
+    {
+        startScape = true;
+        yield return new WaitForSeconds(5);
+        startScape = false;
+        currentMovement = null;
+    }
+
     // Use this for initialization
     void Start () {
 
@@ -104,13 +113,21 @@ public class ModelEnemyArcher : EnemyClass {
 	void Update () {
 
         WrapperStates();
+        GetObstacles();
+        closeObstacle = GetCloserOb();
+        vectAvoidance = getObstacleAvoidance();
 
         if (currentMovement != null && !isOcuped) currentMovement.ESMove();
+         
+        if (target != null && !isOcuped) isScape = SearchForTarget.SearchTarget(target, viewDistanceScape, viewAngleScape, gameObject, true);
 
-        if (!isAttack && !isOcuped) isFollow = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
+        if (isScape == true) StartCoroutine(ScapeTime());
+
+        if (target != null && !isAttack && !isOcuped && !startScape) isFollow = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
         else isFollow = false;
 
-        if (target != null && !isOcuped) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        if (target != null && !isOcuped && !startScape) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        else isAttack = false;
 
         if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
     }
@@ -120,12 +137,13 @@ public class ModelEnemyArcher : EnemyClass {
         currentMovement = new EnemySightFollow(this, target.transform, sightSpeed);
         if (!isReloading)
         {
+            attackPivot.LookAt(target.transform.position);
             Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
             newArrow.ammoAmount = munition;
             newArrow.transform.position = attackPivot.position;
             newArrow.transform.forward = transform.forward;
             Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
-            arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.3f, transform.forward.z) * 700 * Time.deltaTime, ForceMode.Impulse);
+            arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.3f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
 
             StartCoroutine(Reloading());
         }
@@ -134,6 +152,11 @@ public class ModelEnemyArcher : EnemyClass {
     public void Follow()
     {
         currentMovement = new EnemyFollow(this, target, speed);
+    }
+
+    public void Scape()
+    {
+       currentMovement = new EnemyScape(this, target.transform, speed);
     }
 
     public override void GetDamage(float damage, Transform player)
@@ -163,6 +186,15 @@ public class ModelEnemyArcher : EnemyClass {
 
         Vector3 leftLimit2 = Quaternion.AngleAxis(-viewAngleFollow, transform.up) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + (leftLimit2 * viewDistanceFollow));
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, viewDistanceScape);
+
+        Vector3 rightLimit3 = Quaternion.AngleAxis(viewAngleScape, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (rightLimit3 * viewDistanceScape));
+
+        Vector3 leftLimit3 = Quaternion.AngleAxis(-viewAngleScape, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (leftLimit3 * viewDistanceScape));
 
     }
 

@@ -19,16 +19,15 @@ public class EnemyMeleAttack : ESMovemnt {
         _model.transform.forward = _dirToTarget;
 
         if (_model.myTimeToAttack == true) _model.dileyToAttack -= Time.deltaTime;
-        if (_model.dileyToAttack <= 0)
-        {
-          
+        if (_model.dileyToAttack <= 0 && _model.isAttack)
+        {         
             _rb.AddForce(_model.transform.forward * _attackMeleForce, ForceMode.Impulse);
             _model.dileyToAttack = Random.Range(4f, 5f);
             _model.myTimeToAttack = false;
             _model.createAttack= true;
             foreach (var item in _model.myFriends)
             {
-                if (item.myTimeToAttack == false)
+                if (item.myTimeToAttack == false && item.GetComponent<ModelEnemy>())
                 {
                     item.myTimeToAttack = true;
                     break;
@@ -36,10 +35,14 @@ public class EnemyMeleAttack : ESMovemnt {
             }
             _model.currentMovement = null;
         }
+        if(! _model.isAttack) _model.currentMovement = null;
     }
 
     public EnemyMeleAttack(Rigidbody rb , float attackforce, EnemyClass model, GameObject player)
     {
+        var modelPlayer = player.GetComponent<Model>();
+        modelPlayer.StopCoroutine(modelPlayer.StartStateCombat());
+        modelPlayer.StartCoroutine(modelPlayer.StartStateCombat());
         _rb = rb;
         _attackMeleForce = attackforce;
         _model = model;

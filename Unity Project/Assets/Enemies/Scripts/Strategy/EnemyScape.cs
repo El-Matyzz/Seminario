@@ -13,8 +13,7 @@ public class EnemyScape :ESMovemnt {
     public void ESMove()
     {
         Quaternion targetRotation;
-        _dirToTarget = _enemy.transform.position - _target.transform.position;
-        _dirToTarget += _enemy.vectAvoidance;
+        _dirToTarget = ((_enemy.transform.position - _target.transform.position) + _enemy.vectAvoidance).normalized;
         _dirToTarget.y = 0;
         targetRotation = Quaternion.LookRotation(_dirToTarget, Vector3.up);
         _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);

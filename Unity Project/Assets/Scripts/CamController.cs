@@ -5,7 +5,7 @@ using UnityEngine;
 public class CamController : MonoBehaviour {
 
     public Transform player;
-
+    public Model model;
     public float distance;
     float currentX = 0;
     float currentY = 0;
@@ -19,6 +19,7 @@ public class CamController : MonoBehaviour {
     void Start () {
         if (invertY)
             sensitivityY = -sensitivityY;
+        model = FindObjectOfType<Model>();
     }
 
     void Update () {
@@ -39,6 +40,16 @@ public class CamController : MonoBehaviour {
 
         if (!cameraActivate)
         {
+            if (model.isInCombat)
+            {
+                distance += 35 * Time.deltaTime;
+                if (distance >= 17) distance = 17;
+            }
+            else
+            {
+                distance += 35 * Time.deltaTime;
+                if (distance >= 3) distance =3;
+            }
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
             transform.position =Vector3.Lerp(player.position, player.position + rotation * direction,Time.deltaTime * smooth);

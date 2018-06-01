@@ -8,16 +8,29 @@ public class Controller : MonoBehaviour {
     public Model model;
     public Viewer view;
     public GameObject text;
-    bool aux;
-
+    bool smashBool;
+    public bool useSword;
+    float count;
+   
+    public IEnumerator DelaySmash()
+    {
+        smashBool = true;
+        yield return new WaitForSeconds(0.2f);
+        smashBool = false;
+    }
+    
     // Use this for initialization
     void Awake() {
-        
+
         model.Attack += view.BasicAttack;
+        model.OnDamage += view.ReciveDamage;
         model.Estocada += view.Estocada;
         model.RotateAttack += view.GolpeGiratorio;
         model.SaltoyGolpe1 += view.SaltoyGolpe1;
         model.SaltoyGolpe2 += view.SaltoyGolpe2;
+        model.Dead += view.Dead;
+        model.Combat += view.OnCombat;
+        model.Safe += view.NoOnCombat;
     }
 
     // Update is called once per frame
@@ -31,25 +44,36 @@ public class Controller : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
-        if (Input.GetKeyUp(KeyCode.Space)) model.NormalAttack();
+        if (Input.GetKeyUp(KeyCode.C) && view.animTrotSpeedX==0 && view.animTrotSpeedZ == 0)
+        {
+            model.InActionAttack = true;
 
-        if (Input.GetKeyUp(KeyCode.Alpha5)) view.Attack2();
+            if (!useSword) view.TakeSword();
 
+            else if (useSword && !model.isInCombat) view.SaveSword();
+        }
         if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
      
         if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;      
+
+        if(Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
+        {
+            StartCoroutine(DelaySmash());
+            useSword = true;
+            model.NormalAttack();
+        }
 
     }
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W)) model.Movement(model.mainCamera.forward);
+        if (Input.GetKey(KeyCode.W) && !model.isDead) model.Movement(model.mainCamera.forward);
       
-        if (Input.GetKey(KeyCode.S)) model.Movement(-model.mainCamera.forward);
+        if (Input.GetKey(KeyCode.S) && !model.isDead) model.Movement(-model.mainCamera.forward);
 
-        if (Input.GetKey(KeyCode.D)) model.Movement(model.mainCamera.right);
+        if (Input.GetKey(KeyCode.D) && !model.isDead) model.Movement(model.mainCamera.right);
 
-        if (Input.GetKey(KeyCode.A)) model.Movement(-model.mainCamera.right);
+        if (Input.GetKey(KeyCode.A) && !model.isDead) model.Movement(-model.mainCamera.right);
 
      
     }

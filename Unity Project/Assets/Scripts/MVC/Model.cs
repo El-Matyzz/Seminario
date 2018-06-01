@@ -8,8 +8,9 @@ using System.Linq;
 public class Model : MonoBehaviour {
 
     public Transform attackPivot;
+    public Viewer view;
 
-    PowerManager _powerManager;
+    public PowerManager powerManager;
     public Powers prefabPower;
     public Pool<Powers> powerPool;
 
@@ -23,22 +24,28 @@ public class Model : MonoBehaviour {
     public float runSpeed;
     float totalTime = 0.5f;
     public float actualtime = 0;
+    public int countAnimAttack;
     public Collider enemy;  
 
     public int stocadaAmount;
 
     public Skills mySkills;
+    public bool isIdle;
+    public bool onAir;
     public bool stocadaState;
     public bool jumpAttackWarriorState;
     public bool chargeTankeState;
     public bool isRuning;
     public bool isAnimatedMove;
+    public bool isInCombat;
+    public bool isDead;
     public bool aux;
     bool cdPower1;
     bool cdPower2;
     bool cdPower3;
     bool cdPower4;
-    bool InAction;
+    public bool InAction;
+    public bool InActionAttack;
     bool WraperInAction;
     public bool forward;
     public bool backward;
@@ -52,11 +59,24 @@ public class Model : MonoBehaviour {
 
     List<bool> cdList = new List<bool>();
     
-    public event Action Estocada;
+    public  Action Estocada;
     public event Action Attack;
     public event Action RotateAttack;
-    public event Action SaltoyGolpe1;
-    public event Action SaltoyGolpe2;
+    public Action SaltoyGolpe1;
+    public Action SaltoyGolpe2;
+    public Action OnDamage;
+    public event Action Combat;
+    public event Action Safe;
+    public Action Dead;
+
+    public IEnumerator StartStateCombat()
+    {
+        Combat();
+        isInCombat = true;
+        yield return new WaitForSeconds(5);
+        isInCombat = false;
+        Safe();
+    }
 
     public IEnumerator PowerColdown(float cdTime, int n)
     {
@@ -85,10 +105,16 @@ public class Model : MonoBehaviour {
         power();
     }
 
+    public IEnumerator CountAttack()
+    {
+        yield return new WaitForSeconds(1f);
+        countAnimAttack = 0;
+    }
+
     void Start () {
 
         rb = GetComponent<Rigidbody>();
-        _powerManager = FindObjectOfType<PowerManager>();
+        powerManager = FindObjectOfType<PowerManager>();
         powerPool = new Pool<Powers>(10, PowersFactory, Powers.InitializePower, Powers.DisposePower, true);
         mySkills = new Skills();
     }
@@ -98,7 +124,7 @@ public class Model : MonoBehaviour {
         WraperAction();
         actualtime += Time.deltaTime;
         if (actualtime >= totalTime) actualtime = totalTime;
-	}
+    }
 
 
     public void CastPower1()
@@ -107,7 +133,7 @@ public class Model : MonoBehaviour {
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
-            _powerManager.SetIPower(0, newPower, this);
+            powerManager.SetIPower(0, newPower, this);
             Estocada();
         }
     }
@@ -118,7 +144,7 @@ public class Model : MonoBehaviour {
         {          
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
-            _powerManager.SetIPower(1, newPower, this);
+            powerManager.SetIPower(1, newPower, this);
             RotateAttack();
         }
     }
@@ -129,7 +155,7 @@ public class Model : MonoBehaviour {
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
-            _powerManager.SetIPower(2, newPower, this);
+            powerManager.SetIPower(2, newPower, this);
         }
     }
 
@@ -139,13 +165,12 @@ public class Model : MonoBehaviour {
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
-            _powerManager.SetIPower(3, newPower, this);
+            powerManager.SetIPower(3, newPower, this);
         }
     }
 
     public void Movement(Vector3 direction)
-    {
-       
+    {      
         if (!InAction)
         {
             Quaternion targetRotation;
@@ -157,30 +182,82 @@ public class Model : MonoBehaviour {
           
             else rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
         }
+        
     }
-   
+
+    public void Idle()
+    {
+        isIdle = true;
+    }
+
+    public void NoIdle()
+    {
+        isIdle = false;
+    }
+
     public void NormalAttack()
     {
-        if (!InAction)
+        if (!isDead)
         {
             Attack();
-            Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
-            foreach (var item in col)
+            countAnimAttack++;
+            countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
+        }
+        if (!InActionAttack)
+        {           
+            StopCoroutine(CountAttack());
+            StartCoroutine(CountAttack());
+            InActionAttack = true;                           
+        }      
+    }
+
+    public void MakeDamage()
+    {
+        Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
+        foreach (var item in col)
+        {
+            if (item.GetComponent<EnemyClass>())
             {
-                if (item.GetComponent<EnemyClass>()) item.GetComponent<EnemyClass>().GetDamage(10, transform);
+              item.GetComponent<EnemyClass>().GetDamage(10);
+                item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
             }
         }
     }
 
-    public void GetDamage(float damage)
+    public void StartInCombat()
+    {
+        Combat();
+        StopCoroutine(StartStateCombat());
+        StartCoroutine(StartStateCombat());
+    }
+
+    public void ActiveAttack()
+    {
+        InActionAttack = false;
+        InAction = false;
+    }
+
+    public void CountAnimZero()
+    {
+        countAnimAttack = 0;
+    }
+
+    public void GetDamage(float damage, Transform enemy)
     {
         life -= damage;
+        rb.AddForce(enemy.forward * 2, ForceMode.Impulse);
+        if (life > 0) OnDamage();
+        else
+        {
+            Dead();
+            isDead = true;
+        }
     }
 
     public Powers PowersFactory()
     {
         Powers newPower = Instantiate(prefabPower);
-        newPower.transform.SetParent(_powerManager.transform);
+        newPower.transform.SetParent(powerManager.transform);
         newPower.myCaller = transform;
         return newPower;
     }
@@ -195,30 +272,32 @@ public class Model : MonoBehaviour {
        if (stocadaState)
         {
             enemy = c.gameObject.GetComponent<Collider>();
-            _powerManager.currentPowerAction.Ipower2();
+            powerManager.currentPowerAction.Ipower2();
             stocadaAmount++;
-            if (stocadaAmount > _powerManager.amountOfTimes)
+            if (stocadaAmount > powerManager.amountOfTimes)
             {
-                 _powerManager.constancepower = false;
-                 _powerManager.currentPowerAction = null;
+                 powerManager.constancepower = false;
+                 powerManager.currentPowerAction = null;
                 stocadaState = false;
                 stocadaAmount = 0;
-                _powerManager.amountOfTimes = 0;
+                powerManager.amountOfTimes = 0;
+                view.BackEstocada();
             }
         }
        
        if (jumpAttackWarriorState)
         {
-            _powerManager.currentPowerAction.Ipower2();
-            _powerManager.constancepower = false;
-            _powerManager.currentPowerAction = null;
+            powerManager.currentPowerAction.Ipower2();
+            powerManager.constancepower = false;
+            powerManager.currentPowerAction = null;
             jumpAttackWarriorState = false;
+            onAir = false;
         }
 
        if (chargeTankeState)
         {
             if(c.gameObject.GetComponent(typeof(EnemyClass))) currentEnemy = c.gameObject.GetComponent<EnemyClass>();
-            _powerManager.currentPowerAction.Ipower2();
+            powerManager.currentPowerAction.Ipower2();
         }
     }
 
@@ -228,20 +307,9 @@ public class Model : MonoBehaviour {
         Gizmos.DrawWireSphere(attackPivot.position, radiusAttack);
     }
 
-    public void AnimSaltoyGolpe1()
-    {
-        SaltoyGolpe1();
-    }
-
-    public void AnimSaltoyGolpe2()
-    {
-        SaltoyGolpe2();
-    }
-
-
     public void WraperAction()
     {
-        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState) InAction = true;
+        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead) InAction = true;
         else InAction = false;
     }
 

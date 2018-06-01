@@ -225,8 +225,9 @@ public class SpatialGrid : MonoBehaviour
         }
 
         if (activatedGrid)
-        {
+        {            
             int connections = 0;
+            bool player = false;
             foreach (var elem in buckets)
             {
                 foreach (var ent in elem)
@@ -237,6 +238,7 @@ public class SpatialGrid : MonoBehaviour
                         Gizmos.DrawLine(ent.transform.position, n.transform.position);
                         if (!aux)
                         {
+                            
                             if (ent.GetComponent<EnemyClass>())
                             {
                                 var enemy = ent.GetComponent<EnemyClass>();
@@ -244,15 +246,19 @@ public class SpatialGrid : MonoBehaviour
                                 if (n.GetComponent<Model>())
                                 {
                                     enemy.target = n.gameObject;
+                                    player = true;
                                 }
 
                                 if (n.GetComponent<EnemyClass>()) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
-                            }
+                                
+                                if (!player) enemy.target = null;
+                            }                            
                         }
+                        
                         connections++;
                     }
                     if (showLogs)
-
+                    
                     connections = 0;
                 }
                 

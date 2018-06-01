@@ -244,6 +244,8 @@ ModelImporter:
     7400032: Attack2
     7400034: Caida
     7400036: Caida2
+    7400038: RepitEstocada
+    7400040: GolpeGiratorio2
     9500000: //RootNode
     13700000: ArmorF
     13700002: ArmorFront
@@ -278,37 +280,8 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'CATRigSpine3' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\t'CATRigHub002' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n\t'CATRigLArm1'
-      has scale animation that will be discarded.\n\t'CATRigLArm2' has scale animation
-      that will be discarded.\n\t'CATRigLArmPalm' has scale animation that will be
-      discarded.\n\t'CATRigLArmDigit11' has scale animation that will be discarded.\n\t'CATRigLArmDigit12'
-      has scale animation that will be discarded.\n\t'CATRigLArmDigit21' has scale
-      animation that will be discarded.\n\t'CATRigLArmDigit22' has scale animation
-      that will be discarded.\n\t'CATRigLArmDigit23' has scale animation that will
-      be discarded.\n\t'CATRigLArmDigit31' has scale animation that will be discarded.\n\t'CATRigLArmDigit32'
-      has scale animation that will be discarded.\n\t'CATRigLArmDigit33' has scale
-      animation that will be discarded.\n\t'CATRigLArmDigit41' has scale animation
-      that will be discarded.\n\t'CATRigLArmDigit42' has scale animation that will
-      be discarded.\n\t'CATRigLArmDigit43' has scale animation that will be discarded.\n\t'CATRigLArmDigit51'
-      has scale animation that will be discarded.\n\t'CATRigLArmDigit52' has scale
-      animation that will be discarded.\n\t'CATRigLArmDigit53' has scale animation
-      that will be discarded.\n\t'CATRigRArmPalm' has scale animation that will be
-      discarded.\n\t'CATRigRArmDigit11' has scale animation that will be discarded.\n\t'CATRigRArmDigit12'
-      has scale animation that will be discarded.\n\t'CATRigRArmDigit21' has scale
-      animation that will be discarded.\n\t'CATRigRArmDigit22' has scale animation
-      that will be discarded.\n\t'CATRigRArmDigit23' has scale animation that will
-      be discarded.\n\t'CATRigRArmDigit31' has scale animation that will be discarded.\n\t'CATRigRArmDigit32'
-      has scale animation that will be discarded.\n\t'CATRigRArmDigit33' has scale
-      animation that will be discarded.\n\t'CATRigRArmDigit41' has scale animation
-      that will be discarded.\n\t'CATRigRArmDigit42' has scale animation that will
-      be discarded.\n\t'CATRigRArmDigit43' has scale animation that will be discarded.\n\t'CATRigRArmDigit51'
-      has scale animation that will be discarded.\n\t'CATRigRArmDigit52' has scale
-      animation that will be discarded.\n\t'CATRigRArmDigit53' has scale animation
-      that will be discarded.\n"
+    animationImportWarnings: Event NoRepitEstocada has a time (0.766667) outside the
+      clip's valid range (0.000000..0.766666). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -343,7 +316,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Idle
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -371,7 +351,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: NoEstocada
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -399,7 +386,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 1
+        functionName: NoGolpeGiratorio
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -567,7 +561,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9847826
+        functionName: FalseTakeSword
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9956522
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -595,7 +603,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.008672073
+        functionName: NoBackEstocada
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -679,7 +701,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9782609
+        functionName: FalseSaveSword
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.98913044
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -848,6 +884,76 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: RepitEstocada
+      takeName: Take 001
+      firstFrame: 692
+      lastFrame: 715
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 1
+        functionName: NoRepitEstocada
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: GolpeGiratorio2
+      takeName: Take 001
+      firstFrame: 718
+      lastFrame: 780
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 1
+        functionName: NoSecondGolpeGiratorio
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

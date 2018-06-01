@@ -23,25 +23,29 @@ public class JumpAttackWarrior :  Ipower {
 
 	public void Ipower()
 	{
-        _mainCamera.distance += 35 * Time.deltaTime;
+         _mainCamera.distance += 35 * Time.deltaTime;
         if (_mainCamera.distance >= 17) _mainCamera.distance = 17;
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
-        {           
+        {
+            _player.SaltoyGolpe2();
             _player.jumpAttackWarriorState = true;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) _mousePosition = hit.point;
             _mousePosition.y = _playerTransform.position.y;
             _aux = true;
             _mainCamera.sensitivityY = 1;
             _mainCamera.blockMouse = true;
-            _player.AnimSaltoyGolpe2();
+            _player.SaltoyGolpe2();
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            _player.jumpAttackWarriorState = false;
+            _player.jumpAttackWarriorState = false;          
+            _player.view.NoSaltoyGolpe1();
             _mainCamera.distance = 3;
-            
+            _player.powerManager.constancepower = false;
+            _player.powerManager.currentPowerAction = null;
+            _player.onAir=false;
         }
         if (_aux == true)
         {
@@ -82,7 +86,7 @@ public class JumpAttackWarrior :  Ipower {
            {
             _rb = item.GetComponent<Rigidbody>();
             _rb.AddExplosionForce(_force, _playerTransform.position, _radius, 2, ForceMode.Impulse);
-            item.GetComponent<EnemyClass>().GetDamage(_damage, item.transform);
+            item.GetComponent<EnemyClass>().GetDamage(_damage);
            }
         }
     }
@@ -96,9 +100,9 @@ public class JumpAttackWarrior :  Ipower {
 		_playerTransform =t;
         _aux2 = true;
         _jumpActivator = true;
-        _player.AnimSaltoyGolpe1();
+        _player.SaltoyGolpe1();
         _mainCamera.blockMouse = false;
         _yPos = _player.transform.position.y;
-
+        _player.onAir = true;
     }
 }

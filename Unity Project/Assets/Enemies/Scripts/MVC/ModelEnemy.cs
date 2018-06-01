@@ -32,15 +32,13 @@ public class ModelEnemy :  EnemyClass
     public float viewAngleAttack;
     public float speed;
     public float life;
-    public float bleedingDamage;
     public float radFlock;
     public float separationWeight;
     float starDistaceToFollow;
-    int countTimesForSearch;
+    public int countTimesForSearch;
 
     public override IEnumerator FillFriends()
-    {
-        grid = FindObjectOfType<SpatialGrid>();
+    {       
         grid.aux = false;
         yield return new WaitForSeconds(0.25f);
         myFriends.Clear();
@@ -86,11 +84,11 @@ public class ModelEnemy :  EnemyClass
     // Use this for initialization
     void Start()
     {
+        grid = FindObjectOfType<SpatialGrid>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
         starDistaceToFollow = viewDistanceFollow;
-        increaseFollowRadio = true;
-        grid = FindObjectOfType<SpatialGrid>();
+        increaseFollowRadio = true;        
     }
 
     // Update is called once per frame
@@ -153,7 +151,7 @@ public class ModelEnemy :  EnemyClass
             {
                 if (item.GetComponent<Model>())
                 {
-                    item.GetComponent<Model>().GetDamage(10);
+                    item.GetComponent<Model>().GetDamage(10, transform);
                     createAttack = false;
                 }
             }
@@ -180,11 +178,10 @@ public class ModelEnemy :  EnemyClass
 
     }
 
-    public override void GetDamage(float damage, Transform player)
+    public override void GetDamage(float damage)
     {
-        life -= damage;
+        life -= damage;       
         dileyToAttack += 0.8f;
-        rb.AddForce(player.forward * 5, ForceMode.Impulse);
         if (life <= 0) isDead = true;
     }
 

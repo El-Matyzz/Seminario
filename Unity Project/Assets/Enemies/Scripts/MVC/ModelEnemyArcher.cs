@@ -34,7 +34,6 @@ public class ModelEnemyArcher : EnemyClass {
     public float viewAngleAttack;
     public float speed;
     public float life;
-    public float bleedingDamage;
     public float radFlock;
     public float separationWeight;
     float starDistaceToFollow;
@@ -159,11 +158,10 @@ public class ModelEnemyArcher : EnemyClass {
        currentMovement = new EnemyScape(this, target.transform, speed);
     }
 
-    public override void GetDamage(float damage, Transform player)
+    public override void GetDamage(float damage)
     {
         life -= damage;
         dileyToAttack += 0.8f;
-        rb.AddForce(player.forward * 5, ForceMode.Impulse);
         if (life <= 0) isDead = true;
     }
 
@@ -228,7 +226,7 @@ public class ModelEnemyArcher : EnemyClass {
     Vector3 getObstacleAvoidance()
     {
         if (closeObstacle)
-            return transform.position - closeObstacle.transform.position;
+        return transform.position - closeObstacle.transform.position;
         else return Vector3.zero;
     }
 

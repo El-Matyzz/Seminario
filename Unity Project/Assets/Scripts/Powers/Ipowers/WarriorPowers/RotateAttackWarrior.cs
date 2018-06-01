@@ -6,8 +6,8 @@ public class RotateAttackWarrior : Ipower {
 
     Transform _player;
     Model _model;
-    float _radius=4;
-    float _force=10;
+    float _radius=1.5f;
+    float _force=5;
     float _damage = 10;
     float _cdTime = 5;
     Rigidbody _rb;
@@ -23,18 +23,15 @@ public class RotateAttackWarrior : Ipower {
                 var enemy = item.GetComponent<ModelEnemy>();
 
                 _rb = item.GetComponent<Rigidbody>();
-                _rb.AddForce(-item.transform.forward * _force, ForceMode.Impulse);
-
+                _rb.AddExplosionForce(_force, _player.transform.position, _radius, 2, ForceMode.Impulse);
                 enemy.StartCoroutine(enemy.Stuned(1));
-
-                enemy.GetDamage(_damage, item.transform);
-
+                enemy.GetDamage(_damage);
             }
         }
-        if (_model.mySkills.secondRotate)
+        if (!_model.mySkills.secondRotate)
         {
             _model.StartCoroutine(_model.ActionDelay(Ipower2));
-            _model.StartCoroutine(_model.InActionDelay(2f));
+            _model.StartCoroutine(_model.InActionDelay(4f));
         }
         else _model.StartCoroutine(_model.InActionDelay(0.6f));
         _model.StartCoroutine(_model.PowerColdown(_cdTime,2));
@@ -42,13 +39,14 @@ public class RotateAttackWarrior : Ipower {
     }
 
     public void Ipower2()
-    {
+    {       
+        _model.view.GolpeGiratorio();
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
         foreach (var item in col) {
             if (item.GetComponent<EnemyClass>()) {
                 _rb = item.GetComponent<Rigidbody>();
-                _rb.AddForce(-item.transform.forward * _force*1.5f, ForceMode.Impulse);
-                item.GetComponent<EnemyClass>().GetDamage(_damage, item.transform);
+                _rb.AddExplosionForce(_force, _player.transform.position, _radius, 2, ForceMode.Impulse);
+                item.GetComponent<EnemyClass>().GetDamage(_damage);
                 if (_model.mySkills.healRotateAttack)
                 {
                     _model.life += (_damage * 30) / 100;

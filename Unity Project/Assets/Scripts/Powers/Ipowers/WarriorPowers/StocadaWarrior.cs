@@ -6,6 +6,8 @@ public class StocadaWarrior : Ipower {
 
     float _currentTime;
     float _totalTime=0.25f;
+    float _currentTime2;
+    float _totalTime2 = 0.5f;
     float _speed=40;
     Model _player;
     Rigidbody _rb;
@@ -22,22 +24,29 @@ public class StocadaWarrior : Ipower {
     bool corrutineActivate;
     int amountTimes;
     int counterEnemies;
+
     public void Ipower()
     {
-       
-        _currentTime += Time.deltaTime;
-        if (_currentTime < _totalTime)
+        _currentTime2 += Time.deltaTime;
+        if (_currentTime2 > _totalTime2)
         {
-            _player.rb.MovePosition(_player.transform.position + dir * _speed * Time.deltaTime);
-            if (!corrutineActivate)
+            _currentTime += Time.deltaTime;
+            if (_currentTime < _totalTime)
             {
-                _player.StartCoroutine(_player.PowerColdown(_cdTime, 1));
-                corrutineActivate = true;
+                _player.rb.MovePosition(_player.transform.position + dir * _speed * Time.deltaTime);
+                if (!corrutineActivate)
+                {
+                    _player.StartCoroutine(_player.PowerColdown(_cdTime, 1));
+                    corrutineActivate = true;
+                    _player.view.NoBackEstocada();
+                }
+            }
+            else
+            {
+                _player.stocadaState = false;
+                _player.view.BackEstocada();
             }
         }
-        else  _player.stocadaState = false;
-        
-
     }
 
     public void Ipower2()
@@ -46,7 +55,7 @@ public class StocadaWarrior : Ipower {
 
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
 
-        Collider[] col2 = Physics.OverlapSphere(_player.transform.position, 15);
+        Collider[] col2 = Physics.OverlapSphere(_player.transform.position, 20);
 
         if (!aux)
         {
@@ -65,23 +74,23 @@ public class StocadaWarrior : Ipower {
         {
             if (item.GetComponent<EnemyClass>())
             {
-                var enemy = item.GetComponent<ModelEnemy>();
+                var enemy = item.GetComponent<EnemyClass>();
                 enemy.bleedingDamage = 15;
                 enemy.StartCoroutine(enemy.Bleeding(1));
                 enemy.StartCoroutine(enemy.Knocked(1));
                 _rb = item.GetComponent<Rigidbody>();
-                _rb.AddForce(-_player.transform.forward * _force, ForceMode.Impulse);
-                enemy.GetDamage(_damage, enemy.transform);
+                _rb.AddExplosionForce(2, _player.transform.position, 5, 2, ForceMode.Impulse);
+                enemy.GetDamage(_damage);
             }
         }
 
         if (!_player.mySkills.MultipleStocada && counterEnemies < amountTimes)
-        {         
+        {
             dir = colliderEnemies[counterEnemies].transform.position - _player.transform.position;
             dir.y = 0;
             _player.transform.forward = dir;
             aux = true;
-            _player.stocadaState = true;
+            _player.stocadaState = true;                   
             _currentTime = 0;
             _speed = 5;
             counterEnemies++;
@@ -94,5 +103,6 @@ public class StocadaWarrior : Ipower {
         _manager = manager;
         _player.stocadaState = true;
         dir = _player.transform.forward;
+        _player.Estocada();
     }
 }

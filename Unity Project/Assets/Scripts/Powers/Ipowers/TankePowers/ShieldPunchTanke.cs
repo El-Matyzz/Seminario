@@ -25,7 +25,7 @@ public class ShieldPunchTanke : Ipower
                 {
                     var enemy = item.GetComponent<EnemyClass>();
                     _rbEnemy.AddExplosionForce(_force, _player.transform.position, _radius, 2, ForceMode.Impulse);
-                    enemy.GetDamage(_damage,enemy.transform);
+                    enemy.GetDamage(_damage);
                     enemy.StartCoroutine(enemy.Stuned(_stunedTime));
                 }
 

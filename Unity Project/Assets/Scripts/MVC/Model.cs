@@ -22,6 +22,7 @@ public class Model : MonoBehaviour {
     public float totalLife;
     public float speed;
     public float runSpeed;
+    public float timeOnCombat;
     float totalTime = 0.5f;
     public float actualtime = 0;
     public int countAnimAttack;
@@ -69,26 +70,20 @@ public class Model : MonoBehaviour {
     public event Action Safe;
     public Action Dead;
 
-    public IEnumerator StartStateCombat()
-    {
-        Combat();
-        isInCombat = true;
-        yield return new WaitForSeconds(5);
-        isInCombat = false;
-        Safe();
-    }
-
+    
     public IEnumerator PowerColdown(float cdTime, int n)
     {
         if (n == 1) cdPower1 = true;
         if (n == 2) cdPower2 = true;
         if (n == 3) cdPower3 = true;
         if (n == 4) cdPower4 = true;
+        view.NoBackEstocada();
         yield return new WaitForSeconds(cdTime);
         if (n == 1) cdPower1 = false;
         if (n == 2) cdPower2 = false;
         if (n == 3) cdPower3 = false;
-        if (n == 4) cdPower4 = false;        
+        if (n == 4) cdPower4 = false;
+        
     }
 
     public IEnumerator InActionDelay(float cdTime)
@@ -121,6 +116,20 @@ public class Model : MonoBehaviour {
 
     void Update () {
 
+        timeOnCombat -= Time.deltaTime;
+        if (timeOnCombat <= 0) timeOnCombat = 0;
+
+        if (timeOnCombat > 0)
+        {            
+            isInCombat = true;
+            Combat();
+        }
+        else
+        {
+          view.FalseTakeSword();  
+          isInCombat = false;
+          Safe();
+        }
         WraperAction();
         actualtime += Time.deltaTime;
         if (actualtime >= totalTime) actualtime = totalTime;
@@ -207,7 +216,8 @@ public class Model : MonoBehaviour {
         {           
             StopCoroutine(CountAttack());
             StartCoroutine(CountAttack());
-            InActionAttack = true;                           
+            InActionAttack = true;
+            rb.AddForce(transform.forward * 10, ForceMode.Impulse);
         }      
     }
 
@@ -226,9 +236,9 @@ public class Model : MonoBehaviour {
 
     public void StartInCombat()
     {
+        view.FalseSaveSword();
         Combat();
-        StopCoroutine(StartStateCombat());
-        StartCoroutine(StartStateCombat());
+        timeOnCombat = 5;
     }
 
     public void ActiveAttack()
@@ -276,12 +286,12 @@ public class Model : MonoBehaviour {
             stocadaAmount++;
             if (stocadaAmount > powerManager.amountOfTimes)
             {
-                 powerManager.constancepower = false;
-                 powerManager.currentPowerAction = null;
-                stocadaState = false;
-                stocadaAmount = 0;
-                powerManager.amountOfTimes = 0;
-                view.BackEstocada();
+              powerManager.constancepower = false;
+              powerManager.currentPowerAction = null;
+              stocadaState = false;
+              stocadaAmount = 0;
+              powerManager.amountOfTimes = 0;
+              view.BackEstocada();
             }
         }
        

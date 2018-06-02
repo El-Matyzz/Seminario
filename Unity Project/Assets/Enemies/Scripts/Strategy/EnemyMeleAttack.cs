@@ -41,8 +41,7 @@ public class EnemyMeleAttack : ESMovemnt {
     public EnemyMeleAttack(Rigidbody rb , float attackforce, EnemyClass model, GameObject player)
     {
         var modelPlayer = player.GetComponent<Model>();
-        modelPlayer.StopCoroutine(modelPlayer.StartStateCombat());
-        modelPlayer.StartCoroutine(modelPlayer.StartStateCombat());
+        modelPlayer.timeOnCombat = 5;
         _rb = rb;
         _attackMeleForce = attackforce;
         _model = model;

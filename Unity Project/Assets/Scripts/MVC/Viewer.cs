@@ -32,16 +32,6 @@ public class Viewer : MonoBehaviour {
         anim.SetFloat("VelX", animTrotSpeedX);
     }
 
-    public void OnCombat()
-    {
-        anim.SetBool("InCombat", true);
-    }
-
-    public void NoOnCombat()
-    {
-        anim.SetBool("InCombat", true);
-    }
-
     public void DesactivateAttack()
     {
         anim.SetBool("attack", false);

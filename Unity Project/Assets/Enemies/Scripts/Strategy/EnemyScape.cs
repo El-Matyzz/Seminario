@@ -15,9 +15,11 @@ public class EnemyScape :ESMovemnt {
         Quaternion targetRotation;
         _dirToTarget = ((_enemy.transform.position - _target.transform.position) + _enemy.vectAvoidance).normalized;
         _dirToTarget.y = 0;
+        var avoidance = _enemy.vectAvoidance.normalized;
+        avoidance.y = 0;
         targetRotation = Quaternion.LookRotation(_dirToTarget, Vector3.up);
         _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
-        _enemy.rb.MovePosition(_enemy.rb.position + _dirToTarget * _speed * Time.deltaTime);
+        _enemy.rb.MovePosition(_enemy.rb.position + (_dirToTarget + avoidance) * _speed * Time.deltaTime);
     }
 
     public EnemyScape(EnemyClass enemy, Transform target, float speed)

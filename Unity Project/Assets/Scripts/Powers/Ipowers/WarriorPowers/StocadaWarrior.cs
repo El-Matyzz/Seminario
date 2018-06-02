@@ -43,8 +43,9 @@ public class StocadaWarrior : Ipower {
             }
             else
             {
-                _player.stocadaState = false;
-                _player.view.BackEstocada();
+              _player.stocadaState = false;
+              _player.view.BackEstocada();
+              _player.powerManager.constancepower = false;
             }
         }
     }
@@ -55,7 +56,7 @@ public class StocadaWarrior : Ipower {
 
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
 
-        Collider[] col2 = Physics.OverlapSphere(_player.transform.position, 20);
+        Collider[] col2 = Physics.OverlapSphere(_player.transform.position, 15);
 
         if (!aux)
         {

@@ -42,13 +42,13 @@ public class CamController : MonoBehaviour {
         {
             if (model.isInCombat)
             {
-                distance += 35 * Time.deltaTime;
-                if (distance >= 17) distance = 17;
+              distance += 35 * Time.deltaTime;
+              if (distance >= 13) distance = 13;
             }
             else
             {
-                distance += 35 * Time.deltaTime;
-                if (distance >= 3) distance =3;
+              distance += 35 * Time.deltaTime;
+              if (distance >= 3) distance =3;
             }
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);

@@ -29,8 +29,8 @@ public class Controller : MonoBehaviour {
         model.SaltoyGolpe1 += view.SaltoyGolpe1;
         model.SaltoyGolpe2 += view.SaltoyGolpe2;
         model.Dead += view.Dead;
-        model.Combat += view.OnCombat;
-        model.Safe += view.NoOnCombat;
+        model.Combat += view.TakeSword;
+        model.Safe += view.SaveSword;
     }
 
     // Update is called once per frame
@@ -44,9 +44,10 @@ public class Controller : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
-        if (Input.GetKeyUp(KeyCode.C) && view.animTrotSpeedX==0 && view.animTrotSpeedZ == 0)
+        if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
         {
-            model.InActionAttack = true;
+           
+            model.StartInCombat();
 
             if (!useSword) view.TakeSword();
 

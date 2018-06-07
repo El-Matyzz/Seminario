@@ -35,47 +35,53 @@ public class Controller : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-        if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
-
-        if (Input.GetKeyUp(KeyCode.Alpha2)) model.CastPower2();
-
-        if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
-
-        if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
-
-        if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
+        if (!model.isPlatformJumping)
         {
-           
-            model.StartInCombat();
+            if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
 
-            if (!useSword) view.TakeSword();
+            if (Input.GetKeyUp(KeyCode.Alpha2)) model.CastPower2();
 
-            else if (useSword && !model.isInCombat) view.SaveSword();
+            if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
+
+            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
+
+            if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
+            {
+
+                model.StartInCombat();
+
+                if (!useSword) view.TakeSword();
+
+                else if (useSword && !model.isInCombat) view.SaveSword();
+            }
+            if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
+
+            if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
+
+            if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
+            {
+                StartCoroutine(DelaySmash());
+                useSword = true;
+                model.NormalAttack();
+            }
+
+            if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
+
+            if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
         }
-        if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
-     
-        if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;      
-
-        if(Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
-        {
-            StartCoroutine(DelaySmash());
-            useSword = true;
-            model.NormalAttack();
-        }
-
     }
 
     private void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W) && !model.isDead) model.Movement(model.mainCamera.forward);
-      
-        if (Input.GetKey(KeyCode.S) && !model.isDead) model.Movement(-model.mainCamera.forward);
+        if (!model.isPlatformJumping)
+        {
+            if (Input.GetKey(KeyCode.W) && !model.isDead) model.Movement(model.mainCamera.forward);
 
-        if (Input.GetKey(KeyCode.D) && !model.isDead) model.Movement(model.mainCamera.right);
+            if (Input.GetKey(KeyCode.S) && !model.isDead) model.Movement(-model.mainCamera.forward);
 
-        if (Input.GetKey(KeyCode.A) && !model.isDead) model.Movement(-model.mainCamera.right);
+            if (Input.GetKey(KeyCode.D) && !model.isDead) model.Movement(model.mainCamera.right);
 
-     
+            if (Input.GetKey(KeyCode.A) && !model.isDead) model.Movement(-model.mainCamera.right);
+        }
     }
 }

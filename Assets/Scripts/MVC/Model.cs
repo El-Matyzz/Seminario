@@ -58,6 +58,9 @@ public class Model : MonoBehaviour {
     public Rigidbody rb;
     public EnemyClass currentEnemy;
 
+    Platform currentPlatform;
+    public bool isPlatformJumping;
+
     List<bool> cdList = new List<bool>();
     
     public  Action Estocada;
@@ -347,6 +350,47 @@ public class Model : MonoBehaviour {
         {
             if(c.gameObject.GetComponent(typeof(EnemyClass))) currentEnemy = c.gameObject.GetComponent<EnemyClass>();
             powerManager.currentPowerAction.Ipower2();
+        }
+
+        if (c.gameObject.GetComponent<Platform>())
+            currentPlatform = c.gameObject.GetComponent<Platform>();
+    }
+
+    public void StartInteraction()
+    {
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1.5f))
+        {
+            var comp = hit.transform.GetComponent<Interactable>();
+            if (comp)
+                comp.Interaction();
+        }
+    }
+
+    public IEnumerator PlatformJump()
+    {
+        if (currentPlatform)
+        {
+            Vector3 p1 = currentPlatform.transform.position;
+            Vector3 p3 = currentPlatform.otherPlatform.position;
+            Vector3 p2 = Vector3.Lerp(p1, p3, 0.5f);
+            p2.y = (p1.y > p3.y ? p1.y : p3.y) + 15;
+            float t = 0;
+            isPlatformJumping = true;
+
+            while (currentPlatform != null)
+            {
+                t += Time.deltaTime;
+                rb.transform.position = Vector3.Lerp(Vector3.Lerp(p1, p2, t), Vector3.Lerp(p2, p3, t), t);
+
+                if (transform.position.x == p3.x && transform.position.z == p3.z)
+                {
+                    currentPlatform = null;
+                    isPlatformJumping = false;
+                }
+                yield return new WaitForFixedUpdate();
+            }
         }
     }
 

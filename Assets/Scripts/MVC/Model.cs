@@ -167,9 +167,9 @@ public class Model : MonoBehaviour {
     void Update () {
       
         timeOnCombat -= Time.deltaTime;
+        if(timeOnCombat <=0) timeOnCombat = 0;
         if (timeOnCombat <= 0 && isInCombat)
         {
-            timeOnCombat = 0;
             Safe();
             isInCombat = false;
         }

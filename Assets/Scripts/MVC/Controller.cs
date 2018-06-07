@@ -35,7 +35,8 @@ public class Controller : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         if (!model.isPlatformJumping)
         {
             if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
@@ -44,40 +45,33 @@ public class Controller : MonoBehaviour {
 
             if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
 
-            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
+            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();        
 
-<<<<<<< HEAD
-        if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
-        {
-           
-            model.CombatState();
-=======
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
-            {
->>>>>>> 0079c04de8a7ebe90e1b53ab941e8ec16b39b99c
+             {
 
-                model.StartInCombat();
+               model.CombatState();
 
-                if (!useSword) view.TakeSword();
+               if (!useSword) view.TakeSword();
 
-                else if (useSword && !model.isInCombat) view.SaveSword();
-            }
+               else if (useSword && !model.isInCombat) view.SaveSword();
+             }
             if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
 
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
 
             if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
             {
-                StartCoroutine(DelaySmash());
-                useSword = true;
+               StartCoroutine(DelaySmash());
+               useSword = true;
                 model.NormalAttack();
+             }
+
+                if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
+
+                if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
             }
-
-            if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
-
-            if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
         }
-    }
 
     private void FixedUpdate()
     {
@@ -93,3 +87,5 @@ public class Controller : MonoBehaviour {
         }
     }
 }
+   
+

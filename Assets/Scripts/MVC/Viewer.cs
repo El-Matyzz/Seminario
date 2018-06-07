@@ -84,6 +84,7 @@ public class Viewer : MonoBehaviour {
     public void SaveSword()
     {
         anim.SetLayerWeight(1, 1);
+        anim.SetBool("TakeSword", false);
         anim.SetBool("SaveSword", true);                       
         controller.useSword = false;
     }

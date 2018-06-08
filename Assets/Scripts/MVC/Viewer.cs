@@ -11,15 +11,20 @@ public class Viewer : MonoBehaviour {
     bool turn;
     public float animTrotSpeedZ;
     public float animTrotSpeedX;
+    CamShake camShake;
 
     public Image power1;
     public Image power2;
     public Image power3;
     public Image power4;
 
+    public void Awake()
+    {
+        camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
+    }
+
     public void Update()
     {
-
         if (model.InAction && model.onDamage)
         {
             animTrotSpeedX = 0;
@@ -176,6 +181,7 @@ public class Viewer : MonoBehaviour {
 
     public void ReciveDamage()
     {
+        camShake.ShakeCamera(3.5f, 1);
         anim.SetLayerWeight(1, 0);
         var random = Random.Range(1, 4);
         anim.SetInteger("TakeDamage", random);

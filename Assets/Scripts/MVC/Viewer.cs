@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class Viewer : MonoBehaviour {
 
     public Model model;
+    public Transform sword;
     public Controller controller;
     public Animator anim;
+
     bool turn;
     public float animTrotSpeedZ;
     public float animTrotSpeedX;
@@ -17,17 +19,28 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
+    private void Start()
+    {
+       
+    }
+
     public void Update()
     {
-         
-        if (!model.isRuning && !model.isDead)
+
+        if (model.InAction && model.onDamage)
+        {
+            animTrotSpeedX = 0;
+            animTrotSpeedZ = 0;
+            
+        }
+        if (!model.isRuning && !model.isDead && !model.InAction && !model.onDamage)
         {
             animTrotSpeedZ = Input.GetAxis("Vertical")*1.2f;
             animTrotSpeedX = Input.GetAxis("Horizontal")*1.2f;
             if (animTrotSpeedX > 1) animTrotSpeedX = 1;
             if (animTrotSpeedZ > 1) animTrotSpeedZ = 1;
         }
-        if(model.isRuning && !model.isDead) 
+        if(model.isRuning && !model.isDead && !model.InAction && !model.onDamage) 
         {
             animTrotSpeedZ += Input.GetAxis("Vertical")/10; 
             animTrotSpeedX += Input.GetAxis("Horizontal")/10;
@@ -69,119 +82,132 @@ public class Viewer : MonoBehaviour {
 
     public void TakeSword()
     {
+        
+        anim.SetLayerWeight(1, 1);
+        anim.SetBool("SaveSword", false);
         anim.SetBool("TakeSword", true);
     }
 
     public void FalseTakeSword()
     {
         anim.SetBool("TakeSword", false);
-        controller.useSword = true;
     }
 
     public void SaveSword()
     {
-        anim.SetBool("SaveSword",true);
+        anim.SetLayerWeight(1, 1);
+        anim.SetBool("SaveSword", true);                       
         controller.useSword = false;
     }
 
-    public void FalseSaveSword()
+    public void DesactivateLayer()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
+        anim.SetBool("TakeSword", false);
     }
 
     public void Estocada()
-    {    
-     anim.SetBool("EstocadaBool", true);
+    {
+        anim.SetLayerWeight(1, 0);
+        anim.SetBool("EstocadaBool", true);
     }
 
     public void NoEstocada()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("EstocadaBool", false);
     }
 
     public void BackEstocada()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("BackEstocada", true);
     }
 
     public void NoBackEstocada()
     {
+    
         anim.SetBool("BackEstocada", false);
     }
 
     public void GolpeGiratorio()
     {
-        anim.SetBool("GolpeGiratorio", true);
+        anim.SetLayerWeight(1, 0);
+        if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", true);
+
+        else anim.SetBool("GolpeGiratorio", true);
     }
 
     public void NoGolpeGiratorio()
     {
-        if (!model.mySkills.secondRotate)
-            anim.Play("GolpeGiratorio2");
+        anim.SetLayerWeight(1, 0);
+        if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", false);
+
         else anim.SetBool("GolpeGiratorio",false);
     }
 
-    public void NoGolpeGiratorio2()
-    {      
-      anim.SetBool("GolpeGiratorio", false);
-    } 
-      
-    public void NoSecondGolpeGiratorio()
-    {
-        if (!model.mySkills.secondRotate)
-            anim.SetBool("GolpeGiratorio", false);
-    }
+  
 
     public void SaltoyGolpe1()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", true);
     }
 
     public void NoSaltoyGolpe1()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", false);
     }
 
     public void SaltoyGolpe2()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", true);
     }
 
     public void NoSaltoyGolpe2()
     {
+        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", false);
     }
 
-    public void RockThrow()
+    public void Uppercut()
     {
-        anim.Play("RockThrow");
+        anim.SetLayerWeight(1, 0);
+        anim.SetBool("Uppercut", true);
+    }
+
+    public void FalseUppercut()
+    {
+        anim.SetLayerWeight(1, 0);
+        anim.SetBool("Uppercut", false);
     }
 
     public void ReciveDamage()
     {
-        anim.SetBool("TakeDamageBool", true);
+        anim.SetLayerWeight(1, 0);
+        var random = Random.Range(1, 4);
+        anim.SetInteger("TakeDamage", random);
     }
 
     public void NoReciveDamage()
     {
-        anim.SetBool("TakeDamageBool", false);
-    }
-
-    public void OpenChest()
-    {
-        anim.Play("OpenChest");
-    }
-
-    public void StopAttack()
-    {
-        anim.Play("StopAttack");
+        anim.SetLayerWeight(1, 0);
+        anim.SetInteger("TakeDamage", 0);
     }
 
     public void BasicAttack()
     {
-          
-        if(model.countAnimAttack==0) anim.SetBool("attack", true);
+        anim.SetLayerWeight(1, 0);
 
+        if (model.countAnimAttack == 0)
+        {
+            anim.SetBool("attack", true);
+            anim.SetBool("SaveSword", false);
+            anim.SetBool("TakeSword", true);
+        }
         if (model.countAnimAttack == 1) BasicAttack2();
 
         if (model.countAnimAttack >= 2) BasicAttack3();
@@ -220,23 +246,5 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("IsDead", true);
     }
 
-    public void SwordDead()
-    {
-        anim.Play("SwordDead");
-    }
-
-    public void TakeDamageSword()
-    {
-        anim.Play("TakeDamageSword");
-    }
-
-    public void Fall()
-    {
-        anim.Play("Caida");
-    }
-
-    public void Fall2()
-    {
-        anim.Play("Caida2");
-    }
+   
 }

@@ -23,7 +23,7 @@ public class EnemySightFollow : ESMovemnt {
     public EnemySightFollow(EnemyClass enemy, Transform target, float sightSpeed)
     {
         var model = target.GetComponent<Model>();
-        model.timeOnCombat = 5;
+        model.CombatState();
         _enemy = enemy;
         _target = target;
         _sightSpeed = sightSpeed;

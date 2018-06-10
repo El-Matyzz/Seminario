@@ -7151,15 +7151,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: -1.02
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.98
+      value: 0.86
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -100.96
+      value: -12.15
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalRotation.x
@@ -7238,6 +7238,16 @@ Prefab:
       propertyPath: power4
       value: 
       objectReference: {fileID: 1445544946}
+    - target: {fileID: 54607003337318170, guid: 8fbccba294ad40449ac94eadb25b708d,
+        type: 2}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 95118510763602624, guid: 8fbccba294ad40449ac94eadb25b708d,
+        type: 2}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
   m_IsPrefabParent: 0
@@ -16670,6 +16680,27 @@ Transform:
   m_PrefabParentObject: {fileID: 4542276187679372, guid: 4f81d817fe9e7024c901355087f552a3,
     type: 2}
   m_PrefabInternal: {fileID: 1766428713}
+--- !u!1 &1766428715 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1670484659057056, guid: 4f81d817fe9e7024c901355087f552a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1766428713}
+--- !u!114 &1766428716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1766428715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba800f73fa3f51340bd09830f34923e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
+  shakeAmount: 0
+  shakeDuration: 0
+  smooth: 0
+  smoothAmount: 1
 --- !u!1 &1772469925
 GameObject:
   m_ObjectHideFlags: 0

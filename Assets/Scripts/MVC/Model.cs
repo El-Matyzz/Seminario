@@ -23,7 +23,8 @@ public class Model : MonoBehaviour {
     public float speed;
     public float runSpeed;
     public float timeOnCombat;
-
+    float totalTime = 0.5f;
+    public float actualtime = 0;
     public int countAnimAttack;
     public Collider enemy;  
 
@@ -39,7 +40,7 @@ public class Model : MonoBehaviour {
     public bool isAnimatedMove;
     public bool isInCombat;
     public bool isDead;
-
+    public bool aux;
     bool cdPower1;
     bool cdPower2;
     bool cdPower3;
@@ -51,16 +52,11 @@ public class Model : MonoBehaviour {
     public bool backward;
     public bool left;
     public bool right;
-    public bool onDamage;
 
     public Transform mainCamera;
-    public Transform sword;
     public Vector3 dir;
     public Rigidbody rb;
     public EnemyClass currentEnemy;
-
-    Platform currentPlatform;
-    public bool isPlatformJumping;
 
     List<bool> cdList = new List<bool>();
     
@@ -69,7 +65,6 @@ public class Model : MonoBehaviour {
     public event Action RotateAttack;
     public Action SaltoyGolpe1;
     public Action SaltoyGolpe2;
-    public Action Uppercut;
     public Action OnDamage;
     public event Action Combat;
     public event Action Safe;
@@ -137,13 +132,6 @@ public class Model : MonoBehaviour {
         WraperInAction = false;
     }
 
-    public IEnumerator OnDamageDelay(float cdTime)
-    {
-        onDamage = true;
-        yield return new WaitForSeconds(cdTime);
-        onDamage = false;
-    }
-
     public IEnumerator ActionDelay(Action power) {
 
         yield return new WaitForSeconds(1f);
@@ -165,6 +153,7 @@ public class Model : MonoBehaviour {
         mySkills = new Skills();
     }
 
+<<<<<<< HEAD
     void Update() {
 
         timeOnCombat -= Time.deltaTime;
@@ -179,6 +168,28 @@ public class Model : MonoBehaviour {
                 Safe();
                 isInCombat = false;
             }
+=======
+    void Update () {
+
+        timeOnCombat -= Time.deltaTime;
+        if (timeOnCombat <= 0) timeOnCombat = 0;
+
+        if (timeOnCombat > 0)
+        {            
+            isInCombat = true;
+            Combat();
+        }
+        else
+        {
+          view.FalseTakeSword();  
+          isInCombat = false;
+          Safe();
+        }
+        WraperAction();
+        actualtime += Time.deltaTime;
+        if (actualtime >= totalTime) actualtime = totalTime;
+    }
+>>>>>>> 5ad752f7cd41809da29cfdf69ad503c14d40d354
 
             WraperAction();
 
@@ -187,7 +198,7 @@ public class Model : MonoBehaviour {
     }
     public void CastPower1()
     {
-        if (!cdPower1 && !InAction && !onDamage)
+        if (!cdPower1 && !InAction)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -198,7 +209,7 @@ public class Model : MonoBehaviour {
 
     public void CastPower2()
     {
-        if (!cdPower2 && !InAction && !onDamage)
+        if (!cdPower2 && !InAction)
         {          
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -209,18 +220,17 @@ public class Model : MonoBehaviour {
 
     public void CastPower3()
     {
-        if (!cdPower3 && !InAction && !onDamage)
+        if (!cdPower3 && !InAction)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(2, newPower, this);
-            Uppercut();
         }
     }
 
     public void CastPower4()
     {
-        if (!cdPower4 && !InAction && !onDamage)
+        if (!cdPower4 && !InAction)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -230,7 +240,7 @@ public class Model : MonoBehaviour {
 
     public void Movement(Vector3 direction)
     {      
-        if (!InAction && !onDamage)
+        if (!InAction)
         {
             Quaternion targetRotation;
             direction.y = 0;
@@ -266,36 +276,48 @@ public class Model : MonoBehaviour {
         {           
             StopCoroutine(CountAttack());
             StartCoroutine(CountAttack());
+<<<<<<< HEAD
 
             InActionAttack = true;           
 
             InActionAttack = true;
             
 
+=======
+            InActionAttack = true;
+            rb.AddForce(transform.forward * 10, ForceMode.Impulse);
+>>>>>>> 5ad752f7cd41809da29cfdf69ad503c14d40d354
         }      
     }
 
     public void MakeDamage()
     {
-        rb.AddForce(transform.forward * 2, ForceMode.Impulse);
         Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
         foreach (var item in col)
         {
             if (item.GetComponent<EnemyClass>())
             {
+<<<<<<< HEAD
 
                item.GetComponent<EnemyClass>().GetDamage(10);
 
               item.GetComponent<EnemyClass>().GetDamage(10);
 
                item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
+=======
+              item.GetComponent<EnemyClass>().GetDamage(10);
+                item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
+>>>>>>> 5ad752f7cd41809da29cfdf69ad503c14d40d354
             }
         }
     }
 
-    public void CombatState()
+    public void StartInCombat()
     {
+        view.FalseSaveSword();
+        Combat();
         timeOnCombat = 5;
+<<<<<<< HEAD
 
         if (!isInCombat && !view.anim.GetBool("attack") 
                         && !view.anim.GetBool("Uppercut") 
@@ -306,6 +328,8 @@ public class Model : MonoBehaviour {
         if (!isInCombat) Combat();
 
         isInCombat = true;
+=======
+>>>>>>> 5ad752f7cd41809da29cfdf69ad503c14d40d354
     }
 
     public void ActiveAttack()
@@ -322,14 +346,7 @@ public class Model : MonoBehaviour {
     public void GetDamage(float damage, Transform enemy)
     {
         life -= damage;
-        view.animTrotSpeedX = 0;
-        view.animTrotSpeedZ = 0;
-        StartCoroutine(OnDamageDelay(1f));
-        if (!InAction)
-        {
-            rb.velocity = Vector3.zero;
-            rb.AddForce(enemy.forward * 2, ForceMode.Impulse);
-        }
+        rb.AddForce(enemy.forward * 2, ForceMode.Impulse);
         if (life > 0) OnDamage();
         else
         {
@@ -382,47 +399,6 @@ public class Model : MonoBehaviour {
         {
             if(c.gameObject.GetComponent(typeof(EnemyClass))) currentEnemy = c.gameObject.GetComponent<EnemyClass>();
             powerManager.currentPowerAction.Ipower2();
-        }
-
-        if (c.gameObject.GetComponent<Platform>())
-            currentPlatform = c.gameObject.GetComponent<Platform>();
-    }
-
-    public void StartInteraction()
-    {
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1.5f))
-        {
-            var comp = hit.transform.GetComponent<Interactable>();
-            if (comp)
-                comp.Interaction();
-        }
-    }
-
-    public IEnumerator PlatformJump()
-    {
-        if (currentPlatform)
-        {
-            Vector3 p1 = currentPlatform.transform.position;
-            Vector3 p3 = currentPlatform.otherPlatform.position;
-            Vector3 p2 = Vector3.Lerp(p1, p3, 0.5f);
-            p2.y = (p1.y > p3.y ? p1.y : p3.y) + 15;
-            float t = 0;
-            isPlatformJumping = true;
-
-            while (currentPlatform != null)
-            {
-                t += Time.deltaTime;
-                rb.transform.position = Vector3.Lerp(Vector3.Lerp(p1, p2, t), Vector3.Lerp(p2, p3, t), t);
-
-                if (transform.position.x == p3.x && transform.position.z == p3.z)
-                {
-                    currentPlatform = null;
-                    isPlatformJumping = false;
-                }
-                yield return new WaitForFixedUpdate();
-            }
         }
     }
 

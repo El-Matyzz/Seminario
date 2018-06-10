@@ -7151,15 +7151,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1.02
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.86
+      value: -0.98
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -12.15
+      value: -100.96
       objectReference: {fileID: 0}
     - target: {fileID: 4491588237648744, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
       propertyPath: m_LocalRotation.x
@@ -7238,6 +7238,7 @@ Prefab:
       propertyPath: power4
       value: 
       objectReference: {fileID: 1445544946}
+<<<<<<< HEAD
     - target: {fileID: 54607003337318170, guid: 8fbccba294ad40449ac94eadb25b708d,
         type: 2}
       propertyPath: m_Constraints
@@ -7253,6 +7254,8 @@ Prefab:
       propertyPath: sword
       value: 
       objectReference: {fileID: 1623398215}
+=======
+>>>>>>> 5ad752f7cd41809da29cfdf69ad503c14d40d354
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
   m_IsPrefabParent: 0
@@ -14545,31 +14548,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4211664673815846, guid: 2daf1fb32e6ba344b8337666e397837d,
     type: 2}
   m_PrefabInternal: {fileID: 1620354840}
---- !u!1 &1623398214 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1100432377743080, guid: 8fbccba294ad40449ac94eadb25b708d,
-    type: 2}
-  m_PrefabInternal: {fileID: 812541206}
---- !u!4 &1623398215 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4173788336658910, guid: 8fbccba294ad40449ac94eadb25b708d,
-    type: 2}
-  m_PrefabInternal: {fileID: 812541206}
---- !u!54 &1623398216
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1623398214}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!43 &1628955352
 Mesh:
   m_ObjectHideFlags: 0

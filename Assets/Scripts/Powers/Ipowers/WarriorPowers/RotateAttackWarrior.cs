@@ -15,7 +15,6 @@ public class RotateAttackWarrior : Ipower {
 
     public void Ipower()
     {
-        
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
         foreach (var item in col)
         {
@@ -32,7 +31,7 @@ public class RotateAttackWarrior : Ipower {
         if (!_model.mySkills.secondRotate)
         {
             _model.StartCoroutine(_model.ActionDelay(Ipower2));
-            _model.StartCoroutine(_model.InActionDelay(2.5f));
+            _model.StartCoroutine(_model.InActionDelay(4f));
         }
         else _model.StartCoroutine(_model.InActionDelay(0.6f));
         _model.StartCoroutine(_model.PowerColdown(_cdTime,2));

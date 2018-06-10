@@ -47,10 +47,7 @@ public class Model : MonoBehaviour {
     public bool InAction;
     public bool InActionAttack;
     bool WraperInAction;
-    public bool forward;
-    public bool backward;
-    public bool left;
-    public bool right;
+
     public bool onDamage;
 
     public Transform mainCamera;

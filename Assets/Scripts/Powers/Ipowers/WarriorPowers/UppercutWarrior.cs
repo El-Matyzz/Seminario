@@ -33,7 +33,7 @@ public class UppercutWarrior : Ipower {
             }
         }
         _player.StartCoroutine(_player.PowerColdown(_cdTime, 3));
-        _player.StartCoroutine(_player.InActionDelay(1.5f));
+        _player.StartCoroutine(_player.InActionDelay(2));
     }
 
     public void Ipower2()

@@ -32,7 +32,7 @@ public class EnemyFollow : ESMovemnt {
     public EnemyFollow(EnemyClass enemy, GameObject player, float speed)
     {
         var model = player.GetComponent<Model>();
-        model.CombatState();
+        model.timeOnCombat = 5;
         _enemy = enemy;
         _player = player;
         _speed = speed;       

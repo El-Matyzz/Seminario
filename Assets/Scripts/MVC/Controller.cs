@@ -28,7 +28,6 @@ public class Controller : MonoBehaviour {
         model.RotateAttack += view.GolpeGiratorio;
         model.SaltoyGolpe1 += view.SaltoyGolpe1;
         model.SaltoyGolpe2 += view.SaltoyGolpe2;
-        model.Uppercut += view.Uppercut;
         model.Dead += view.Dead;
         model.Combat += view.TakeSword;
         model.Safe += view.SaveSword;
@@ -47,6 +46,13 @@ public class Controller : MonoBehaviour {
 
             if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
+<<<<<<< HEAD
+=======
+        if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
+        {
+           
+            model.StartInCombat();
+>>>>>>> parent of 04d5a02... animaciones
 
          
 

@@ -6,10 +6,8 @@ using UnityEngine.UI;
 public class Viewer : MonoBehaviour {
 
     public Model model;
-    public Transform sword;
     public Controller controller;
     public Animator anim;
-
     bool turn;
     public float animTrotSpeedZ;
     public float animTrotSpeedX;
@@ -20,6 +18,7 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
+<<<<<<< HEAD
 
     private void Start()
     {
@@ -44,13 +43,19 @@ public class Viewer : MonoBehaviour {
             
         }
         if (!model.isRuning && !model.isDead && !model.InAction && !model.onDamage)
+=======
+    public void Update()
+    {
+         
+        if (!model.isRuning && !model.isDead)
+>>>>>>> parent of 04d5a02... animaciones
         {
             animTrotSpeedZ = Input.GetAxis("Vertical")*1.2f;
             animTrotSpeedX = Input.GetAxis("Horizontal")*1.2f;
             if (animTrotSpeedX > 1) animTrotSpeedX = 1;
             if (animTrotSpeedZ > 1) animTrotSpeedZ = 1;
         }
-        if(model.isRuning && !model.isDead && !model.InAction && !model.onDamage) 
+        if(model.isRuning && !model.isDead) 
         {
             animTrotSpeedZ += Input.GetAxis("Vertical")/10; 
             animTrotSpeedX += Input.GetAxis("Horizontal")/10;
@@ -92,117 +97,123 @@ public class Viewer : MonoBehaviour {
 
     public void TakeSword()
     {
+<<<<<<< HEAD
 
         
 
         anim.SetLayerWeight(1, 1);
         anim.SetBool("SaveSword", false);
+=======
+>>>>>>> parent of 04d5a02... animaciones
         anim.SetBool("TakeSword", true);
     }
 
     public void FalseTakeSword()
     {
         anim.SetBool("TakeSword", false);
+        controller.useSword = true;
     }
 
 
     public void SaveSword()
     {
+<<<<<<< HEAD
         anim.SetLayerWeight(1, 1);
 
 
         anim.SetBool("TakeSword", false);
 
         anim.SetBool("SaveSword", true);                       
+=======
+        anim.SetBool("SaveSword",true);
+>>>>>>> parent of 04d5a02... animaciones
         controller.useSword = false;
     }
 
-    public void DesactivateLayer()
+    public void FalseSaveSword()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
-        anim.SetBool("TakeSword", false);
     }
 
     public void Estocada()
-    {
-        anim.SetLayerWeight(1, 0);
-        anim.SetBool("EstocadaBool", true);
+    {    
+     anim.SetBool("EstocadaBool", true);
     }
 
     public void NoEstocada()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("EstocadaBool", false);
     }
 
     public void BackEstocada()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("BackEstocada", true);
     }
 
     public void NoBackEstocada()
     {
-    
         anim.SetBool("BackEstocada", false);
     }
 
     public void GolpeGiratorio()
     {
-        anim.SetLayerWeight(1, 0);
-        if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", true);
-
-        else anim.SetBool("GolpeGiratorio", true);
+        anim.SetBool("GolpeGiratorio", true);
     }
 
     public void NoGolpeGiratorio()
     {
-        anim.SetLayerWeight(1, 0);
-        if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", false);
-
+        if (!model.mySkills.secondRotate)
+            anim.Play("GolpeGiratorio2");
         else anim.SetBool("GolpeGiratorio",false);
     }
 
-  
+    public void NoGolpeGiratorio2()
+    {      
+      anim.SetBool("GolpeGiratorio", false);
+    } 
+      
+    public void NoSecondGolpeGiratorio()
+    {
+        if (!model.mySkills.secondRotate)
+            anim.SetBool("GolpeGiratorio", false);
+    }
 
     public void SaltoyGolpe1()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", true);
     }
 
     public void NoSaltoyGolpe1()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", false);
     }
 
     public void SaltoyGolpe2()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", true);
     }
 
     public void NoSaltoyGolpe2()
     {
-        anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", false);
     }
 
+<<<<<<< HEAD
     public void Uppercut()
 
+=======
+    public void RockThrow()
+>>>>>>> parent of 04d5a02... animaciones
     {
-        anim.SetLayerWeight(1, 0);
-        anim.SetBool("Uppercut", true);
+        anim.Play("RockThrow");
     }
 
-    public void FalseUppercut()
+    public void ReciveDamage()
     {
-        anim.SetLayerWeight(1, 0);
-        anim.SetBool("Uppercut", false);
+        anim.SetBool("TakeDamageBool", true);
     }
 
+<<<<<<< HEAD
 
 
     public void ReciveDamage()
@@ -212,16 +223,26 @@ public class Viewer : MonoBehaviour {
         anim.SetLayerWeight(1, 0);
         var random = Random.Range(1, 4);
         anim.SetInteger("TakeDamage", random);
-    }
-
+=======
     public void NoReciveDamage()
     {
-        anim.SetLayerWeight(1, 0);
-        anim.SetInteger("TakeDamage", 0);
+        anim.SetBool("TakeDamageBool", false);
+>>>>>>> parent of 04d5a02... animaciones
+    }
+
+    public void OpenChest()
+    {
+        anim.Play("OpenChest");
+    }
+
+    public void StopAttack()
+    {
+        anim.Play("StopAttack");
     }
 
     public void BasicAttack()
     {
+<<<<<<< HEAD
 
         anim.SetLayerWeight(1, 0);
 
@@ -235,6 +256,11 @@ public class Viewer : MonoBehaviour {
             anim.SetBool("SaveSword", false);
             anim.SetBool("TakeSword", true);
         }
+=======
+          
+        if(model.countAnimAttack==0) anim.SetBool("attack", true);
+
+>>>>>>> parent of 04d5a02... animaciones
         if (model.countAnimAttack == 1) BasicAttack2();
 
         if (model.countAnimAttack >= 2) BasicAttack3();
@@ -273,5 +299,23 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("IsDead", true);
     }
 
-   
+    public void SwordDead()
+    {
+        anim.Play("SwordDead");
+    }
+
+    public void TakeDamageSword()
+    {
+        anim.Play("TakeDamageSword");
+    }
+
+    public void Fall()
+    {
+        anim.Play("Caida");
+    }
+
+    public void Fall2()
+    {
+        anim.Play("Caida2");
+    }
 }

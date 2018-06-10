@@ -7248,11 +7248,14 @@ Prefab:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     - target: {fileID: 114989513961238592, guid: 8fbccba294ad40449ac94eadb25b708d,
         type: 2}
       propertyPath: sword
       value: 
       objectReference: {fileID: 1623398215}
+=======
+>>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
   m_IsPrefabParent: 0
@@ -16710,6 +16713,27 @@ Transform:
   m_PrefabParentObject: {fileID: 4542276187679372, guid: 4f81d817fe9e7024c901355087f552a3,
     type: 2}
   m_PrefabInternal: {fileID: 1766428713}
+--- !u!1 &1766428715 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1670484659057056, guid: 4f81d817fe9e7024c901355087f552a3,
+    type: 2}
+  m_PrefabInternal: {fileID: 1766428713}
+--- !u!114 &1766428716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1766428715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba800f73fa3f51340bd09830f34923e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
+  shakeAmount: 0
+  shakeDuration: 0
+  smooth: 0
+  smoothAmount: 1
 --- !u!1 &1772469925
 GameObject:
   m_ObjectHideFlags: 0

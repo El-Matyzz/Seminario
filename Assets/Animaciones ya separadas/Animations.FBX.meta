@@ -381,6 +381,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+<<<<<<< HEAD
       - time: 0
         functionName: CombatState
         data: 
@@ -388,6 +389,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+=======
+>>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -528,6 +531,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+<<<<<<< HEAD
       - time: 0
         functionName: CombatState
         data: 
@@ -535,6 +539,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+=======
+>>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

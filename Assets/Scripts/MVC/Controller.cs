@@ -45,41 +45,38 @@ public class Controller : MonoBehaviour {
 
             if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
 
-            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();        
+            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
-<<<<<<< HEAD
-        if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
-        {
-           
-            model.CombatState();
-=======
-            if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
-             {
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
 
-               model.CombatState();
+         
 
-               if (!useSword) view.TakeSword();
+                if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
+                {
 
-               else if (useSword && !model.isInCombat) view.SaveSword();
-             }
-            if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
 
-            if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
+                    model.CombatState();
 
-            if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
-            {
-               StartCoroutine(DelaySmash());
-               useSword = true;
-                model.NormalAttack();
-             }
+                    if (!useSword) view.TakeSword();
+
+                    else if (useSword && !model.isInCombat) view.SaveSword();
+                }
+                if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
+
+                if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
+
+                if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
+                {
+                    StartCoroutine(DelaySmash());
+                    useSword = true;
+                    model.NormalAttack();
+                }
 
                 if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
 
                 if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
-            }
+            
         }
-
+    }
     private void FixedUpdate()
     {
         if (!model.isPlatformJumping)

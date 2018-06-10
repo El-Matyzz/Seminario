@@ -20,23 +20,23 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
-<<<<<<< HEAD
+
     private void Start()
     {
-       
-=======
+
+    }
     public void Awake()
     {
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
     }
 
     public void Update()
     {
-<<<<<<< HEAD
 
-=======
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
+
+
         if (model.InAction && model.onDamage)
         {
             animTrotSpeedX = 0;
@@ -92,30 +92,27 @@ public class Viewer : MonoBehaviour {
 
     public void TakeSword()
     {
-<<<<<<< HEAD
+
         
-=======
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
         anim.SetLayerWeight(1, 1);
         anim.SetBool("SaveSword", false);
         anim.SetBool("TakeSword", true);
     }
 
-<<<<<<< HEAD
     public void FalseTakeSword()
     {
         anim.SetBool("TakeSword", false);
     }
-=======
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
 
     public void SaveSword()
     {
         anim.SetLayerWeight(1, 1);
-<<<<<<< HEAD
-=======
+
+
         anim.SetBool("TakeSword", false);
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
         anim.SetBool("SaveSword", true);                       
         controller.useSword = false;
     }
@@ -194,7 +191,7 @@ public class Viewer : MonoBehaviour {
     }
 
     public void Uppercut()
-<<<<<<< HEAD
+
     {
         anim.SetLayerWeight(1, 0);
         anim.SetBool("Uppercut", true);
@@ -206,24 +203,12 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("Uppercut", false);
     }
 
-    public void ReciveDamage()
-    {
-=======
-    {
-        anim.SetLayerWeight(1, 0);
-        anim.SetBool("Uppercut", true);
-    }
 
-    public void FalseUppercut()
-    {
-        anim.SetLayerWeight(1, 0);
-        anim.SetBool("Uppercut", false);
-    }
 
     public void ReciveDamage()
     {
         camShake.ShakeCamera(3.5f, 1);
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
         anim.SetLayerWeight(1, 0);
         var random = Random.Range(1, 4);
         anim.SetInteger("TakeDamage", random);
@@ -237,13 +222,12 @@ public class Viewer : MonoBehaviour {
 
     public void BasicAttack()
     {
-<<<<<<< HEAD
+
         anim.SetLayerWeight(1, 0);
-=======
+
         anim.SetLayerWeight(1, 0);  
 
         if(model.countAnimAttack==0) anim.SetBool("attack", true);
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
 
         if (model.countAnimAttack == 0)
         {

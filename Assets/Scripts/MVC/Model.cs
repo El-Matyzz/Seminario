@@ -165,32 +165,26 @@ public class Model : MonoBehaviour {
         mySkills = new Skills();
     }
 
-    void Update () {
-      
+    void Update() {
+
         timeOnCombat -= Time.deltaTime;
-<<<<<<< HEAD
+
         if (timeOnCombat <= 0 && isInCombat)
         {
             timeOnCombat = 0;
-=======
-        if(timeOnCombat <=0) timeOnCombat = 0;
-        if (timeOnCombat <= 0 && isInCombat)
-        {
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
-            Safe();
-            isInCombat = false;
+
+            if (timeOnCombat <= 0) timeOnCombat = 0;
+            if (timeOnCombat <= 0 && isInCombat)
+            {
+                Safe();
+                isInCombat = false;
+            }
+
+            WraperAction();
+
         }
- 
-        WraperAction();
-<<<<<<< HEAD
 
-       
-=======
- 
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
     }
-
-
     public void CastPower1()
     {
         if (!cdPower1 && !InAction && !onDamage)
@@ -272,12 +266,12 @@ public class Model : MonoBehaviour {
         {           
             StopCoroutine(CountAttack());
             StartCoroutine(CountAttack());
-<<<<<<< HEAD
+
             InActionAttack = true;           
-=======
+
             InActionAttack = true;
             
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
         }      
     }
 
@@ -289,11 +283,11 @@ public class Model : MonoBehaviour {
         {
             if (item.GetComponent<EnemyClass>())
             {
-<<<<<<< HEAD
+
                item.GetComponent<EnemyClass>().GetDamage(10);
-=======
+
               item.GetComponent<EnemyClass>().GetDamage(10);
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
                item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
             }
         }
@@ -302,15 +296,15 @@ public class Model : MonoBehaviour {
     public void CombatState()
     {
         timeOnCombat = 5;
-<<<<<<< HEAD
+
         if (!isInCombat && !view.anim.GetBool("attack") 
                         && !view.anim.GetBool("Uppercut") 
                         && !view.anim.GetBool("GolpeGiratorio2")
                         && !view.anim.GetBool("GolpeGiratorio")
                         && !view.anim.GetBool("EstocadaBool")) Combat();
-=======
+
         if (!isInCombat) Combat();
->>>>>>> 320521f17657a3220505400af3b102f306a8bd7b
+
         isInCombat = true;
     }
 

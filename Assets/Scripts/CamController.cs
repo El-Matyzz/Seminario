@@ -47,8 +47,8 @@ public class CamController : MonoBehaviour {
             }
             else
             {
-              distance -= 5 * Time.deltaTime;
-              if (distance <= 3) distance =3;
+              distance += 35 * Time.deltaTime;
+              if (distance >= 3) distance =3;
             }
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);

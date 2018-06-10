@@ -28,7 +28,6 @@ public class Controller : MonoBehaviour {
         model.RotateAttack += view.GolpeGiratorio;
         model.SaltoyGolpe1 += view.SaltoyGolpe1;
         model.SaltoyGolpe2 += view.SaltoyGolpe2;
-        model.Uppercut += view.Uppercut;
         model.Dead += view.Dead;
         model.Combat += view.TakeSword;
         model.Safe += view.SaveSword;
@@ -48,7 +47,7 @@ public class Controller : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.C)  && !model.isInCombat)
         {
            
-            model.CombatState();
+            model.StartInCombat();
 
             if (!useSword) view.TakeSword();
 

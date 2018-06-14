@@ -31,20 +31,35 @@ public class Viewer : MonoBehaviour {
             animTrotSpeedZ = 0;
             
         }
-        if (!model.isRuning && !model.isDead && !model.InAction && !model.onDamage)
+        if (!model.isRuning && !model.isDead && !model.InAction && !model.onDamage && model.countAnimAttack == 0)
         {
             animTrotSpeedZ = Input.GetAxis("Vertical")*1.2f;
             animTrotSpeedX = Input.GetAxis("Horizontal")*1.2f;
             if (animTrotSpeedX > 1) animTrotSpeedX = 1;
             if (animTrotSpeedZ > 1) animTrotSpeedZ = 1;
         }
-        if(model.isRuning && !model.isDead && !model.InAction && !model.onDamage) 
+        if(model.isRuning && !model.isDead && !model.InAction && !model.onDamage && model.countAnimAttack == 0) 
         {
             animTrotSpeedZ += Input.GetAxis("Vertical")/10; 
             animTrotSpeedX += Input.GetAxis("Horizontal")/10;
         }
+
+        if (model.countAnimAttack > 0)
+        {
+            animTrotSpeedX = 0;
+            animTrotSpeedZ = 0;
+        }
+
         anim.SetFloat("VelZ", animTrotSpeedZ);
         anim.SetFloat("VelX", animTrotSpeedX);
+    }
+
+    public IEnumerator SlowSpeed()
+    {
+        anim.speed = 0.3f;
+        yield return new WaitForSeconds(0.1f);
+        anim.speed = 1;
+
     }
 
     public void UpdatePowerCD(int id, float fa)
@@ -73,9 +88,7 @@ public class Viewer : MonoBehaviour {
 
     public void DesactivateAttack2()
     {
-        anim.SetBool("attack", false);
-        model.InAction = false;
-        model.InActionAttack = false;
+        anim.SetBool("attack", false);   
     }
 
     public void TakeSword()
@@ -86,11 +99,15 @@ public class Viewer : MonoBehaviour {
     }
 
 
+    public void FalseTakeSword()
+    {
+        anim.SetBool("TakeSword", false);
+    }
+
     public void SaveSword()
     {
         anim.SetLayerWeight(1, 1);
-        anim.SetBool("TakeSword", false);
-        anim.SetBool("SaveSword", true);                       
+        anim.SetBool("SaveSword", true);
         controller.useSword = false;
     }
 
@@ -195,10 +212,14 @@ public class Viewer : MonoBehaviour {
 
     public void BasicAttack()
     {
-        anim.SetLayerWeight(1, 0);  
+        anim.SetLayerWeight(1, 0);
 
-        if(model.countAnimAttack==0) anim.SetBool("attack", true);
-
+        if (model.countAnimAttack == 0)
+        {
+            anim.SetBool("attack", true);
+            anim.SetBool("SaveSword", false);
+            anim.SetBool("TakeSword", true);
+        }
         if (model.countAnimAttack == 1) BasicAttack2();
 
         if (model.countAnimAttack >= 2) BasicAttack3();

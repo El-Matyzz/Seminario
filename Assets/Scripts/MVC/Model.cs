@@ -270,8 +270,9 @@ public class Model : MonoBehaviour {
         {
             if (item.GetComponent<EnemyClass>())
             {
+              view.StartCoroutine(view.SlowSpeed());
               item.GetComponent<EnemyClass>().GetDamage(10);
-               item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
+              item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);  
             }
         }
     }
@@ -279,7 +280,11 @@ public class Model : MonoBehaviour {
     public void CombatState()
     {
         timeOnCombat = 5;
-        if (!isInCombat) Combat();
+        if (!isInCombat && !view.anim.GetBool("attack")
+                        && !view.anim.GetBool("Uppercut")
+                        && !view.anim.GetBool("GolpeGiratorio2")
+                        && !view.anim.GetBool("GolpeGiratorio")
+                        && !view.anim.GetBool("EstocadaBool")) Combat();
         isInCombat = true;
     }
 
@@ -287,6 +292,12 @@ public class Model : MonoBehaviour {
     {
         InActionAttack = false;
         InAction = false;
+    }
+
+    public void FalseActiveAttack()
+    {
+        InActionAttack = true;
+        InAction = true;
     }
 
     public void CountAnimZero()

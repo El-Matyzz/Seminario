@@ -48,14 +48,16 @@ public class Controller : MonoBehaviour {
             if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();        
 
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
-             {
+            {
 
-               model.CombatState();
+             model.CombatState();
 
-               if (!useSword) view.TakeSword();
+             if (!useSword) view.TakeSword();
 
-               else if (useSword && !model.isInCombat) view.SaveSword();
-             }
+             else if (useSword && !model.isInCombat) view.SaveSword();
+
+            }
+
             if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
 
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
@@ -64,7 +66,7 @@ public class Controller : MonoBehaviour {
             {
                StartCoroutine(DelaySmash());
                useSword = true;
-                model.NormalAttack();
+               model.NormalAttack();
              }
 
                 if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();

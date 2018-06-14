@@ -16822,7 +16822,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6b4a76ff37bf3084dbe4fb7a3ed080ae, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6b4a76ff37bf3084dbe4fb7a3ed080ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ModelEnemy :  EnemyClass
 {
-
     public bool isFollow;
     public bool isStuned;
     public bool isKnocked;
@@ -157,6 +156,23 @@ public class ModelEnemy :  EnemyClass
             }
         }
     }
+
+    public void GetBack(Vector3 src)
+    {
+        if (isAttack)
+        {
+            Vector3 dir = (src - transform.position).normalized;
+            dir.y = 0;
+            rb.AddForce(-dir * 400);
+        }
+    }
+
+    public void OnCollisionEnter(Collision c)
+    {
+        if (c.gameObject.GetComponent<Model>() && isAttack)
+            GetBack(c.transform.position);
+    }
+
 
     void OnDrawGizmos()
     {

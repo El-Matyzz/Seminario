@@ -2,26 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Controller : MonoBehaviour {
-
-    
+public class Controller : MonoBehaviour
+{
     public Model model;
     public Viewer view;
     public GameObject text;
     bool smashBool;
     public bool useSword;
     float count;
-   
+
     public IEnumerator DelaySmash()
     {
         smashBool = true;
         yield return new WaitForSeconds(0.2f);
         smashBool = false;
     }
-    
-    // Use this for initialization
-    void Awake() {
 
+    // Use this for initialization
+    void Awake()
+    {
         model.Attack += view.BasicAttack;
         model.OnDamage += view.ReciveDamage;
         model.Estocada += view.Estocada;
@@ -45,17 +44,15 @@ public class Controller : MonoBehaviour {
 
             if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
 
-            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();        
+            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
             {
+                model.CombatState();
 
-             model.CombatState();
+                if (!useSword) view.TakeSword();
 
-             if (!useSword) view.TakeSword();
-
-             else if (useSword && !model.isInCombat) view.SaveSword();
-
+                else if (useSword && !model.isInCombat) view.SaveSword();
             }
 
             if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
@@ -64,16 +61,16 @@ public class Controller : MonoBehaviour {
 
             if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
             {
-               StartCoroutine(DelaySmash());
-               useSword = true;
-               model.NormalAttack();
-             }
-
-                if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
-
-                if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
+                StartCoroutine(DelaySmash());
+                useSword = true;
+                model.NormalAttack();
             }
+
+            if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
+
+            if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
         }
+    }
 
     private void FixedUpdate()
     {
@@ -89,5 +86,5 @@ public class Controller : MonoBehaviour {
         }
     }
 }
-   
+
 

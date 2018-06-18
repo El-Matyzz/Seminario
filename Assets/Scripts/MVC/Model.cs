@@ -37,6 +37,7 @@ public class Model : MonoBehaviour
     public bool isAnimatedMove;
     public bool isInCombat;
     public bool isDead;
+    public bool biz;
 
     bool cdPower1;
     bool cdPower2;
@@ -58,6 +59,8 @@ public class Model : MonoBehaviour
 
     List<bool> cdList = new List<bool>();
 
+    public Action Trot;
+    public Action Run;
     public Action Estocada;
     public event Action Attack;
     public event Action RotateAttack;
@@ -214,21 +217,85 @@ public class Model : MonoBehaviour
         }
     }
 
-    public void Movement(Vector3 direction)
+    public void Movement(Vector3 direction, bool key, bool backward)
     {
-        if (!InAction && !onDamage)
+        biz = false;
+
+        if (!InAction && !onDamage && countAnimAttack == 0)
         {
             Quaternion targetRotation;
             direction.y = 0;
-            if (!isInCombat)
+            if (key)
             {
                 targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
-            if (!isRuning) rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
+            if (backward)
+            {
+                var turnDir = -direction;
+                targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+            }
 
-            else rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
+            if (!isRuning && !isInCombat)
+            {
+                Trot();
+                rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
+            }
+            else if (!isRuning && isInCombat)
+            {
+                Trot();
+                rb.MovePosition(rb.position + direction * speed / 1.5f * Time.deltaTime);
+            }
+            else
+            {
+                Run();
+                rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+    public void MovementBizectriz(Vector3 d1, Vector3 d2, bool key, bool backward)
+    {
+        biz = true;
+
+        if (!InAction && !onDamage && countAnimAttack == 0)
+        {
+            Vector3 direction = (d1 + d2) / 2;
+            direction.y = 0;
+
+            Quaternion targetRotation;
+
+            if (key)
+            {
+              
+                targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+            }
+
+            if (backward)
+            {
+                var turnDir = (d1 + (-d2)) /2 ;
+                targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+            }
+
+            if (!isRuning && !isInCombat)
+            {
+                Trot();
+                rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
+            }
+            else if (!isRuning && isInCombat)
+            {
+                Trot();
+                rb.MovePosition(rb.position + direction * speed / 1.5f * Time.deltaTime);
+            }
+            else
+            {
+                Run();
+                rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
+            }
         }
     }
 
@@ -278,7 +345,7 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 5;
+        timeOnCombat = 60;
         if (!isInCombat && !view.anim.GetBool("attack")
                         && !view.anim.GetBool("Uppercut")
                         && !view.anim.GetBool("GolpeGiratorio2")
@@ -307,8 +374,6 @@ public class Model : MonoBehaviour
     public void GetDamage(float damage, Transform enemy)
     {
         life -= damage;
-        view.animTrotSpeedX = 0;
-        view.animTrotSpeedZ = 0;
         StartCoroutine(OnDamageDelay(1f));
         if (!InAction)
         {

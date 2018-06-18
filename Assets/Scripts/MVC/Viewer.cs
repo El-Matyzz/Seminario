@@ -9,14 +9,14 @@ public class Viewer : MonoBehaviour {
     public Controller controller;
     public Animator anim;
     bool turn;
-    public float animTrotSpeedZ;
-    public float animTrotSpeedX;
     CamShake camShake;
 
     public Image power1;
     public Image power2;
     public Image power3;
     public Image power4;
+    float x = 0;
+    float y = 0;
 
     public void Awake()
     {
@@ -25,33 +25,82 @@ public class Viewer : MonoBehaviour {
 
     public void Update()
     {
-        if (model.InAction && model.onDamage)
-        {
-            animTrotSpeedX = 0;
-            animTrotSpeedZ = 0;
-            
-        }
-        if (!model.isRuning && !model.isDead && !model.InAction && !model.onDamage && model.countAnimAttack == 0)
-        {
-            animTrotSpeedZ = Input.GetAxis("Vertical")*1.2f;
-            animTrotSpeedX = Input.GetAxis("Horizontal")*1.2f;
-            if (animTrotSpeedX > 1) animTrotSpeedX = 1;
-            if (animTrotSpeedZ > 1) animTrotSpeedZ = 1;
-        }
-        if(model.isRuning && !model.isDead && !model.InAction && !model.onDamage && model.countAnimAttack == 0) 
-        {
-            animTrotSpeedZ += Input.GetAxis("Vertical")/10; 
-            animTrotSpeedX += Input.GetAxis("Horizontal")/10;
-        }
 
-        if (model.countAnimAttack > 0)
-        {
-            animTrotSpeedX = 0;
-            animTrotSpeedZ = 0;
-        }
+    }
 
-        anim.SetFloat("VelZ", animTrotSpeedZ);
-        anim.SetFloat("VelX", animTrotSpeedX);
+    public void RunSword()
+    {
+        anim.SetBool("runSword", true);
+    }
+
+    public void TrotAnim()
+    {
+        anim.SetBool("trotAnim", true);
+    }
+
+    public void FalseTrotAnim()
+    {
+        anim.SetBool("trotAnim", false);
+    }
+
+    public void RunAnim()
+    {      
+        anim.SetBool("runAnim", true);
+        anim.SetBool("WalkW", false);
+        anim.SetBool("WalkS", false);
+        anim.SetBool("WalkD", false);
+        anim.SetBool("WalkA", false);
+    }
+
+    public void FalseRunAnim()
+    {
+        anim.SetBool("runAnim", false);
+    }
+
+    public void FalseAnimRunSword()
+    {
+        anim.SetBool("runSword", false);
+    }
+
+    public void AnimWalkW()
+    {
+        anim.SetBool("WalkW", true);
+        anim.SetBool("WalkS", false);
+        anim.SetBool("WalkD", false);
+        anim.SetBool("WalkA", false);
+    }
+
+    public void AnimWalkS()
+    {
+        anim.SetBool("WalkW", false);
+        anim.SetBool("WalkS", true);
+        anim.SetBool("WalkD", false);
+        anim.SetBool("WalkA", false);
+    }
+
+    public void AnimWalkD()
+    {
+        anim.SetBool("WalkW", false);
+        anim.SetBool("WalkS", false);
+        anim.SetBool("WalkD", true);
+        anim.SetBool("WalkA", false);
+    }
+
+    public void AnimWalkA()
+    {
+        anim.SetBool("WalkW", false);
+        anim.SetBool("WalkS", false);
+        anim.SetBool("WalkD", false);
+        anim.SetBool("WalkA", true);
+    }
+
+    public void FalseAnimWalk()
+    {
+        anim.SetBool("WalkW", false);
+        anim.SetBool("WalkS", false);
+        anim.SetBool("WalkD", false);
+        anim.SetBool("WalkA", false);
+        
     }
 
     public IEnumerator SlowSpeed()

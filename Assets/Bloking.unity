@@ -16672,6 +16672,21 @@ Prefab:
       propertyPath: player
       value: 
       objectReference: {fileID: 812541207}
+    - target: {fileID: 114679607075051190, guid: 4f81d817fe9e7024c901355087f552a3,
+        type: 2}
+      propertyPath: invertY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679607075051190, guid: 4f81d817fe9e7024c901355087f552a3,
+        type: 2}
+      propertyPath: cameraActivate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114679607075051190, guid: 4f81d817fe9e7024c901355087f552a3,
+        type: 2}
+      propertyPath: blockMouse
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f81d817fe9e7024c901355087f552a3, type: 2}
   m_IsPrefabParent: 0

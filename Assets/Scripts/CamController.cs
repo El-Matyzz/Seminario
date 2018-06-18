@@ -16,17 +16,28 @@ public class CamController : MonoBehaviour {
     public bool cameraActivate;
     public bool blockMouse;
 
+    Vector3 startPositionPivot;
+
     void Start () {
         if (invertY)
             sensitivityY = -sensitivityY;
         model = FindObjectOfType<Model>();
+
     }
 
     void Update () {
 
-        if (blockMouse) Cursor.visible = false;
-        
-        else Cursor.visible = true;
+        if (blockMouse)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
 
         if (!cameraActivate)
         {

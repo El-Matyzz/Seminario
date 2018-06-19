@@ -7248,6 +7248,21 @@ Prefab:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114989513961238592, guid: 8fbccba294ad40449ac94eadb25b708d,
+        type: 2}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114989513961238592, guid: 8fbccba294ad40449ac94eadb25b708d,
+        type: 2}
+      propertyPath: runSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114989513961238592, guid: 8fbccba294ad40449ac94eadb25b708d,
+        type: 2}
+      propertyPath: maxAcceleration
+      value: 1.7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8fbccba294ad40449ac94eadb25b708d, type: 2}
   m_IsPrefabParent: 0

@@ -20,6 +20,8 @@ public class Model : MonoBehaviour
     public float totalLife;
     public float speed;
     public float runSpeed;
+    public float acceleration;
+    public float maxAcceleration;
     public float timeOnCombat;
 
     public int countAnimAttack;
@@ -220,6 +222,8 @@ public class Model : MonoBehaviour
     public void Movement(Vector3 direction, bool key, bool backward)
     {
         biz = false;
+        acceleration += 3f * Time.deltaTime;
+        if (acceleration > maxAcceleration) acceleration = maxAcceleration;
 
         if (!InAction && !onDamage && countAnimAttack == 0)
         {
@@ -241,17 +245,17 @@ public class Model : MonoBehaviour
             if (!isRuning && !isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration*speed * Time.deltaTime);
             }
             else if (!isRuning && isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * speed / 1.5f * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * (speed / 1.5f) * Time.deltaTime);
             }
             else
             {
                 Run();
-                rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * runSpeed * Time.deltaTime);
             }
         }
     }
@@ -259,6 +263,8 @@ public class Model : MonoBehaviour
     public void MovementBizectriz(Vector3 d1, Vector3 d2, bool key, bool backward)
     {
         biz = true;
+        acceleration += 3f * Time.deltaTime;
+        if (acceleration > maxAcceleration) acceleration = maxAcceleration;
 
         if (!InAction && !onDamage && countAnimAttack == 0)
         {
@@ -283,18 +289,19 @@ public class Model : MonoBehaviour
 
             if (!isRuning && !isInCombat)
             {
+                
                 Trot();
-                rb.MovePosition(rb.position + direction * speed * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
             }
             else if (!isRuning && isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * speed / 1.5f * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * (speed / 1.5f) * Time.deltaTime);
             }
             else
             {
                 Run();
-                rb.MovePosition(rb.position + direction * runSpeed * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * runSpeed * Time.deltaTime);
             }
         }
     }

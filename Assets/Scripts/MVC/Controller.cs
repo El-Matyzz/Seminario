@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,11 +60,17 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
             {
-               if(!model.isRuning) view.FalseTrotAnim();
-               if(!model.isRuning) view.FalseAnimRunSword();
-                view.FalseRunAnim();
-                view.FalseAnimWalk();
+               if(!model.isRuning) view.FalseTrotAnim();                       
+                view.FalseAnimWalk();               
             }
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+            {
+                model.acceleration = 0;
+                view.FalseAnimRunSword();
+                view.FalseRunAnim();
+            }
+                
+
             if (Input.GetKey(KeyCode.LeftShift)) model.isRuning = true;
 
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.isRuning = false;
@@ -148,15 +155,24 @@ public class Controller : MonoBehaviour
                 view.AnimWalkW();
                 model.MovementBizectriz(model.mainCamera.forward, -model.mainCamera.right, true, false);
             }
-            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat)
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat && !model.isRuning)
             {
                 view.AnimWalkS();
                 model.MovementBizectriz(-model.mainCamera.forward, model.mainCamera.right, true, true);
             }
-            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat)
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat && !model.isRuning)
             {
                 view.AnimWalkS();
                 model.MovementBizectriz(-model.mainCamera.forward, -model.mainCamera.right, true, true);
+            }
+
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat && model.isRuning)
+            {
+                model.MovementBizectriz(-model.mainCamera.forward, model.mainCamera.right, true, false);
+            }
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat && model.isRuning)
+            {
+                model.MovementBizectriz(-model.mainCamera.forward, -model.mainCamera.right, true, false);
             }
 
 

@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1281662585161550}
   m_LocalRotation: {x: -0, y: 0.64130837, z: -0, w: 0.76728326}
-  m_LocalPosition: {x: -21.32, y: -0.7097626, z: -5.29}
+  m_LocalPosition: {x: -21.32, y: 1.83, z: -5.29}
   m_LocalScale: {x: 0.48798993, y: 1.3585199, z: 0.59022}
   m_Children:
   - {fileID: 224388673390607082}
@@ -261,6 +261,7 @@ MonoBehaviour:
   isAttack: 0
   myTimeToAttack: 0
   dileyToAttack: 0
+  bleedingDamage: 0
   vectAvoidance: {x: 0, y: 0, z: 0}
   rb: {fileID: 0}
   target: {fileID: 0}
@@ -272,6 +273,8 @@ MonoBehaviour:
   isDead: 0
   isOcuped: 0
   isReloading: 0
+  isScape: 0
+  startScape: 0
   grid: {fileID: 0}
   munition: {fileID: 0}
   obstacles: []
@@ -280,18 +283,16 @@ MonoBehaviour:
   obstacle:
     serializedVersion: 2
     m_Bits: 512
-  radObst: 0
-  attackForce: 0
+  radObst: 1
   sightSpeed: 1
-  radiusAttack: 0
   viewAngleFollow: 264.16
-  viewDistanceFollow: 11.79
-  distanceToTraget: 0
-  viewDistanceAttack: 8.99
+  viewDistanceFollow: 18.9
+  viewAngleScape: 260
+  viewDistanceScape: 4.44
+  viewDistanceAttack: 14.72
   viewAngleAttack: 264.19
   speed: 4
   life: 100
-  bleedingDamage: 0
   radFlock: 4
   separationWeight: 4
 --- !u!114 &114974921497076984

@@ -345,6 +345,7 @@
     <None Include="Assets\FbxExporters\LICENSE.txt" />
     <None Include="Assets\FbxExporters\README.txt" />
     <None Include="Assets\FbxExporters\RELEASE_NOTES.txt" />
+    <None Include="Assets\MyAssets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
     <None Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\README.txt" />
     <None Include="Assets\ProCore\ProBuilder\About\Font\SIL Open Font License.txt" />
     <None Include="Assets\ProCore\ProBuilder\About\ThirdPartyLicenses.txt" />

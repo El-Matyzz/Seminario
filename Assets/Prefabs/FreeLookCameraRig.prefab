@@ -56,6 +56,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4117765056397492}
+  - component: {fileID: 114515815816794048}
   m_Layer: 0
   m_Name: Pivot
   m_TagString: Untagged
@@ -97,7 +98,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1371674006766558}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.036736, y: 15.832638, z: 37.35888}
+  m_LocalPosition: {x: -2.5, y: 15.832638, z: 21.11}
   m_LocalScale: {x: 0.52220744, y: 0.52220744, z: 0.52220744}
   m_Children:
   - {fileID: 4117765056397492}
@@ -186,6 +187,22 @@ MonoBehaviour:
   visualiseInEditor: 1
   closestDistance: 0.5
   dontClipTag: Player
+--- !u!114 &114515815816794048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1670484659057056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba800f73fa3f51340bd09830f34923e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugMode: 0
+  shakeAmount: 0
+  shakeDuration: 0
+  smooth: 0
+  smoothAmount: 1
 --- !u!114 &114679607075051190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -198,13 +215,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  model: {fileID: 0}
   distance: 3
   sensitivityX: 4
   sensitivityY: 1
   smooth: 10
   invertY: 0
   cameraActivate: 0
-  blockMouse: 0
+  blockMouse: 1
 --- !u!124 &124235265999256354
 Behaviour:
   m_ObjectHideFlags: 1

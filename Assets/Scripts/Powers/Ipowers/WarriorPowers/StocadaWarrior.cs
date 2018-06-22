@@ -14,7 +14,6 @@ public class StocadaWarrior : Ipower {
     PowerManager _manager;
     Vector3 dir;
     List<Collider> colliderEnemies = new List<Collider>();
-    float _force = 5;
     float _damage = 10;
     float _radius = 3;
     float _cdTime = 5;

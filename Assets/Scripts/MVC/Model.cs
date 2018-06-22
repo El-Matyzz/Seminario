@@ -59,8 +59,6 @@ public class Model : MonoBehaviour
     Platform currentPlatform;
     public bool isPlatformJumping;
 
-    List<bool> cdList = new List<bool>();
-
     public Action Trot;
     public Action Run;
     public Action Estocada;
@@ -219,7 +217,7 @@ public class Model : MonoBehaviour
         }
     }
 
-    public void Movement(Vector3 direction, bool key, bool backward)
+    public void Movement(Vector3 direction, bool key, bool backward, bool rotate)
     {
         biz = false;
         acceleration += 3f * Time.deltaTime;
@@ -239,6 +237,12 @@ public class Model : MonoBehaviour
             {
                 var turnDir = -direction;
                 targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+            }
+
+            if (rotate)
+            {
+                targetRotation = Quaternion.LookRotation(mainCamera.forward, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
@@ -352,7 +356,7 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 60;
+        timeOnCombat = 5;
         if (!isInCombat && !view.anim.GetBool("attack")
                         && !view.anim.GetBool("Uppercut")
                         && !view.anim.GetBool("GolpeGiratorio2")

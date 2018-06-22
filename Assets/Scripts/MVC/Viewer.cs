@@ -15,11 +15,10 @@ public class Viewer : MonoBehaviour {
     public Image power2;
     public Image power3;
     public Image power4;
-    float x = 0;
-    float y = 0;
 
     public void Awake()
     {
+        anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
     }
 
@@ -54,6 +53,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseRunAnim()
     {
+        
         anim.SetBool("runAnim", false);
     }
 
@@ -64,6 +64,7 @@ public class Viewer : MonoBehaviour {
 
     public void AnimWalkW()
     {
+        anim.SetBool("runSword", false);
         anim.SetBool("WalkW", true);
         anim.SetBool("WalkS", false);
         anim.SetBool("WalkD", false);
@@ -72,6 +73,7 @@ public class Viewer : MonoBehaviour {
 
     public void AnimWalkS()
     {
+        anim.SetBool("runSword", false);
         anim.SetBool("WalkW", false);
         anim.SetBool("WalkS", true);
         anim.SetBool("WalkD", false);
@@ -80,6 +82,7 @@ public class Viewer : MonoBehaviour {
 
     public void AnimWalkD()
     {
+        anim.SetBool("runSword", false);
         anim.SetBool("WalkW", false);
         anim.SetBool("WalkS", false);
         anim.SetBool("WalkD", true);
@@ -88,6 +91,7 @@ public class Viewer : MonoBehaviour {
 
     public void AnimWalkA()
     {
+        anim.SetBool("runSword", false);
         anim.SetBool("WalkW", false);
         anim.SetBool("WalkS", false);
         anim.SetBool("WalkD", false);
@@ -96,6 +100,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseAnimWalk()
     {
+        anim.SetBool("runSword", false);
         anim.SetBool("WalkW", false);
         anim.SetBool("WalkS", false);
         anim.SetBool("WalkD", false);
@@ -105,8 +110,8 @@ public class Viewer : MonoBehaviour {
 
     public IEnumerator SlowSpeed()
     {
-        anim.speed = 0.3f;
-        yield return new WaitForSeconds(0.1f);
+        anim.speed = 0f;
+        yield return new WaitForSeconds(0.025f);
         anim.speed = 1;
 
     }

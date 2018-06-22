@@ -22,8 +22,6 @@ public class SpatialGrid : MonoBehaviour
 
     public bool aux;
 
-    public List<GridEntity> ents = new List<GridEntity>();
-
     //ultimas posiciones conocidas de los elementos, guardadas para comparación.
     private Dictionary<GridEntity, Tuple<int, int>> lastPositions;
     //los "contenedores"
@@ -227,7 +225,7 @@ public class SpatialGrid : MonoBehaviour
         if (activatedGrid)
         {            
             int connections = 0;
-            bool player = false;
+            //bool player = false;
             foreach (var elem in buckets)
             {
                 foreach (var ent in elem)
@@ -238,7 +236,8 @@ public class SpatialGrid : MonoBehaviour
                         Gizmos.DrawLine(ent.transform.position, n.transform.position);
                         if (!aux)
                         {
-                            
+                            bool isTheSame = false;
+
                             if (ent.GetComponent<EnemyClass>())
                             {
                                 var enemy = ent.GetComponent<EnemyClass>();
@@ -246,12 +245,17 @@ public class SpatialGrid : MonoBehaviour
                                 if (n.GetComponent<Model>())
                                 {
                                     enemy.target = n.gameObject;
-                                    player = true;
+                                    //player = true;
                                 }
 
-                                if (n.GetComponent<EnemyClass>()) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
+                                foreach (var item in enemy.myFriends)
+                                {
+                                    if (n == item) isTheSame = true;
+                                }
                                 
-                                if (!player) enemy.target = null;
+                                if (n.GetComponent<EnemyClass>() && !isTheSame) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
+                                
+                                //if (!player) enemy.target = null;
                             }                            
                         }
                         

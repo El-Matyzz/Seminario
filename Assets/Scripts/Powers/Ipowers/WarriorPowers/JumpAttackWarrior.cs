@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ public class JumpAttackWarrior :  Ipower {
     CamController _mainCamera;
 	float _currentTime;
 	float _jumpTime=1f;
-    float _yPos;
 	bool _jumpActivator;
     bool _aux;
     bool _aux2;
@@ -20,8 +20,11 @@ public class JumpAttackWarrior :  Ipower {
     float _force=7;
     float _damage=5;
     float _radius=5;
+    float _maxDistance = 2;
+    float _jumpHeight;
+    float _cdTime = 5;
 
-	public void Ipower()
+    public void Ipower()
 	{
          _mainCamera.distance += 35 * Time.deltaTime;
         if (_mainCamera.distance >= 17) _mainCamera.distance = 17;
@@ -52,9 +55,12 @@ public class JumpAttackWarrior :  Ipower {
             _currentTime += Time.deltaTime;
             if (_jumpActivator == true)
             {
-                _playerTransform.position = Vector3.Lerp(_playerTransform.position, _mousePosition, (_currentTime / _jumpTime));
+                _jumpHeight = _maxDistance * 8;
+                float distance = Vector3.Distance(_playerTransform.position, _mousePosition);
+                Vector3 targetPosition = distance > _maxDistance ? Vector3.Lerp(_playerTransform.position, _mousePosition, _maxDistance / distance) : Vector3.Lerp(_playerTransform.position, _mousePosition, 1);
+                _playerTransform.position = Vector3.Lerp(_playerTransform.position, targetPosition, (_currentTime / _jumpTime));
                 _mainCamera.cameraActivate = true;
-                if (_currentTime < _jumpTime / 2) _playerTransform.position += new Vector3(0, 1, 0) * 40 * Time.deltaTime;
+                if (_currentTime < _jumpTime / 2) _playerTransform.position += new Vector3(0, 1, 0) * _jumpHeight * Time.deltaTime;
                 if (_currentTime > _jumpTime / 2 && _currentTime < _jumpTime) _playerTransform.position += new Vector3(0, -1, 0) * 60 * Time.deltaTime;
                 if (_currentTime >= _jumpTime)
                 {
@@ -62,6 +68,7 @@ public class JumpAttackWarrior :  Ipower {
                     _jumpActivator = false;
                 }
                 _mainCamera.distance = 3;
+                _player.StartCoroutine(_player.PowerColdown(_cdTime, 4));
             }
 
             if (_aux2 == true)
@@ -102,7 +109,6 @@ public class JumpAttackWarrior :  Ipower {
         _jumpActivator = true;
         _player.SaltoyGolpe1();
         _mainCamera.blockMouse = false;
-        _yPos = _player.transform.position.y;
         _player.onAir = true;
     }
 }

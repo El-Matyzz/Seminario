@@ -106,10 +106,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 879, y: 492}
-  m_MaxSize: {x: 16004, y: 14042}
+  m_MinSize: {x: 881, y: 492}
+  m_MaxSize: {x: 16006, y: 14042}
   vertical: 0
-  controlID: 1322
+  controlID: 92
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_MinSize: {x: 604, y: 492}
   m_MaxSize: {x: 12004, y: 14042}
   vertical: 1
-  controlID: 1291
+  controlID: 93
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_MinSize: {x: 604, y: 221}
   m_MaxSize: {x: 12004, y: 4021}
   vertical: 0
-  controlID: 1292
+  controlID: 94
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -392,9 +392,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
+    m_SelectedIDs: b6bbfdff
     m_LastClickedID: 0
-    m_ExpandedIDs: 3684ffff0000000084560000
+    m_ExpandedIDs: 826cfeff74f9ffff8af9ffff96f9ffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -556,14 +556,14 @@ MonoBehaviour:
     height: 556
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 37.6464404946011
+  lastFramingTime: 726.1655888664833
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 121.19922, y: 33.93164, z: -47.015625}
+    m_Target: {x: 157.60986, y: 28.026367, z: -143.875}
     speed: 2
-    m_Value: {x: 121.19922, y: 33.93164, z: -47.015625}
+    m_Value: {x: 157.60986, y: 28.026367, z: -143.875}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -587,13 +587,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.23064208, y: 0.66452587, z: -0.22761701, w: -0.673358}
+    m_Target: {x: -0.116389714, y: 0.87605983, z: -0.26381528, w: -0.3865063}
     speed: 2
-    m_Value: {x: -0.23064208, y: 0.66452587, z: -0.22761703, w: -0.6733581}
+    m_Value: {x: -0.11638896, y: 0.87605417, z: -0.26381359, w: -0.38650382}
   m_Size:
-    m_Target: 13.767761
+    m_Target: 36.62213
     speed: 2
-    m_Value: 13.767761
+    m_Value: 36.62213
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -644,19 +644,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Prefabs
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Prefabs
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\elmat\Documents\GitHub\Seminario
+  m_LastProjectPath: F:\DaVinci\GitHub\Seminario
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 4a480000
-    m_LastClickedID: 18506
-    m_ExpandedIDs: 000000004a4800008a480000de490000224a00004a4c00004c4c0000524c00008e4c00009c4c00006c4d0000225000002252000036520000a85200001c54000062540000dc540000e0540000da55000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 948}
+    m_SelectedIDs: 2e470000
+    m_LastClickedID: 18222
+    m_ExpandedIDs: 00000000ee350000d8360000c638000010390000d83b0000e43c0000e63c0000ee3c00003e3d00004e3d00008a3e0000f44100004444000060440000dc440000da4600002e470000c6470000ca470000ec480000166d0000206d0000226d0000326d0000586d0000626d0000fa6d000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -684,7 +684,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004a4800008a480000de490000224a00004a4c00004c4c0000524c00008e4c00009c4c00006c4d0000225000002252000036520000a85200001c54000062540000dc540000e0540000da55000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000ee350000d8360000c638000010390000e43c0000e63c0000ee3c00003e3d00004e3d00008a3e0000f44100004444000060440000dc440000da4600002e470000c6470000ca470000ec480000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

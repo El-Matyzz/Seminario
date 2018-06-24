@@ -17,7 +17,6 @@ public class ModelEnemyArcher : EnemyClass {
     bool startSearch;
     bool increaseFollowRadio;
 
-    public SpatialGrid grid;
     public EnemyAmmo munition;
     public List<Collider> obstacles;
 
@@ -59,7 +58,6 @@ public class ModelEnemyArcher : EnemyClass {
     {
         while (true)
         {
-            grid.aux = false;
             yield return new WaitForSeconds(0.25f);
             myFriends.Clear();
         }              
@@ -128,7 +126,6 @@ public class ModelEnemyArcher : EnemyClass {
     void Start () {
 
         timeToScape = true;
-        grid = FindObjectOfType<SpatialGrid>();
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());

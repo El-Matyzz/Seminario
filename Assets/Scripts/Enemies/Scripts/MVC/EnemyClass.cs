@@ -24,6 +24,6 @@ public abstract class EnemyClass: MonoBehaviour  {
     public Rigidbody rb;
     public GameObject target;
     public ESMovemnt currentMovement;
-    public List<EnemyClass> myFriends = new List<EnemyClass>();
+    public List<ModelEnemy> myFriends = new List<ModelEnemy>();
 
 }

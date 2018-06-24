@@ -13,8 +13,6 @@ public class ModelEnemy :  EnemyClass
     public bool isOcuped;
     bool startSearch;
     bool increaseFollowRadio;
-
-    public SpatialGrid grid;
     
     public List<Collider> obstacles;
 
@@ -43,12 +41,10 @@ public class ModelEnemy :  EnemyClass
     {
         while (true)
         {
-            Collider[] col = Physics.OverlapSphere(transform.position, fightingTogetherRadius);
-            List<EnemyClass> friendList = new List<EnemyClass>();
-            foreach (var i in col)
-                if (i.gameObject.GetComponent<EnemyClass>() && i != this && !friendList.Contains(i.gameObject.GetComponent<EnemyClass>()))
-                    friendList.Add(i.gameObject.GetComponent<EnemyClass>());
-            myFriends = friendList;
+            IEnumerable<ModelEnemy> friends = Physics.OverlapSphere(transform.position, fightingTogetherRadius)
+                .Select(x => x.GetComponent<ModelEnemy>())
+                .Where(x => x && x != this && !myFriends.Contains(x) && !x.isDead);
+            myFriends = friends.ToList();
             yield return new WaitForSeconds(0.25f);
             myFriends.Clear();
         }
@@ -129,7 +125,6 @@ public class ModelEnemy :  EnemyClass
     {
        StartCoroutine(PatrolCorrutine());
         startPosition = transform.position;
-        grid = FindObjectOfType<SpatialGrid>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
         starDistaceToFollow = viewDistanceFollow;
@@ -243,6 +238,9 @@ public class ModelEnemy :  EnemyClass
         Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistanceFollow));
 
 
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, fightingTogetherRadius);
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, viewDistanceAttack);
 
@@ -251,7 +249,6 @@ public class ModelEnemy :  EnemyClass
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(startPosition, areaToPatrol);
-
     }
 
     public override void GetDamage(float damage)

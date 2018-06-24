@@ -253,7 +253,7 @@ public class SpatialGrid : MonoBehaviour
                                     if (n == item) isTheSame = true;
                                 }
                                 
-                                if (n.GetComponent<EnemyClass>() && !isTheSame) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
+                                //if (n.GetComponent<EnemyClass>() && !isTheSame) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
                                 
                                 //if (!player) enemy.target = null;
                             }                            

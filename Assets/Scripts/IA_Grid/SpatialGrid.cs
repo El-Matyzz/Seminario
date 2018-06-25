@@ -236,7 +236,7 @@ public class SpatialGrid : MonoBehaviour
                         Gizmos.DrawLine(ent.transform.position, n.transform.position);
                         if (!aux)
                         {
-                            bool isTheSame = false;
+                            //bool isTheSame = false;
 
                             if (ent.GetComponent<EnemyClass>())
                             {
@@ -248,14 +248,16 @@ public class SpatialGrid : MonoBehaviour
                                     //player = true;
                                 }
 
+                                /*
                                 foreach (var item in enemy.myFriends)
                                 {
                                     if (n == item) isTheSame = true;
                                 }
                                 
-                                //if (n.GetComponent<EnemyClass>() && !isTheSame) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
+                                if (n.GetComponent<EnemyClass>() && !isTheSame) enemy.myFriends.Add(n.GetComponent<EnemyClass>());
                                 
-                                //if (!player) enemy.target = null;
+                                if (!player) enemy.target = null;
+                                */
                             }                            
                         }
                         

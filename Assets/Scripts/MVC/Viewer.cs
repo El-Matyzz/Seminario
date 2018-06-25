@@ -167,6 +167,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseSaveSword()
     {
+        Debug.Log("asdas");
         anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
         controller.useSword = false;

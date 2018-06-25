@@ -12,9 +12,7 @@ public class EnemyFollow : ESMovemnt {
     float _speed; 
 
     public void ESMove()
-    {
-    
-
+    {   
         if (_enemy.isAttack == false)
         {
             Quaternion targetRotation;

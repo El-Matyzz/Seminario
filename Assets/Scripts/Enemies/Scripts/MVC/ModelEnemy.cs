@@ -32,6 +32,7 @@ public class ModelEnemy :  EnemyClass
     public float life;
     public float radFlock;
     public float separationWeight;
+    public float timeToSearch;
     float starDistaceToFollow;
     public int countTimesForSearch;
     public float knockbackForce;
@@ -52,6 +53,8 @@ public class ModelEnemy :  EnemyClass
 
     public override IEnumerator SearchingForPlayer()
     {
+
+        var maxTime = timeToSearch;
         viewDistanceFollow = starDistaceToFollow;
         while (countTimesForSearch < 5)
         {
@@ -60,19 +63,21 @@ public class ModelEnemy :  EnemyClass
 
             if (isFollow) break;
 
-            if (closeObstacle) dirToTarget = vectTurnDirecction;
+            if (!firstSearch) dirToTarget = (target.transform.position - transform.position).normalized;
+            else dirToTarget = randomVect.normalized;
 
-            else dirToTarget = randomVect;
-            
             dirToTarget.y = 0;
             currentMovement = new EnemySearching(this, target.transform, speed, dirToTarget);
             countTimesForSearch++;
-
-            yield return new WaitForSeconds(2.5f);
+            firstSearch = true;
+            yield return new WaitForSeconds(timeToSearch);
+            timeToSearch = 2.5f;
         }
         countTimesForSearch = 0;
         currentMovement = null;
         increaseFollowRadio = true;
+        firstSearch = false;
+        timeToSearch = maxTime;
     }
 
     public IEnumerator PatrolCorrutine()
@@ -81,16 +86,10 @@ public class ModelEnemy :  EnemyClass
         {
             Vector3 dirToTarget;
             var randomVect = new Vector3(Random.Range(-1, 2), 0, Random.Range(-1, 2));
-
             if (isFollow) break;
 
-            if (closeObstacle) dirToTarget = vectTurnDirecction;
-
-            else
-            {
-                dirToTarget = (target.transform.position - transform.position).normalized;
-                dirToTarget += randomVect;
-            }
+            if (closeObstacle) dirToTarget = -transform.forward;
+            else dirToTarget = randomVect;
 
             dirToTarget.y = 0;
             currentMovement = new EnemyPatrol(this, target.gameObject, speed, dirToTarget);
@@ -211,17 +210,17 @@ public class ModelEnemy :  EnemyClass
 
     public void GetBack(Vector3 src)
     {
-        if (isAttack)
-        {
-            Vector3 dir = (src - transform.position).normalized;
-            dir.y = 0;
-            rb.AddForce(-dir * knockbackForce);
-        }
+       rb.velocity = Vector3.zero; 
+       Vector3 dir = (src - transform.position).normalized;
+       dir.y = 0;
+       rb.AddForce(-dir * knockbackForce);
+        
     }
 
     public void OnCollisionEnter(Collision c)
     {
-        if (c.gameObject.GetComponent<Model>() && isAttack)
+        Debug.Log("asd");
+        if (c.gameObject.GetComponent<Model>() && createAttack)
             GetBack(c.transform.position);
     }
 
@@ -254,7 +253,7 @@ public class ModelEnemy :  EnemyClass
     public override void GetDamage(float damage)
     {
         life -= damage;       
-        dileyToAttack += 0.8f;
+        dileyToAttack += 0.25f;
         if (life <= 0) isDead = true;
     }
 

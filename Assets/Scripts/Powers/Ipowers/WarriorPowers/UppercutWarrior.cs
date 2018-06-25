@@ -15,6 +15,7 @@ public class UppercutWarrior : Ipower {
 
     public void Ipower()
     {
+        _rb.velocity = Vector3.zero;
         _rb.AddForce(new Vector3(0, 1, 0) * _force2, ForceMode.Impulse);
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
         foreach (var item in col)

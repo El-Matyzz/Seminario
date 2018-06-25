@@ -33,6 +33,7 @@ public class Model : MonoBehaviour
     public bool isIdle;
     public bool onAir;
     public bool stocadaState;
+    public bool onPowerState;
     public bool jumpAttackWarriorState;
     public bool chargeTankeState;
     public bool isRuning;
@@ -131,13 +132,7 @@ public class Model : MonoBehaviour
         WraperInAction = true;
         yield return new WaitForSeconds(cdTime);
         WraperInAction = false;
-    }
-
-    public IEnumerator OnDamageDelay(float cdTime)
-    {
-        onDamage = true;
-        yield return new WaitForSeconds(cdTime);
-        onDamage = false;
+        onPowerState = false;
     }
 
     public IEnumerator ActionDelay(Action power)
@@ -168,6 +163,7 @@ public class Model : MonoBehaviour
         if (timeOnCombat <= 0 && isInCombat)
         {
             Safe();
+            view.FalseTakeSword();
             isInCombat = false;
         }
 
@@ -176,44 +172,48 @@ public class Model : MonoBehaviour
 
     public void CastPower1()
     {
-        if (!cdPower1 && !InAction && !onDamage)
+        if (!cdPower1 && !onPowerState && !onDamage)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(0, newPower, this);
             Estocada();
+            onPowerState = true;
         }
     }
 
     public void CastPower2()
     {
-        if (!cdPower2 && !InAction && !onDamage)
+        if (!cdPower2 && !onPowerState && !onDamage)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(1, newPower, this);
             RotateAttack();
+            onPowerState = true;
         }
     }
 
     public void CastPower3()
     {
-        if (!cdPower3 && !InAction && !onDamage)
+        if (!cdPower3 && !onPowerState && !onDamage)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(2, newPower, this);
             Uppercut();
+            onPowerState = true;
         }
     }
 
     public void CastPower4()
     {
-        if (!cdPower4 && !InAction && !onDamage)
+        if (!cdPower4 && !onPowerState && !onDamage)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(3, newPower, this);
+            onPowerState = true;
         }
     }
 
@@ -346,7 +346,7 @@ public class Model : MonoBehaviour
             {
 
                 view.StartCoroutine(view.SlowSpeed());
-                if (item.GetComponent<ModelEnemy>())
+                if (item.GetComponent<ModelEnemy>() && item.GetComponent<ModelEnemy>().createAttack)
                     item.GetComponent<ModelEnemy>().GetBack(transform.position);
                 item.GetComponent<EnemyClass>().GetDamage(10);
                 item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
@@ -377,6 +377,11 @@ public class Model : MonoBehaviour
         InAction = true;
     }
 
+    public void FalseOnDamage()
+    {
+        onDamage = false;
+    }
+
     public void CountAnimZero()
     {
         countAnimAttack = 0;
@@ -385,11 +390,11 @@ public class Model : MonoBehaviour
     public void GetDamage(float damage, Transform enemy)
     {
         life -= damage;
-        StartCoroutine(OnDamageDelay(1f));
-        if (!InAction)
+        if (!onPowerState)
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(enemy.forward * 2, ForceMode.Impulse);
+            onDamage = true;
         }
         if (life > 0) OnDamage();
         else
@@ -424,6 +429,7 @@ public class Model : MonoBehaviour
                 powerManager.constancepower = false;
                 powerManager.currentPowerAction = null;
                 stocadaState = false;
+                onPowerState = false;
                 stocadaAmount = 0;
                 powerManager.amountOfTimes = 0;
                 view.BackEstocada();
@@ -435,8 +441,8 @@ public class Model : MonoBehaviour
             powerManager.currentPowerAction.Ipower2();
             powerManager.constancepower = false;
             powerManager.currentPowerAction = null;
-            jumpAttackWarriorState = false;
             onAir = false;
+            onPowerState = false;
         }
 
         if (chargeTankeState)
@@ -447,6 +453,11 @@ public class Model : MonoBehaviour
 
         if (c.gameObject.GetComponent<Platform>())
             currentPlatform = c.gameObject.GetComponent<Platform>();
+    }
+
+    public void StopJumpAttack()
+    {
+        jumpAttackWarriorState = false;
     }
 
     public void StartInteraction()
@@ -495,7 +506,7 @@ public class Model : MonoBehaviour
 
     public void WraperAction()
     {
-        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead) InAction = true;
+        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead || onDamage) InAction = true;
         else InAction = false;
     }
 }

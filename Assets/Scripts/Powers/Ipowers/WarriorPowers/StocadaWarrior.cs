@@ -26,6 +26,7 @@ public class StocadaWarrior : Ipower {
 
     public void Ipower()
     {
+        _player.view.FalseSaveSword();
         _currentTime2 += Time.deltaTime;
         if (_currentTime2 > _totalTime2)
         {
@@ -43,6 +44,7 @@ public class StocadaWarrior : Ipower {
             else
             {
               _player.stocadaState = false;
+              _player.onPowerState = false;
               _player.view.BackEstocada();
               _player.powerManager.constancepower = false;
             }

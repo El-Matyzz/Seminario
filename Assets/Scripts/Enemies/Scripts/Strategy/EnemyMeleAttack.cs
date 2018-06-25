@@ -35,7 +35,7 @@ public class EnemyMeleAttack : ESMovemnt {
             }
             _model.currentMovement = null;
         }
-        if(! _model.isAttack) _model.currentMovement = null;
+        if(!_model.isAttack) _model.currentMovement = null;
     }
 
     public EnemyMeleAttack(Rigidbody rb , float attackforce, EnemyClass model, GameObject player)

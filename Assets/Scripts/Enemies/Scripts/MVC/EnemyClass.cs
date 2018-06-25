@@ -13,6 +13,7 @@ public abstract class EnemyClass: MonoBehaviour  {
     public bool createAttack;
     public bool isAttack;
     public bool myTimeToAttack;
+    public bool firstSearch;
     public float dileyToAttack;
     public float bleedingDamage;
     public float areaToPatrol;

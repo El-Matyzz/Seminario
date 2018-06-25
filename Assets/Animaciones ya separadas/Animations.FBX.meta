@@ -273,9 +273,12 @@ ModelImporter:
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: Event NoReciveDamage has a time (0.512333) outside the
-      clip's valid range (0.000000..0.512333). It will never be firedEvent NoReciveDamage
-      has a time (0.840000) outside the clip's valid range (0.000000..0.840000). It
-      will never be fired
+      clip's valid range (0.000000..0.512333). It will never be firedEvent FalseOnDamage
+      has a time (0.512333) outside the clip's valid range (0.000000..0.512333). It
+      will never be firedEvent NoReciveDamage has a time (0.840000) outside the clip's
+      valid range (0.000000..0.840000). It will never be firedEvent ActiveAttack has
+      a time (0.840000) outside the clip's valid range (0.000000..0.840000). It will
+      never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -381,6 +384,20 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0
+        functionName: CombatState
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: FalseTakeSword
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -411,6 +428,13 @@ ModelImporter:
       events:
       - time: 1
         functionName: NoReciveDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: FalseOnDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -451,6 +475,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 1
+        functionName: FalseOnDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -486,6 +517,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 1
+        functionName: FalseOnDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -516,6 +554,20 @@ ModelImporter:
       events:
       - time: 1
         functionName: NoGolpeGiratorio2
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: CombatState
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: FalseSaveSword
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

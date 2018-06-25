@@ -165,6 +165,13 @@ public class Viewer : MonoBehaviour {
         controller.useSword = false;
     }
 
+    public void FalseSaveSword()
+    {
+        anim.SetLayerWeight(1, 0);
+        anim.SetBool("SaveSword", false);
+        controller.useSword = false;
+    }
+
     public void DesactivateLayer()
     {
         anim.SetLayerWeight(1, 0);
@@ -191,8 +198,7 @@ public class Viewer : MonoBehaviour {
     }
 
     public void NoBackEstocada()
-    {
-    
+    {    
         anim.SetBool("BackEstocada", false);
     }
 

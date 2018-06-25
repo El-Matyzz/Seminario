@@ -43,7 +43,8 @@ public class JumpAttackWarrior :  Ipower {
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            _player.jumpAttackWarriorState = false;          
+            _player.jumpAttackWarriorState = false;
+            _player.onPowerState = false;
             _player.view.NoSaltoyGolpe1();
             _mainCamera.distance = 3;
             _player.powerManager.constancepower = false;

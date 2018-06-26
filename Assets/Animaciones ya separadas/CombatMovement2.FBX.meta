@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ae2bdebe417fae444b943fd3acd5830f
-timeCreated: 1529900526
+guid: 4f8ed3748515fc14db1ac1ea45a9436f
+timeCreated: 1529908242
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -194,7 +194,122 @@ ModelImporter:
     2100004: Guantes
     2100006: Torso
     2100008: Piernas
-    2100010: Espada
+    2100010: No Name
+    2100012: Espada
+    2300000: CATRigAnkleBone001
+    2300002: CATRigAnkleBone001 1
+    2300004: CATRigAnkleBone001Bone001
+    2300006: CATRigAnkleBone001Bone001 1
+    2300008: CATRigHub001
+    2300010: CATRigHub002
+    2300012: CATRigHub004
+    2300014: CATRigLArm1
+    2300016: CATRigLArm2
+    2300018: CATRigLArmCollarbone
+    2300020: CATRigLArmDigit11
+    2300022: CATRigLArmDigit12
+    2300024: CATRigLArmDigit21
+    2300026: CATRigLArmDigit22
+    2300028: CATRigLArmDigit23
+    2300030: CATRigLArmDigit31
+    2300032: CATRigLArmDigit32
+    2300034: CATRigLArmDigit33
+    2300036: CATRigLArmDigit41
+    2300038: CATRigLArmDigit42
+    2300040: CATRigLArmDigit43
+    2300042: CATRigLArmDigit51
+    2300044: CATRigLArmDigit52
+    2300046: CATRigLArmDigit53
+    2300048: CATRigLArmPalm
+    2300050: CATRigLLeg1
+    2300052: CATRigLLeg2
+    2300054: CATRigLLegAnkle
+    2300056: CATRigRArm1
+    2300058: CATRigRArm2
+    2300060: CATRigRArmCollarbone
+    2300062: CATRigRArmDigit11
+    2300064: CATRigRArmDigit12
+    2300066: CATRigRArmDigit21
+    2300068: CATRigRArmDigit22
+    2300070: CATRigRArmDigit23
+    2300072: CATRigRArmDigit31
+    2300074: CATRigRArmDigit32
+    2300076: CATRigRArmDigit33
+    2300078: CATRigRArmDigit41
+    2300080: CATRigRArmDigit42
+    2300082: CATRigRArmDigit43
+    2300084: CATRigRArmDigit51
+    2300086: CATRigRArmDigit52
+    2300088: CATRigRArmDigit53
+    2300090: CATRigRArmPalm
+    2300092: CATRigRLeg1
+    2300094: CATRigRLeg2
+    2300096: CATRigRLegAnkle
+    2300098: CATRigSpine1
+    2300100: CATRigSpine1 1
+    2300102: CATRigSpine2
+    2300104: CATRigSpine2 1
+    2300106: CATRigSpine3
+    2300108: CATRigTail1
+    2300110: CATRigTail1 1
+    2300112: Espada
+    3300000: CATRigAnkleBone001
+    3300002: CATRigAnkleBone001 1
+    3300004: CATRigAnkleBone001Bone001
+    3300006: CATRigAnkleBone001Bone001 1
+    3300008: CATRigHub001
+    3300010: CATRigHub002
+    3300012: CATRigHub004
+    3300014: CATRigLArm1
+    3300016: CATRigLArm2
+    3300018: CATRigLArmCollarbone
+    3300020: CATRigLArmDigit11
+    3300022: CATRigLArmDigit12
+    3300024: CATRigLArmDigit21
+    3300026: CATRigLArmDigit22
+    3300028: CATRigLArmDigit23
+    3300030: CATRigLArmDigit31
+    3300032: CATRigLArmDigit32
+    3300034: CATRigLArmDigit33
+    3300036: CATRigLArmDigit41
+    3300038: CATRigLArmDigit42
+    3300040: CATRigLArmDigit43
+    3300042: CATRigLArmDigit51
+    3300044: CATRigLArmDigit52
+    3300046: CATRigLArmDigit53
+    3300048: CATRigLArmPalm
+    3300050: CATRigLLeg1
+    3300052: CATRigLLeg2
+    3300054: CATRigLLegAnkle
+    3300056: CATRigRArm1
+    3300058: CATRigRArm2
+    3300060: CATRigRArmCollarbone
+    3300062: CATRigRArmDigit11
+    3300064: CATRigRArmDigit12
+    3300066: CATRigRArmDigit21
+    3300068: CATRigRArmDigit22
+    3300070: CATRigRArmDigit23
+    3300072: CATRigRArmDigit31
+    3300074: CATRigRArmDigit32
+    3300076: CATRigRArmDigit33
+    3300078: CATRigRArmDigit41
+    3300080: CATRigRArmDigit42
+    3300082: CATRigRArmDigit43
+    3300084: CATRigRArmDigit51
+    3300086: CATRigRArmDigit52
+    3300088: CATRigRArmDigit53
+    3300090: CATRigRArmPalm
+    3300092: CATRigRLeg1
+    3300094: CATRigRLeg2
+    3300096: CATRigRLegAnkle
+    3300098: CATRigSpine1
+    3300100: CATRigSpine1 1
+    3300102: CATRigSpine2
+    3300104: CATRigSpine2 1
+    3300106: CATRigSpine3
+    3300108: CATRigTail1
+    3300110: CATRigTail1 1
+    3300112: Espada
     4300000: Body
     4300002: Hair
     4300004: Beard
@@ -211,10 +326,70 @@ ModelImporter:
     4300026: ArmorF
     4300028: default
     4300030: Object003
-    4300032: Sword
-    4300034: Pants001
+    4300032: CATRigHub001
+    4300034: CATRigSpine1
+    4300036: CATRigSpine2
+    4300038: CATRigSpine3
+    4300040: CATRigHub002
+    4300042: CATRigLArmCollarbone
+    4300044: CATRigLArm1
+    4300046: CATRigLArm2
+    4300048: CATRigLArmPalm
+    4300050: CATRigLArmDigit11
+    4300052: CATRigLArmDigit12
+    4300054: CATRigLArmDigit21
+    4300056: CATRigLArmDigit22
+    4300058: CATRigLArmDigit23
+    4300060: CATRigLArmDigit31
+    4300062: CATRigLArmDigit32
+    4300064: CATRigLArmDigit33
+    4300066: CATRigLArmDigit41
+    4300068: CATRigLArmDigit42
+    4300070: CATRigLArmDigit43
+    4300072: CATRigLArmDigit51
+    4300074: CATRigLArmDigit52
+    4300076: CATRigLArmDigit53
+    4300078: CATRigRArmCollarbone
+    4300080: CATRigRArm1
+    4300082: CATRigRArm2
+    4300084: CATRigRArmPalm
+    4300086: CATRigRArmDigit11
+    4300088: CATRigRArmDigit12
+    4300090: CATRigRArmDigit21
+    4300092: CATRigRArmDigit22
+    4300094: CATRigRArmDigit23
+    4300096: CATRigRArmDigit31
+    4300098: CATRigRArmDigit32
+    4300100: CATRigRArmDigit33
+    4300102: CATRigRArmDigit41
+    4300104: CATRigRArmDigit42
+    4300106: CATRigRArmDigit43
+    4300108: CATRigRArmDigit51
+    4300110: CATRigRArmDigit52
+    4300112: CATRigRArmDigit53
+    4300114: CATRigSpine1
+    4300116: CATRigSpine2
+    4300118: CATRigHub004
+    4300120: CATRigTail1
+    4300122: CATRigTail1
+    4300124: Espada
+    4300126: CATRigLLeg1
+    4300128: CATRigLLeg2
+    4300130: CATRigLLegAnkle
+    4300132: CATRigAnkleBone001
+    4300134: CATRigAnkleBone001Bone001
+    4300136: CATRigRLeg1
+    4300138: CATRigRLeg2
+    4300140: CATRigRLegAnkle
+    4300142: CATRigAnkleBone001
+    4300144: CATRigAnkleBone001Bone001
+    4300146: Sword
+    4300148: Pants001
     7400000: WalkA
     7400002: WalkD
+    7400004: WalkW
+    7400006: WalkS
+    7400008: IdleSword2
     9500000: //RootNode
     13700000: ArmorF
     13700002: ArmorFront
@@ -286,14 +461,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: ActiveAttack
+        functionName: NoBackEstocada
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0
-        functionName: NoBackEstocada
+        functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -336,6 +511,139 @@ ModelImporter:
         messageOptions: 0
       - time: 0
         functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: WalkW
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: NoBackEstocada
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: WalkS
+      takeName: Take 001
+      firstFrame: 26
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: NoBackEstocada
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: IdleSword2
+      takeName: Take 001
+      firstFrame: 59
+      lastFrame: 116
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: CountAnimZero
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: FalseFall
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

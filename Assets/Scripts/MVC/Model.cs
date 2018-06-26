@@ -71,6 +71,7 @@ public class Model : MonoBehaviour
     public Action OnDamage;
     public event Action Combat;
     public event Action Safe;
+    public Action Fall;
     public Action Dead;
 
     public IEnumerator PowerColdown(float cdTime, int n)
@@ -198,10 +199,12 @@ public class Model : MonoBehaviour
     {
         if (!cdPower3 && !onPowerState && !onDamage)
         {
+            CombatState();
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(2, newPower, this);
             Uppercut();
+            onAir = true;
             onPowerState = true;
         }
     }
@@ -310,6 +313,11 @@ public class Model : MonoBehaviour
         }
     }
 
+    public void FallDelay()
+    {
+        StartCoroutine(InActionDelay(0.7f));
+    }
+
     public void Idle()
     {
         isIdle = true;
@@ -356,7 +364,7 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 5;
+        timeOnCombat = 65;
         if (!isInCombat && !view.anim.GetBool("attack")
                         && !view.anim.GetBool("Uppercut")
                         && !view.anim.GetBool("GolpeGiratorio2")
@@ -419,6 +427,11 @@ public class Model : MonoBehaviour
 
     public void OnCollisionEnter(Collision c)
     {
+        if (onAir)
+        {
+            Fall();
+            onAir = false;
+        }
         if (stocadaState)
         {
             enemy = c.gameObject.GetComponent<Collider>();

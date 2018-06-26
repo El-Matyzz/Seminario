@@ -219,7 +219,7 @@ public class ModelEnemy :  EnemyClass
 
     public void OnCollisionEnter(Collision c)
     {
-        Debug.Log("asd");
+
         if (c.gameObject.GetComponent<Model>() && createAttack)
             GetBack(c.transform.position);
     }

@@ -23,6 +23,12 @@ public class Controller : MonoBehaviour
         smashBool = false;
     }
 
+    public IEnumerator delayIdleCombat()
+    {
+        yield return new WaitForSeconds(0.1f);
+        view.anim.SetBool("IdleCombat", true);
+    }
+
     // Use this for initialization
     void Awake()
     {
@@ -38,6 +44,7 @@ public class Controller : MonoBehaviour
         model.Safe += view.SaveSword;
         model.Trot += view.TrotAnim;
         model.Run += view.RunAnim;
+        model.Fall += view.Falling;
     }
 
     // Update is called once per frame
@@ -53,6 +60,8 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
 
+            if (Input.GetKeyDown(KeyCode.Mouse1) && model.isInCombat) view.Defence();
+
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
             {
                 model.CombatState();
@@ -64,16 +73,27 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
             {
-               if(!model.isRuning) view.FalseTrotAnim();                       
+                
+                if (!model.isRuning) view.FalseTrotAnim();                       
                 view.FalseAnimWalk();
             }
+
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && model.isInCombat) StartCoroutine(delayIdleCombat());
+            
+
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
             {
+                view.anim.SetBool("Idle", true);
                 model.acceleration = 0;
                 view.FalseAnimRunSword();
                 view.FalseRunAnim();               
             }
 
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
+            {
+                view.anim.SetBool("Idle", false);
+                view.anim.SetBool("IdleCombat", false);
+            }     
             if (!Input.GetKey(KeyCode.W)) pushW = false;
             if (!Input.GetKey(KeyCode.S)) pushS = false;
             if (!Input.GetKey(KeyCode.D)) pushD = false;

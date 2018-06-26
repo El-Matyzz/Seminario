@@ -116,6 +116,7 @@ public class Viewer : MonoBehaviour {
 
     }
 
+
     public void UpdatePowerCD(int id, float fa)
     {
         switch (id)
@@ -133,6 +134,16 @@ public class Viewer : MonoBehaviour {
                 power4.fillAmount = fa;
                 break;
         }
+    }
+
+    public void Falling()
+    {
+        anim.SetBool("FallBool", true);
+    }
+
+    public void FalseFall()
+    {
+        anim.SetBool("FallBool", false);
     }
 
     public void DesactivateAttack()
@@ -219,7 +230,15 @@ public class Viewer : MonoBehaviour {
         else anim.SetBool("GolpeGiratorio",false);
     }
 
-  
+    public void Defence()
+    {
+        anim.SetBool("Defence", true);
+    }
+
+    public void NoDefence()
+    {
+        anim.SetBool("Defence", false);
+    }
 
     public void SaltoyGolpe1()
     {

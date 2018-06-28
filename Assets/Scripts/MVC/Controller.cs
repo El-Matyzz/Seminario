@@ -64,6 +64,7 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
             {
+               
                 model.CombatState();
 
                 if (!useSword) view.TakeSword();

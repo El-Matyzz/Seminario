@@ -32,7 +32,6 @@ public class ModelEnemyArcher : EnemyClass {
     public float viewDistanceAttack;
     public float viewAngleAttack;
     public float speed;
-    public float life;
     public float radFlock;
     public float separationWeight;
     float starDistaceToFollow;
@@ -129,6 +128,7 @@ public class ModelEnemyArcher : EnemyClass {
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
+        ess = GetComponent<EnemyScreenSpace>();
     }
 	
 	// Update is called once per frame
@@ -187,6 +187,7 @@ public class ModelEnemyArcher : EnemyClass {
     public override void GetDamage(float damage)
     {
         life -= damage;
+        ess.UpdateLifeBar(life);
         dileyToAttack += 0.8f;
         if (life <= 0) isDead = true;
     }

@@ -143,6 +143,17 @@ public class Model : MonoBehaviour
         power();
     }
 
+    public IEnumerator PowerDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Powers newPower = powerPool.GetObjectFromPool();
+        newPower.myCaller = transform;
+        powerManager.SetIPower(2, newPower, this);
+       
+        onAir = true;
+        onPowerState = true;
+    }
+
     public IEnumerator CountAttack()
     {
         yield return new WaitForSeconds(1f);
@@ -169,11 +180,16 @@ public class Model : MonoBehaviour
         }
 
         WraperAction();
+        if (life <= 0)
+        {
+            Dead();
+            isDead = true;
+        }
     }
 
     public void CastPower1()
     {
-        if (!cdPower1 && !onPowerState && !onDamage)
+        if (!cdPower1 && !onPowerState && !onDamage && !isDead)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -185,7 +201,7 @@ public class Model : MonoBehaviour
 
     public void CastPower2()
     {
-        if (!cdPower2 && !onPowerState && !onDamage)
+        if (!cdPower2 && !onPowerState && !onDamage && !isDead)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -197,21 +213,17 @@ public class Model : MonoBehaviour
 
     public void CastPower3()
     {
-        if (!cdPower3 && !onPowerState && !onDamage)
+        if (!cdPower3 && !onPowerState && !onDamage && !isDead)
         {
             CombatState();
-            Powers newPower = powerPool.GetObjectFromPool();
-            newPower.myCaller = transform;
-            powerManager.SetIPower(2, newPower, this);
             Uppercut();
-            onAir = true;
-            onPowerState = true;
+            StartCoroutine(PowerDelay(0.5f));
         }
     }
 
     public void CastPower4()
     {
-        if (!cdPower4 && !onPowerState && !onDamage)
+        if (!cdPower4 && !onPowerState && !onDamage && !isDead)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -364,7 +376,7 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 65;
+        timeOnCombat = 10;
         if (!isInCombat && !view.anim.GetBool("attack")
                         && !view.anim.GetBool("Uppercut")
                         && !view.anim.GetBool("GolpeGiratorio2")
@@ -398,6 +410,7 @@ public class Model : MonoBehaviour
     public void GetDamage(float damage, Transform enemy)
     {
         life -= damage;
+        view.UpdateLifeBar(life / totalLife);
         if (!onPowerState)
         {
             rb.velocity = Vector3.zero;

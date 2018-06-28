@@ -18,6 +18,7 @@ public abstract class EnemyClass: MonoBehaviour  {
     public float bleedingDamage;
     public float areaToPatrol;
     public float distanceToPatrol;
+    public float life;
     public Vector3 vectAvoidance;
     public Vector3 startPosition;
     public Vector3 vectTurnDirecction;
@@ -26,5 +27,5 @@ public abstract class EnemyClass: MonoBehaviour  {
     public GameObject target;
     public ESMovemnt currentMovement;
     public List<ModelEnemy> myFriends = new List<ModelEnemy>();
-
+    public EnemyScreenSpace ess;
 }

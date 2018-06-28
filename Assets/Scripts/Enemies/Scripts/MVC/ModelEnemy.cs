@@ -29,7 +29,6 @@ public class ModelEnemy :  EnemyClass
     public float viewAngleAttack;
     public float fightingTogetherRadius;
     public float speed;
-    public float life;
     public float radFlock;
     public float separationWeight;
     public float timeToSearch;
@@ -128,6 +127,7 @@ public class ModelEnemy :  EnemyClass
         StartCoroutine(FillFriends());
         starDistaceToFollow = viewDistanceFollow;
         increaseFollowRadio = true;
+        ess = GetComponent<EnemyScreenSpace>();
 
         attackForce *= Random.Range(0.8f, 1.2f);
         viewDistanceFollow *= Random.Range(0.8f, 1.2f);
@@ -252,7 +252,8 @@ public class ModelEnemy :  EnemyClass
 
     public override void GetDamage(float damage)
     {
-        life -= damage;       
+        life -= damage;
+        ess.UpdateLifeBar(life);
         dileyToAttack += 0.25f;
         if (life <= 0) isDead = true;
     }

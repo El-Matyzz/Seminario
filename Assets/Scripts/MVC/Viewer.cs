@@ -16,15 +16,12 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
+    public Slider lifeBar;
+
     public void Awake()
     {
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
-    }
-
-    public void Update()
-    {
-
     }
 
     public void RunSword()
@@ -108,14 +105,17 @@ public class Viewer : MonoBehaviour {
         
     }
 
+    public void UpdateLifeBar(float val)
+    {
+        lifeBar.value = val;
+    }
+
     public IEnumerator SlowSpeed()
     {
         anim.speed = 0f;
         yield return new WaitForSeconds(0.025f);
         anim.speed = 1;
-
     }
-
 
     public void UpdatePowerCD(int id, float fa)
     {
@@ -178,7 +178,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseSaveSword()
     {
-        Debug.Log("asdas");
+
         anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
         controller.useSword = false;
@@ -278,10 +278,13 @@ public class Viewer : MonoBehaviour {
 
     public void ReciveDamage()
     {
-        camShake.ShakeCamera(3.5f, 1);
-        anim.SetLayerWeight(1, 0);
-        var random = Random.Range(1, 4);
-        anim.SetInteger("TakeDamage", random);
+        if (!model.onPowerState)
+        {
+            camShake.ShakeCamera(3.5f, 1);
+            anim.SetLayerWeight(1, 0);
+            var random = Random.Range(1, 4);
+            anim.SetInteger("TakeDamage", random);
+        }
     }
 
     public void NoReciveDamage()

@@ -422,6 +422,7 @@ public class Model : MonoBehaviour
         {
             Dead();
             isDead = true;
+            StartCoroutine(view.YouDied());
         }
     }
 
@@ -479,6 +480,12 @@ public class Model : MonoBehaviour
 
         if (c.gameObject.GetComponent<Platform>())
             currentPlatform = c.gameObject.GetComponent<Platform>();
+    }
+
+    void OnTriggerEnter(Collider c)
+    {
+        if (c.gameObject.layer == 10)
+            StartCoroutine(view.YouWin());
     }
 
     public void StopJumpAttack()

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seminario-master", "Seminario-master.csproj", "{ACA3BB39-9CF2-385A-A0DB-6A37DF61DF2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seminario-master.Plugins", "Seminario-master.Plugins.csproj", "{34163AE7-7E7F-F420-D18A-00D2E458BD37}"

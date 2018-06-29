@@ -54,7 +54,7 @@ public class CamController : MonoBehaviour {
             if (model.isInCombat)
             {
               distance += 35 * Time.deltaTime;
-              if (distance >= 13) distance = 13;
+              if (distance >= 5) distance = 5;
             }
             else
             {

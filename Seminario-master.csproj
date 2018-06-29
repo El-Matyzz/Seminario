@@ -14,6 +14,7 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile></TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
@@ -338,25 +339,25 @@
       <HintPath>Assets/ProCore/ProBuilder/Editor/ProBuilderEditor-Unity5.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Advertisements">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Analytics">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/Editor/UnityEditor.Analytics.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/Editor/UnityEditor.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
-      <HintPath>C:/Users/Alumno/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Nahuel/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -375,6 +376,70 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Aura\Attributes\ColorCircularPickerAttribute.cs" />
+    <Compile Include="Assets\Aura\Attributes\Texture3DPreviewAttribute.cs" />
+    <Compile Include="Assets\Aura\Classes\Aura.cs" />
+    <Compile Include="Assets\Aura\Classes\AuraLight.cs" />
+    <Compile Include="Assets\Aura\Classes\AuraVolume.cs" />
+    <Compile Include="Assets\Aura\Classes\Buffers.cs" />
+    <Compile Include="Assets\Aura\Classes\CullableObject.cs" />
+    <Compile Include="Assets\Aura\Classes\DirectionalLightsManager.cs" />
+    <Compile Include="Assets\Aura\Classes\DirectionalShadowDataCollector.cs" />
+    <Compile Include="Assets\Aura\Classes\Frustum.cs" />
+    <Compile Include="Assets\Aura\Classes\FrustumSettings.cs" />
+    <Compile Include="Assets\Aura\Classes\LightsManager.cs" />
+    <Compile Include="Assets\Aura\Classes\ObjectsCuller.cs" />
+    <Compile Include="Assets\Aura\Classes\PointLightsManager.cs" />
+    <Compile Include="Assets\Aura\Classes\ShadowmapsCollector.cs" />
+    <Compile Include="Assets\Aura\Classes\SpotLightsManager.cs" />
+    <Compile Include="Assets\Aura\Classes\SwappableRenderTexture.cs" />
+    <Compile Include="Assets\Aura\Classes\Texture2DArrayComposer.cs" />
+    <Compile Include="Assets\Aura\Classes\VolumesManager.cs" />
+    <Compile Include="Assets\Aura\Classes\VolumetricTexture.cs" />
+    <Compile Include="Assets\Aura\Classes\VolumetricTextureArrayComposer.cs" />
+    <Compile Include="Assets\Aura\Enums\FrustumParametersEnum.cs" />
+    <Compile Include="Assets\Aura\Enums\OcclusionCullingAccuracyEnum.cs" />
+    <Compile Include="Assets\Aura\Enums\VolumetricTextureFilterModeEnum.cs" />
+    <Compile Include="Assets\Aura\Enums\VolumetricTextureWrapModeEnum.cs" />
+    <Compile Include="Assets\Aura\Enums\VolumeTypeEnum.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Fireball\Fireball.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\AutoMoveAndRotate.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\DebugFps.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\FreeCamera.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\LightFlicker.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\MoveSinCos.cs" />
+    <Compile Include="Assets\Aura\Examples\Sponza\Scripts\SinRotationOffset.cs" />
+    <Compile Include="Assets\Aura\Extensions\CameraExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\FloatExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\FrustumParametersEnumExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\Gaia\GaiaExtension.cs" />
+    <Compile Include="Assets\Aura\Extensions\GenericExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\IntExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\Matrix4x4Extensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\RenderTextureExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\StringExtensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\Vector3Extensions.cs" />
+    <Compile Include="Assets\Aura\Extensions\Vector4Extensions.cs" />
+    <Compile Include="Assets\Aura\Scripts\GenerateComputeShaderKernelVariants.cs" />
+    <Compile Include="Assets\Aura\Statics\CustomGizmo.cs" />
+    <Compile Include="Assets\Aura\Statics\FrustumCorners.cs" />
+    <Compile Include="Assets\Aura\Structs\DirectionalLightParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\DynamicNoiseParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\FrustumSettingsParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\LevelsParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\MatrixFloats.cs" />
+    <Compile Include="Assets\Aura\Structs\PointLightParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\SpotLightParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\TransformParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeData.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeDynamicNoiseData.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeGradient.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeInjectionColorParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeInjectionCommonParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeInjectionParameters.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeInjectionShape.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeLevelsData.cs" />
+    <Compile Include="Assets\Aura\Structs\VolumeTextureData.cs" />
     <Compile Include="Assets\MyAssets\Rocks and Boulders 2\Shaders\RotateGameObject.cs" />
     <Compile Include="Assets\MyAssets\Standard Assets\Environment\Water (Basic)\Scripts\WaterBasic.cs" />
     <Compile Include="Assets\MyAssets\Standard Assets\Environment\Water\Water\Scripts\Displace.cs" />
@@ -466,6 +531,9 @@
     <Compile Include="Assets\Scripts\Enemies\Scripts\Ammo\Arrow.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\Ammo\EnemyAmmo.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\Ammo\Munition.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Scripts\Life Bar\DepthUI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Scripts\Life Bar\EnemyScreenSpace.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Scripts\Life Bar\ScreenSpaceCanvas.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\MVC\ControllerEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\MVC\ControllerEnemyArcher.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\MVC\EnemyClass.cs" />
@@ -510,12 +578,86 @@
     <Compile Include="Assets\Scripts\SkillsManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Aura\Editor\Shaders\ColorFieldDrawerShader.shader" />
+    <None Include="Assets\Aura\Editor\Shaders\Texture3DPreviewShader.shader" />
+    <None Include="Assets\Aura\Examples\Sponza\Fireball\FireballBlendAdd.shader" />
+    <None Include="Assets\Aura\License\license.txt" />
+    <None Include="Assets\Aura\Shaders\Aura.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\ComputeAccumulationComputeShader.compute" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\ComputeDataComputeShader.compute" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\ComputeMaximumDepthComputeShader.compute" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\DirectionalLightInjection.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\OcclusionCulling.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\PointLightInjection.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\SpotLightInjection.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\TemporalReprojection.cginc" />
+    <None Include="Assets\Aura\Shaders\ComputeShaders\Includes\VolumeInjection.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\AuraParticlesBase.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\AuraParticlesUsage.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\AuraUsage.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\BlueNoise.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\Common.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\CommonFunctions.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\CommonVariables.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\Noise.cginc" />
+    <None Include="Assets\Aura\Shaders\Includes\Structs.cginc" />
+    <None Include="Assets\Aura\Shaders\Shaders\Particles\AuraParticlesAdditive.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\Particles\AuraParticlesAlphaBlend.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\Particles\AuraParticlesBlendAdd.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\PostProcessShader.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\ProcessOcclusionTextureShader.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\StoreDirectionalSpotLightCookieMap.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\StorePointLightCookieMap.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\StorePointLightShadowMap.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\StoreShadowDataShader.shader" />
+    <None Include="Assets\Aura\Shaders\Shaders\Surface\AuraStandardAlphaBlended.shader" />
     <None Include="Assets\FbxExporters\Editor\FbxSdk\LICENSE.txt" />
     <None Include="Assets\FbxExporters\Editor\FbxSdk\README.txt" />
     <None Include="Assets\FbxExporters\LICENSE.txt" />
     <None Include="Assets\FbxExporters\README.txt" />
     <None Include="Assets\FbxExporters\RELEASE_NOTES.txt" />
     <None Include="Assets\MyAssets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramCompute.compute" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramRender.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\ParadeRender.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeCompute.compute" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeRender.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformCompute.compute" />
+    <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\UI\CurveBackground.shader" />
+    <None Include="Assets\PostProcessing\Editor Resources\UI\Trackball.shader" />
+    <None Include="Assets\PostProcessing\Resources\Bluenoise64\COPYING.txt" />
+    <None Include="Assets\PostProcessing\Resources\Bluenoise64\LICENSE.txt" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\ACES.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Blit.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\BuiltinDebugViews.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\ColorGrading.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Common.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\DiskKernels.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\EyeHistogram.compute" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\FXAA.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\FXAA3.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Fog.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\GrainGen.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\LutGen.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceRaytrace.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceReflection.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\TAA.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\TAA.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Tonemapping.cginc" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\Uber.shader" />
+    <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
+    <None Include="Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
     <None Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\README.txt" />
     <None Include="Assets\ProCore\ProBuilder\About\Font\SIL Open Font License.txt" />
     <None Include="Assets\ProCore\ProBuilder\About\ThirdPartyLicenses.txt" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Viewer : MonoBehaviour {
 
@@ -17,6 +18,9 @@ public class Viewer : MonoBehaviour {
     public Image power4;
 
     public Slider lifeBar;
+
+    public GameObject youDied;
+    public GameObject youWin;
 
     public void Awake()
     {
@@ -341,5 +345,52 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("IsDead", true);
     }
 
-   
+    public IEnumerator YouDied()
+    {
+        yield return new WaitForSeconds(0.5f);
+        youDied.gameObject.SetActive(true);
+        var tempColor = youDied.GetComponent<Image>().color;
+        var alpha = 0f;
+        while (alpha <= 1)
+        {
+            alpha += 0.5f * Time.deltaTime;
+            tempColor.a = alpha;
+            youDied.GetComponent<Image>().color = tempColor;
+            if (alpha >= 1)
+            {
+                SceneManager.LoadScene(1);
+                /*
+                camController.blockMouse = false;
+                for (int i = 0; i < youDied.transform.childCount; i++)
+                    youDied.transform.GetChild(i).gameObject.SetActive(true);
+                Time.timeScale = 0;
+                */
+            }
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator YouWin()
+    {
+        youWin.gameObject.SetActive(true);
+        var tempColor = youWin.GetComponent<Image>().color;
+        var alpha = 0f;
+        while (alpha <= 1)
+        {
+            alpha += 0.75f * Time.deltaTime;
+            tempColor.a = alpha;
+            youWin.GetComponent<Image>().color = tempColor;
+            if (alpha >= 1)
+            {
+                SceneManager.LoadScene(2);
+                /*
+                camController.blockMouse = false;
+                for (int i = 0; i < youWin.transform.childCount; i++)
+                    youWin.transform.GetChild(i).gameObject.SetActive(true);
+                Time.timeScale = 0;
+                */
+            }
+            yield return new WaitForEndOfFrame();
+        }
+    }
 }

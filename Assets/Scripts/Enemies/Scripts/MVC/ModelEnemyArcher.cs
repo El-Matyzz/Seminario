@@ -189,7 +189,11 @@ public class ModelEnemyArcher : EnemyClass {
         life -= damage;
         ess.UpdateLifeBar(life);
         dileyToAttack += 0.8f;
-        if (life <= 0) isDead = true;
+        if (life <= 0)
+        {
+            isDead = true;
+            Destroy(gameObject);
+        }
     }
 
     void OnDrawGizmos()
@@ -220,7 +224,6 @@ public class ModelEnemyArcher : EnemyClass {
 
         Vector3 leftLimit3 = Quaternion.AngleAxis(-viewAngleScape, transform.up) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + (leftLimit3 * viewDistanceScape));
-
     }
 
     public void WrapperStates()
@@ -262,6 +265,4 @@ public class ModelEnemyArcher : EnemyClass {
         obstacles.Clear();
         obstacles.AddRange(Physics.OverlapSphere(transform.position, radObst, obstacle));
     }
-
-
 }

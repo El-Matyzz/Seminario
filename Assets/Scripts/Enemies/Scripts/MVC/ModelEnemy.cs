@@ -173,7 +173,7 @@ public class ModelEnemy :  EnemyClass
         if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
 
         if (life <= 0)
-            print(name + " is fucking dead!");
+            Destroy(gameObject);
     }
 
     public void Follow()

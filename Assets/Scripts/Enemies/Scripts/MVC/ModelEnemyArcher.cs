@@ -22,6 +22,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public Transform attackPivot;
     public LayerMask obstacle;
+    public ViewerEnemy view;
 
     public float radObst;
     public float sightSpeed;
@@ -34,6 +35,7 @@ public class ModelEnemyArcher : EnemyClass {
     public float speed;
     public float radFlock;
     public float separationWeight;
+    public float timeToShoot;
     float starDistaceToFollow;
     int countTimesForSearch;
 
@@ -124,6 +126,7 @@ public class ModelEnemyArcher : EnemyClass {
     // Use this for initialization
     void Start () {
 
+        view = GetComponent<ViewerEnemy>();
         timeToScape = true;
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
@@ -133,6 +136,7 @@ public class ModelEnemyArcher : EnemyClass {
 	
 	// Update is called once per frame
 	void Update () {
+
 
         WrapperStates();
         GetObstacles();
@@ -159,6 +163,8 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void Attack()
     {
+        timeToShoot += Time.deltaTime;
+        if (timeToShoot > 4) view.AttackVisorLight();
         currentMovement = new EnemySightFollow(this, target.transform, sightSpeed);
         if (!isReloading)
         {
@@ -169,7 +175,8 @@ public class ModelEnemyArcher : EnemyClass {
             newArrow.transform.forward = transform.forward;
             Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
             arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.3f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
-
+            timeToShoot = 0;
+            view.DesactivateLightAttack();
             StartCoroutine(Reloading());
         }
     }

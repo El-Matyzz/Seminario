@@ -5,6 +5,8 @@ using System.Linq;
 
 public class ModelEnemy :  EnemyClass
 {
+    public ViewerEnemy view;
+
     public bool isFollow;
     public bool isStuned;
     public bool isKnocked;
@@ -118,10 +120,30 @@ public class ModelEnemy :  EnemyClass
         isBleeding = false;
     }
 
+    public IEnumerator AttackCorrutine()
+    {
+        var aux = 0;
+        while (aux < 10 && createAttack)
+        {
+            Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
+            foreach (var item in col)
+            {
+                if (item.GetComponent<Model>())
+                {
+
+                    item.GetComponent<Model>().GetDamage(10, transform, false);
+                    createAttack = false;
+                }
+            }
+            aux++;
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
     // Use this for initialization
     void Start()
     {
-       StartCoroutine(PatrolCorrutine());
+        view = GetComponent<ViewerEnemy>();
+        StartCoroutine(PatrolCorrutine());
         startPosition = transform.position;
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
@@ -194,22 +216,11 @@ public class ModelEnemy :  EnemyClass
             currentMovement = new EnemyMeleAttack(rb, attackForce, this, target);
         }   
 
-        if (createAttack)
-        {
-            Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
-            foreach (var item in col)
-            {
-                if (item.GetComponent<Model>())
-                {
-                    item.GetComponent<Model>().GetDamage(10, transform);
-                    createAttack = false;
-                }
-            }
-        }
     }
 
     public void GetBack(Vector3 src)
     {
+
        rb.velocity = Vector3.zero; 
        Vector3 dir = (src - transform.position).normalized;
        dir.y = 0;

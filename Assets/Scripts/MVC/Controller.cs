@@ -52,6 +52,22 @@ public class Controller : MonoBehaviour
     {
         if (!model.isPlatformJumping)
         {
+            if (Input.GetKeyDown(KeyCode.Space) && pushD && !pushW && !pushS) model.StartCoroutine(model.Dash(transform.right));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushA && !pushW && !pushS) model.StartCoroutine(model.Dash(-transform.right));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && !pushS && !pushD && !pushA) model.StartCoroutine(model.Dash(transform.forward));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && !pushW && !pushD && !pushA) model.StartCoroutine(model.Dash(-transform.forward));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushD && !pushS) model.StartCoroutine(model.Dash(transform.forward));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushA && !pushS) model.StartCoroutine(model.Dash(transform.forward));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushD && !pushW) model.StartCoroutine(model.Dash(-transform.forward));
+
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushA && !pushW) model.StartCoroutine(model.Dash(-transform.forward));
+
             if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
 
             if (Input.GetKeyUp(KeyCode.Alpha2)) model.CastPower2();

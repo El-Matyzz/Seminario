@@ -6,7 +6,7 @@ public class RotateAttackWarrior : Ipower {
 
     Transform _player;
     Model _model;
-    float _radius=1.5f;
+    float _radius=3f;
     float _force=5;
     float _damage = 10;
     float _cdTime = 5;

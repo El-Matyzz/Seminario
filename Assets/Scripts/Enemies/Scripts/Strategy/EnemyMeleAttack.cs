@@ -10,6 +10,7 @@ public class EnemyMeleAttack : ESMovemnt {
     EnemyClass _model;
     GameObject _player;
     Vector3 _dirToTarget;
+    ModelEnemy _modelEnemy;
 
     public void ESMove()
     {
@@ -19,8 +20,10 @@ public class EnemyMeleAttack : ESMovemnt {
         _model.transform.forward = _dirToTarget;
 
         if (_model.myTimeToAttack == true) _model.dileyToAttack -= Time.deltaTime;
+        if (_model.dileyToAttack < 1) _modelEnemy.view.ActiveLightAtack();
         if (_model.dileyToAttack <= 0 && _model.isAttack)
-        {         
+        {
+            _modelEnemy.view.DesactivateLightAttack();
             _rb.AddForce(_model.transform.forward * _attackMeleForce, ForceMode.Impulse);
             _model.dileyToAttack = Random.Range(4f, 5f);
             _model.myTimeToAttack = false;
@@ -34,6 +37,8 @@ public class EnemyMeleAttack : ESMovemnt {
                 }
             }
             _model.currentMovement = null;
+            _model.createAttack = true;
+            _modelEnemy.StartCoroutine(_modelEnemy.AttackCorrutine());
         }
         if(!_model.isAttack) _model.currentMovement = null;
     }
@@ -46,5 +51,6 @@ public class EnemyMeleAttack : ESMovemnt {
         _attackMeleForce = attackforce;
         _model = model;
         _player = player;
+        _modelEnemy = _model.GetComponent<ModelEnemy>();
     }
 }

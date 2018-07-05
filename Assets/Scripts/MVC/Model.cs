@@ -40,6 +40,8 @@ public class Model : MonoBehaviour
     public bool isAnimatedMove;
     public bool isInCombat;
     public bool isDead;
+    public bool onDefence;
+    public bool onDash;
     public bool biz;
 
     bool cdPower1;
@@ -138,9 +140,21 @@ public class Model : MonoBehaviour
 
     public IEnumerator ActionDelay(Action power)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         RotateAttack();
         power();
+    }
+
+    public IEnumerator Dash(Vector3 dir)
+    {
+        if (isInCombat)
+        {
+            rb.velocity = Vector3.zero;
+            rb.AddForce(dir * 8, ForceMode.Impulse);
+            onDash = true;
+            yield return new WaitForSeconds(0.6f);
+            onDash = false;
+        }
     }
 
     public IEnumerator PowerDelay(float time)
@@ -189,7 +203,7 @@ public class Model : MonoBehaviour
 
     public void CastPower1()
     {
-        if (!cdPower1 && !onPowerState && !onDamage && !isDead)
+        if (!cdPower1 && !onPowerState && !onDamage && !isDead && !onDash)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -201,7 +215,7 @@ public class Model : MonoBehaviour
 
     public void CastPower2()
     {
-        if (!cdPower2 && !onPowerState && !onDamage && !isDead)
+        if (!cdPower2 && !onPowerState && !onDamage && !isDead && !onDash)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -213,7 +227,7 @@ public class Model : MonoBehaviour
 
     public void CastPower3()
     {
-        if (!cdPower3 && !onPowerState && !onDamage && !isDead)
+        if (!cdPower3 && !onPowerState && !onDamage && !isDead && !onDash)
         {
             CombatState();
             Uppercut();
@@ -223,7 +237,7 @@ public class Model : MonoBehaviour
 
     public void CastPower4()
     {
-        if (!cdPower4 && !onPowerState && !onDamage && !isDead)
+        if (!cdPower4 && !onPowerState && !onDamage && !isDead && !onDash)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -358,7 +372,7 @@ public class Model : MonoBehaviour
 
     public void MakeDamage()
     {
-        rb.AddForce(transform.forward * 2, ForceMode.Impulse);
+        if(countAnimAttack>1)rb.AddForce(transform.forward * 2, ForceMode.Impulse);
         Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
         foreach (var item in col)
         {
@@ -372,6 +386,16 @@ public class Model : MonoBehaviour
                 item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
             }
         }
+    }
+
+    public void Defence()
+    {
+        onDefence = true;
+    }
+
+    public void StopDefence()
+    {
+        onDefence = false;
     }
 
     public void CombatState()
@@ -407,22 +431,30 @@ public class Model : MonoBehaviour
         countAnimAttack = 0;
     }
 
-    public void GetDamage(float damage, Transform enemy)
+    public void GetDamage(float damage, Transform enemy, bool isProyectile)
     {
-        life -= damage;
-        view.UpdateLifeBar(life / totalLife);
-        if (!onPowerState)
+
+        bool isBehind = false;
+        Vector3 dir = transform.position - enemy.position;
+        float angle = Vector3.Angle(dir, transform.forward);
+        if (angle < 90) isBehind =true;
+
+        if (!onDefence || (onDefence && isBehind) || isProyectile)
         {
-            rb.velocity = Vector3.zero;
-            rb.AddForce(enemy.forward * 2, ForceMode.Impulse);
-            onDamage = true;
-        }
-        if (life > 0) OnDamage();
-        else
-        {
-            Dead();
-            isDead = true;
-            StartCoroutine(view.YouDied());
+            life -= damage;
+            view.UpdateLifeBar(life / totalLife);
+            if (!onPowerState)
+            {
+                rb.velocity = Vector3.zero;
+                onDamage = true;
+            }
+            if (life > 0) OnDamage();
+            else
+            {
+                Dead();
+                isDead = true;
+                StartCoroutine(view.YouDied());
+            }
         }
     }
 
@@ -446,7 +478,8 @@ public class Model : MonoBehaviour
             Fall();
             onAir = false;
         }
-        if (stocadaState)
+        if ((stocadaState && c.gameObject.GetComponent<EnemyClass>()) || 
+            (stocadaState && c.gameObject.layer == LayerMask.NameToLayer("Obstacles")))
         {
             enemy = c.gameObject.GetComponent<Collider>();
             powerManager.currentPowerAction.Ipower2();
@@ -486,6 +519,14 @@ public class Model : MonoBehaviour
     {
         if (c.gameObject.layer == 10)
             StartCoroutine(view.YouWin());
+
+        if(c.gameObject.layer== LayerMask.NameToLayer("Life"))
+        {
+            if (life < totalLife) life += 30;
+            else life = totalLife;
+            view.UpdateLifeBar(life / totalLife);
+            Destroy(c.gameObject);
+        }
     }
 
     public void StopJumpAttack()
@@ -504,6 +545,7 @@ public class Model : MonoBehaviour
                 comp.Interaction();
         }
     }
+
 
     public IEnumerator PlatformJump()
     {
@@ -539,7 +581,7 @@ public class Model : MonoBehaviour
 
     public void WraperAction()
     {
-        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead || onDamage) InAction = true;
+        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead || onDamage || onDash) InAction = true;
         else InAction = false;
     }
 }

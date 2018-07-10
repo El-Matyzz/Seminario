@@ -381,15 +381,7 @@ public class Viewer : MonoBehaviour {
             tempColor.a = alpha;
             youWin.GetComponent<Image>().color = tempColor;
             if (alpha >= 1)
-            {
                 SceneManager.LoadScene(2);
-                /*
-                camController.blockMouse = false;
-                for (int i = 0; i < youWin.transform.childCount; i++)
-                    youWin.transform.GetChild(i).gameObject.SetActive(true);
-                Time.timeScale = 0;
-                */
-            }
             yield return new WaitForEndOfFrame();
         }
     }

@@ -22,6 +22,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public Transform attackPivot;
     public LayerMask obstacle;
+    public LayerMask player;
     public ViewerEnemy view;
 
     public float radObst;
@@ -136,8 +137,6 @@ public class ModelEnemyArcher : EnemyClass {
 	
 	// Update is called once per frame
 	void Update () {
-
-
         WrapperStates();
         GetObstacles();
         closeObstacle = GetCloserOb();
@@ -166,18 +165,31 @@ public class ModelEnemyArcher : EnemyClass {
         timeToShoot += Time.deltaTime;
         if (timeToShoot > 4) view.AttackVisorLight();
         currentMovement = new EnemySightFollow(this, target.transform, sightSpeed);
+
         if (!isReloading)
         {
             attackPivot.LookAt(target.transform.position);
-            Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
-            newArrow.ammoAmount = munition;
-            newArrow.transform.position = attackPivot.position;
-            newArrow.transform.forward = transform.forward;
-            Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
-            arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.3f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
-            timeToShoot = 0;
-            view.DesactivateLightAttack();
-            StartCoroutine(Reloading());
+
+            Vector3 localPlayerPos = transform.InverseTransformPoint(target.transform.position);
+            Vector3 localEnemyPos = transform.InverseTransformPoint(attackPivot.position);
+            Vector3 localPlayerDir = localPlayerPos - localEnemyPos;
+            Vector3 v = localPlayerDir;
+            v.y = 0f;
+            localPlayerDir = Quaternion.FromToRotation(v, Vector3.forward) * localPlayerDir;
+            Vector3 raycastDirection = transform.TransformDirection(localPlayerDir);
+
+            if (Physics.Raycast(attackPivot.position, raycastDirection, Mathf.Infinity, player))
+            {
+                Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
+                newArrow.ammoAmount = munition;
+                newArrow.transform.position = attackPivot.position;
+                newArrow.transform.forward = transform.forward;
+                Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
+                arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.2f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
+                timeToShoot = 0;
+                view.DesactivateLightAttack();
+                StartCoroutine(Reloading());
+            }
         }
     }
 

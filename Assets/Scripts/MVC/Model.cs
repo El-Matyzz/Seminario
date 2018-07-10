@@ -147,7 +147,7 @@ public class Model : MonoBehaviour
 
     public IEnumerator Dash(Vector3 dir)
     {
-        if (isInCombat)
+        if (isInCombat && !onDash)
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(dir * 8, ForceMode.Impulse);
@@ -237,7 +237,7 @@ public class Model : MonoBehaviour
 
     public void CastPower4()
     {
-        if (!cdPower4 && !onPowerState && !onDamage && !isDead && !onDash)
+        if (!cdPower4 && !onPowerState && !onDamage && !isDead && !onDash && !onAir && countAnimAttack==0)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -525,6 +525,11 @@ public class Model : MonoBehaviour
             if (life < totalLife) life += 30;
             else life = totalLife;
             view.UpdateLifeBar(life / totalLife);
+            var col = Physics.OverlapSphere(c.transform.position, 1);
+            foreach (var i in col)
+                if (i.transform.parent)
+                    if (i.transform.parent.name == "Chest")
+                        Destroy(i.transform.parent.gameObject);
             Destroy(c.gameObject);
         }
     }

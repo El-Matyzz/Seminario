@@ -359,7 +359,8 @@ public class Model : MonoBehaviour
         if (!isDead)
         {
             Attack();
-            countAnimAttack++;
+            view.SpawParticleSword(countAnimAttack);
+            countAnimAttack++;           
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
         }
         if (!InActionAttack)

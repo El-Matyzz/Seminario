@@ -21,11 +21,27 @@ public class Viewer : MonoBehaviour {
 
     public GameObject youDied;
     public GameObject youWin;
+    public GameObject phParticles;
+
+    public List<GameObject> particlesSowrd;
+
+    public IEnumerator DestroyParticles(GameObject p)
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(p);
+    }
 
     public void Awake()
     {
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
+    }
+
+    public void SpawParticleSword(int pos)
+    {
+        var p = Instantiate(particlesSowrd[pos]);
+        p.transform.position = phParticles.transform.position;
+        StartCoroutine(DestroyParticles(p));
     }
 
     public void RunSword()

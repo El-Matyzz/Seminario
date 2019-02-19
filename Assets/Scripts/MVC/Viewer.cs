@@ -17,7 +17,13 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
-    public Slider lifeBar;
+    public Image lifeBar;
+    public Image staminaBar;
+    public Image manaBar;
+    public Image armor;
+
+    public Text[] potions;
+    public Text potionTimer;
 
     public GameObject youDied;
     public GameObject youWin;
@@ -39,9 +45,9 @@ public class Viewer : MonoBehaviour {
 
     public void SpawParticleSword(int pos)
     {
-        var p = Instantiate(particlesSowrd[pos]);
-        p.transform.position = phParticles.transform.position;
-        StartCoroutine(DestroyParticles(p));
+      //  var p = Instantiate(particlesSowrd[pos]);
+       // p.transform.position = phParticles.transform.position;
+       // StartCoroutine(DestroyParticles(p));
     }
 
     public void RunSword()
@@ -70,7 +76,6 @@ public class Viewer : MonoBehaviour {
 
     public void FalseRunAnim()
     {
-        
         anim.SetBool("runAnim", false);
     }
 
@@ -127,7 +132,36 @@ public class Viewer : MonoBehaviour {
 
     public void UpdateLifeBar(float val)
     {
-        lifeBar.value = val;
+        lifeBar.fillAmount = val;
+    }
+
+    public void UpdateStaminaBar(float val)
+    {
+        staminaBar.fillAmount = val;
+    }
+
+    public void UpdateManaBar(float val)
+    {
+        manaBar.fillAmount = val;
+    }
+
+    public void UpdateArmorBar(float val)
+    {
+        armor.fillAmount = val;
+    }
+
+    public void UpdatePotions(int i)
+    {
+        potions[i].text = "x" + model.potions[i];
+        if (model.potions[i] == 0)
+            potions[i].transform.parent.gameObject.SetActive(false);
+        else
+            potions[i].transform.parent.gameObject.SetActive(true);
+    }
+
+    public void UpdateTimer(string val = "")
+    {
+        potionTimer.text = val.ToString();
     }
 
     public IEnumerator SlowSpeed()

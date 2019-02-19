@@ -11,11 +11,9 @@ public class RotateAttackWarrior : Ipower {
     float _damage = 10;
     float _cdTime = 5;
     Rigidbody _rb;
-  
 
     public void Ipower()
     {
-        
         Collider[] col = Physics.OverlapSphere(_player.transform.position, _radius);
         foreach (var item in col)
         {

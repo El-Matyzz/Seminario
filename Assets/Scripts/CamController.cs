@@ -7,7 +7,7 @@ public class CamController : MonoBehaviour {
     public Transform player;
     public Model model;
     public float distance;
-    float currentX = 0;
+    float currentX = 270;
     float currentY = 0;
     public float sensitivityX;
     public float sensitivityY;
@@ -43,7 +43,7 @@ public class CamController : MonoBehaviour {
         {
             currentX += Input.GetAxis("Mouse X") * sensitivityX;
             currentY += Input.GetAxis("Mouse Y") * sensitivityY;
-            currentY = Mathf.Clamp(currentY, 0, 30);
+            currentY = Mathf.Clamp(currentY, -70, 70);            
         }
     }
 	
@@ -53,7 +53,7 @@ public class CamController : MonoBehaviour {
         {
             if (model.isInCombat)
             {
-              distance += 35 * Time.deltaTime;
+              distance += 15 * Time.deltaTime;
               if (distance >= 5) distance = 5;
             }
             else

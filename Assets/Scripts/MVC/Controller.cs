@@ -116,7 +116,7 @@ public class Controller : MonoBehaviour
             if (!Input.GetKey(KeyCode.D)) pushD = false;
             if (!Input.GetKey(KeyCode.A)) pushA = false;
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift) && model.stamina > 0)
             {
                 view.FalseTrotAnim();
                 model.isRuning = true;
@@ -141,7 +141,18 @@ public class Controller : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E)) model.StartInteraction();
 
             if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
-      
+
+            if (Input.GetKeyDown(KeyCode.Keypad1)) model.DrinkPotion(1);
+            if (Input.GetKeyDown(KeyCode.Keypad2)) model.DrinkPotion(2);
+            if (Input.GetKeyDown(KeyCode.Keypad3)) model.DrinkPotion(3);
+            if (Input.GetKeyDown(KeyCode.Keypad4)) model.DrinkPotion(4);
+            if (Input.GetKeyDown(KeyCode.Keypad5)) model.DrinkPotion(5);
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                model.mana -= 10;
+                view.UpdateManaBar(model.mana / model.totalMana);
+            }
         }
     }
 

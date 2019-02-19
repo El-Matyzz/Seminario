@@ -23,6 +23,24 @@ public class Model : MonoBehaviour
     public float acceleration;
     public float maxAcceleration;
     public float timeOnCombat;
+    public float stamina;
+    public float totalStamina;
+    public float mana;
+    public float totalMana;
+    public float recoveryMana;
+    public float armor;
+    public float totalArmor;
+    public bool armorActive;
+
+    public float runStamina;
+    public float attackStamina;
+    public float powerStamina;
+    public float dashStamina;
+    public float recoveryStamina;
+
+    public int[] potions = new int[5];
+    public IPotionEffect currentPotionEffect;
+    IPotionEffect[] potionEffects = new IPotionEffect[5];
 
     public int countAnimAttack;
     public Collider enemy;
@@ -147,12 +165,15 @@ public class Model : MonoBehaviour
 
     public IEnumerator Dash(Vector3 dir)
     {
-        if (isInCombat && !onDash)
+        if (!onDash && stamina - dashStamina >= 0)
         {
+            stamina -= dashStamina;
+            view.UpdateStaminaBar(stamina / totalStamina);
+
             rb.velocity = Vector3.zero;
             rb.AddForce(dir * 8, ForceMode.Impulse);
             onDash = true;
-            yield return new WaitForSeconds(0.6f);
+            yield return new WaitForSeconds(1f);
             onDash = false;
         }
     }
@@ -163,7 +184,7 @@ public class Model : MonoBehaviour
         Powers newPower = powerPool.GetObjectFromPool();
         newPower.myCaller = transform;
         powerManager.SetIPower(2, newPower, this);
-       
+
         onAir = true;
         onPowerState = true;
     }
@@ -174,12 +195,19 @@ public class Model : MonoBehaviour
         countAnimAttack = 0;
     }
 
+    public enum PotionName { Health, Extra_Health, Stamina, Costless_Hit, Mana };
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         powerManager = FindObjectOfType<PowerManager>();
         powerPool = new Pool<Powers>(10, PowersFactory, Powers.InitializePower, Powers.DisposePower, true);
         mySkills = new Skills();
+
+        for (int i = 0; i < 5; i++)
+            view.UpdatePotions(i);
+        potionEffects[1] = new ExtraHealth(this, 60);
+        currentPotionEffect = null;
     }
 
     void Update()
@@ -199,12 +227,62 @@ public class Model : MonoBehaviour
             Dead();
             isDead = true;
         }
+
+        if (!isRuning && !onPowerState && !onDamage && !isDead && !onDash)
+        {
+            float prevS = stamina;
+            stamina += recoveryStamina * Time.deltaTime;
+            if (stamina > totalStamina)
+                stamina = totalStamina;
+            if (prevS != stamina)
+                view.UpdateStaminaBar(stamina / totalStamina);
+        }
+
+        float prevM = mana;
+        mana += recoveryMana * Time.deltaTime;
+        if (mana > totalMana)
+            mana = totalMana;
+        if (prevM != mana)
+            view.UpdateManaBar(mana / totalMana);
+
+        if (stamina <= 0)
+        {
+            isRuning = false;
+            view.FalseRunAnim();
+        }
+
+        if (currentPotionEffect != null)
+            currentPotionEffect.PotionEffect();
+    }
+
+    public void DrinkPotion(int i)
+    {
+        i -= 1;
+
+        if (potions[i] == 0 || currentPotionEffect != null)
+            return;
+
+        if (i == (int)PotionName.Health)
+            potionEffects[i] = new Health(this, life, totalLife);
+        else
+            if (i == (int)PotionName.Stamina)
+                potionEffects[i] = new Stamina(this, stamina, totalStamina);
+            else
+                if (i == (int)PotionName.Mana)
+                    potionEffects[i] = new Mana(this, mana, totalMana);
+
+        potions[i]--;
+        view.UpdatePotions(i);
+        currentPotionEffect = potionEffects[i];
     }
 
     public void CastPower1()
     {
-        if (!cdPower1 && !onPowerState && !onDamage && !isDead && !onDash)
+        if (!cdPower1 && !onPowerState && !onDamage && !isDead && !onDash && stamina - powerStamina >= 0)
         {
+            stamina -= powerStamina;
+            view.UpdateStaminaBar(stamina / totalStamina);
+
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(0, newPower, this);
@@ -215,8 +293,11 @@ public class Model : MonoBehaviour
 
     public void CastPower2()
     {
-        if (!cdPower2 && !onPowerState && !onDamage && !isDead && !onDash)
+        if (!cdPower2 && !onPowerState && !onDamage && !isDead && !onDash && stamina - powerStamina >= 0)
         {
+            stamina -= powerStamina;
+            view.UpdateStaminaBar(stamina / totalStamina);
+
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
             powerManager.SetIPower(1, newPower, this);
@@ -227,8 +308,11 @@ public class Model : MonoBehaviour
 
     public void CastPower3()
     {
-        if (!cdPower3 && !onPowerState && !onDamage && !isDead && !onDash)
+        if (!cdPower3 && !onPowerState && !onDamage && !isDead && !onDash && stamina - powerStamina >= 0)
         {
+            stamina -= powerStamina;
+            view.UpdateStaminaBar(stamina / totalStamina);
+
             CombatState();
             Uppercut();
             StartCoroutine(PowerDelay(0.5f));
@@ -237,7 +321,7 @@ public class Model : MonoBehaviour
 
     public void CastPower4()
     {
-        if (!cdPower4 && !onPowerState && !onDamage && !isDead && !onDash && !onAir && countAnimAttack==0)
+        if (!cdPower4 && !onPowerState && !onDamage && !isDead && !onDash && !onAir && countAnimAttack == 0 && stamina - powerStamina >= 0)
         {
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -248,11 +332,17 @@ public class Model : MonoBehaviour
 
     public void Movement(Vector3 direction, bool key, bool backward, bool rotate)
     {
+        if (isRuning)
+        {
+            stamina -= runStamina * Time.deltaTime;
+            view.UpdateStaminaBar(stamina / totalStamina);
+        }
+
         biz = false;
         acceleration += 3f * Time.deltaTime;
         if (acceleration > maxAcceleration) acceleration = maxAcceleration;
 
-        if (!InAction && !onDamage && countAnimAttack == 0)
+        if (!InAction && !onDamage && countAnimAttack == 0 && !onDash)
         {
             Quaternion targetRotation;
             direction.y = 0;
@@ -278,12 +368,12 @@ public class Model : MonoBehaviour
             if (!isRuning && !isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * acceleration*speed * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
             }
             else if (!isRuning && isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * acceleration * (speed / 1.5f) * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
             }
             else
             {
@@ -299,7 +389,7 @@ public class Model : MonoBehaviour
         acceleration += 3f * Time.deltaTime;
         if (acceleration > maxAcceleration) acceleration = maxAcceleration;
 
-        if (!InAction && !onDamage && countAnimAttack == 0)
+        if (!InAction && !onDamage && countAnimAttack == 0 && !onDash)
         {
             Vector3 direction = (d1 + d2) / 2;
             direction.y = 0;
@@ -308,28 +398,28 @@ public class Model : MonoBehaviour
 
             if (key)
             {
-              
+
                 targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
             if (backward)
             {
-                var turnDir = (d1 + (-d2)) /2 ;
+                var turnDir = (d1 + (-d2)) / 2;
                 targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
             if (!isRuning && !isInCombat)
             {
-                
+
                 Trot();
                 rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
             }
             else if (!isRuning && isInCombat)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * acceleration * (speed / 1.5f) * Time.deltaTime);
+                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
             }
             else
             {
@@ -356,11 +446,11 @@ public class Model : MonoBehaviour
 
     public void NormalAttack()
     {
-        if (!isDead)
+        if (!isDead && stamina - attackStamina >= 0)
         {
             Attack();
             view.SpawParticleSword(countAnimAttack);
-            countAnimAttack++;           
+            countAnimAttack++;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
         }
         if (!InActionAttack)
@@ -373,7 +463,10 @@ public class Model : MonoBehaviour
 
     public void MakeDamage()
     {
-        if(countAnimAttack>1)rb.AddForce(transform.forward * 2, ForceMode.Impulse);
+        stamina -= attackStamina;
+        view.UpdateStaminaBar(stamina / totalStamina);
+
+        if (countAnimAttack > 1) rb.AddForce(transform.forward * 2, ForceMode.Impulse);
         Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
         foreach (var item in col)
         {
@@ -438,12 +531,24 @@ public class Model : MonoBehaviour
         bool isBehind = false;
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
-        if (angle < 90) isBehind =true;
+        if (angle < 90) isBehind = true;
 
         if (!onDefence || (onDefence && isBehind) || isProyectile)
         {
-            life -= damage;
-            view.UpdateLifeBar(life / totalLife);
+            if (armor >= damage)
+            {
+                armor -= damage;
+                view.UpdateArmorBar(armor / totalArmor);
+            }
+            else
+            {
+                float dmg = damage - armor;
+                armor = 0;
+                view.UpdateArmorBar(armor / totalArmor);
+                life -= dmg;
+                view.UpdateLifeBar(life / totalLife);
+            }
+
             if (!onPowerState)
             {
                 rb.velocity = Vector3.zero;
@@ -479,7 +584,7 @@ public class Model : MonoBehaviour
             Fall();
             onAir = false;
         }
-        if ((stocadaState && c.gameObject.GetComponent<EnemyClass>()) || 
+        if ((stocadaState && c.gameObject.GetComponent<EnemyClass>()) ||
             (stocadaState && c.gameObject.layer == LayerMask.NameToLayer("Obstacles")))
         {
             enemy = c.gameObject.GetComponent<Collider>();
@@ -521,7 +626,7 @@ public class Model : MonoBehaviour
         if (c.gameObject.layer == 10)
             StartCoroutine(view.YouWin());
 
-        if(c.gameObject.layer== LayerMask.NameToLayer("Life"))
+        if (c.gameObject.layer == LayerMask.NameToLayer("Life"))
         {
             if (life < totalLife) life += 30;
             else life = totalLife;

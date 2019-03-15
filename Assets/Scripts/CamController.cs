@@ -43,7 +43,7 @@ public class CamController : MonoBehaviour {
         {
             currentX += Input.GetAxis("Mouse X") * sensitivityX;
             currentY += Input.GetAxis("Mouse Y") * sensitivityY;
-            currentY = Mathf.Clamp(currentY, -30, 50);            
+            currentY = Mathf.Clamp(currentY, -70, 70);            
         }
     }
 	

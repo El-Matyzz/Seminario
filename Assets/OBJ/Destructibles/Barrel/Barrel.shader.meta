@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 34bf01003529c834f9e3a56b35448afc
+timeCreated: 1551809292
+licenseType: Free
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _Barrel_DefaultMaterial_Normal: {fileID: 2800000, guid: 53bf4de43fec37e4c87174f65a4c9563,
+      type: 3}
+  - _Barrel_DefaultMaterial_AlbedoTR: {fileID: 2800000, guid: 4d4133f269c80f1419bb3e195e6784c9,
+      type: 3}
+  - _Barrel_DefaultMaterial_MetallicSmth: {fileID: 2800000, guid: 7dd27db9f5562e14bb9828c5f7356b7f,
+      type: 3}
+  - _Barrel_DefaultMaterial_AO: {fileID: 2800000, guid: 971fdfdc45fae7c4b977f93873e1ec4e,
+      type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

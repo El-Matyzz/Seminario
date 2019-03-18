@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Model : MonoBehaviour
 {
@@ -449,7 +450,7 @@ public class Model : MonoBehaviour
         if (!isDead && stamina - attackStamina >= 0)
         {
             Attack();
-            view.SpawParticleSword(countAnimAttack);
+            //view.SpawParticleSword(countAnimAttack);
             countAnimAttack++;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
         }
@@ -465,17 +466,17 @@ public class Model : MonoBehaviour
     {
         stamina -= attackStamina;
         view.UpdateStaminaBar(stamina / totalStamina);
-
+       
         if (countAnimAttack > 1) rb.AddForce(transform.forward * 2, ForceMode.Impulse);
-        Collider[] col = Physics.OverlapSphere(attackPivot.position, radiusAttack);
+        var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x=> x.GetComponent<EnemyClass>());
         foreach (var item in col)
         {
             if (item.GetComponent<EnemyClass>())
             {
-
+               
                 view.StartCoroutine(view.SlowSpeed());
-                if (item.GetComponent<ModelEnemy>() && item.GetComponent<ModelEnemy>().createAttack)
-                    item.GetComponent<ModelEnemy>().GetBack(transform.position);
+                //if (item.GetComponent<ModelEnemy>() && item.GetComponent<ModelEnemy>().createAttack)
+                //item.GetComponent<ModelEnemy>().GetBack(transform.position);
                 item.GetComponent<EnemyClass>().GetDamage(10);
                 item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
             }

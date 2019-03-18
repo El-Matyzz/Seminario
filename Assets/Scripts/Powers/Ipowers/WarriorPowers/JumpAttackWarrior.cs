@@ -26,7 +26,7 @@ public class JumpAttackWarrior :  Ipower {
 
     public void Ipower()
 	{
-        _mainCamera.distance += 35 * Time.deltaTime;
+         _mainCamera.distance += 35 * Time.deltaTime;
         if (_mainCamera.distance >= 17) _mainCamera.distance = 17;
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -84,9 +84,7 @@ public class JumpAttackWarrior :  Ipower {
     }
 
     public void Ipower2()
-    {
-        _player.stamina -= _player.powerStamina;
-
+    {      
       _mainCamera.cameraActivate = false;
       Collider[] col = Physics.OverlapSphere(_playerTransform.position, _radius);
 

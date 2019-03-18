@@ -31,8 +31,8 @@ using UnityEngine;
 
         public void Update()
         {
-          //  if (Input.GetKey(KeyCode.S)) closestDistance = 2;
-           // if (Input.GetKeyUp(KeyCode.S)) StartCoroutine(delay());
+            if (Input.GetKey(KeyCode.S)) closestDistance = 2;
+            if (Input.GetKeyUp(KeyCode.S)) StartCoroutine(delay());
         }
 
         private void Start()

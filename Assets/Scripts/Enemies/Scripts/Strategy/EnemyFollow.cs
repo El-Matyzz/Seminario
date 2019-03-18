@@ -13,7 +13,7 @@ public class EnemyFollow : ESMovemnt {
 
     public void ESMove()
     {   
-        if (_enemy.isAttack == false)
+      /*  if (_enemy.isAttack == false)
         {
             Quaternion targetRotation;
             _dirToTarget = (_player.transform.position - _enemy.transform.position).normalized;
@@ -25,6 +25,7 @@ public class EnemyFollow : ESMovemnt {
             _enemy.rb.MovePosition(_enemy.rb.position + (_dirToTarget + avoidance) * _speed * Time.deltaTime);    
         }
         else _enemy.currentMovement = null;
+        */
     }
 
     public EnemyFollow(EnemyClass enemy, GameObject player, float speed)

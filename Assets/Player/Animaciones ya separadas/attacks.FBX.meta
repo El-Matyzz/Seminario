@@ -476,7 +476,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: DesactivateAttack2
+        functionName: DesactivateAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -518,7 +518,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: DesactivateAttack2
+        functionName: DesactivateAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -573,13 +573,6 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.9979369
-        functionName: CountAnimZero
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 0
         functionName: FalseActiveAttack
         data: 
@@ -589,6 +582,13 @@ ModelImporter:
         messageOptions: 0
       - time: 0.78259736
         functionName: MakeDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: FalseActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

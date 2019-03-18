@@ -11,15 +11,7 @@ public class EnemyPatrol : ESMovemnt
 
     public void ESMove()
     {
-        Quaternion targetRotation;
-        if (_enemy.closeObstacle || _enemy.distanceToPatrol>=_enemy.areaToPatrol)
-        {
-         _dirToTarget = -_enemy.transform.forward;
-         _dirToTarget.y = 0;          
-        }
-        targetRotation = Quaternion.LookRotation(_dirToTarget, Vector3.up);
-        _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
-        _enemy.rb.MovePosition(_enemy.rb.position + _dirToTarget * (_speed * 0.25f) * Time.deltaTime);
+    
     }
 
     public EnemyPatrol(EnemyClass enemy, GameObject player, float speed, Vector3 dir)

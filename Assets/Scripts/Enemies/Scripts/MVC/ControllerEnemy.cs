@@ -12,9 +12,11 @@ public class ControllerEnemy : MonoBehaviour {
 	
 	void Update () {
 
-        if (_model.isFollow) _model.Follow();
+        if (_model.isPersuit && !_model.isDead) _model.Persuit();
 
-        if (_model.isAttack) _model.Attack();
+        if (_model.isAttack && !_model.isDead) _model.WaitTurn();
+
+        if (!_model.isAttack && !_model.isDead && !_model.isPersuit && !_model.isBackHome) _model.Patrol();
 
 	}
 }

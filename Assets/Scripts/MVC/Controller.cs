@@ -80,7 +80,7 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
             {
-               
+
                 model.CombatState();
 
                 if (!useSword) view.TakeSword();
@@ -90,33 +90,33 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
             {
-                
-                if (!model.isRuning) view.FalseTrotAnim();                       
+
+                if (!model.isRuning) view.FalseTrotAnim();
                 view.FalseAnimWalk();
             }
 
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && model.isInCombat) StartCoroutine(delayIdleCombat());
-            
+
 
             if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
             {
                 view.anim.SetBool("Idle", true);
                 model.acceleration = 0;
                 view.FalseAnimRunSword();
-                view.FalseRunAnim();               
+                view.FalseRunAnim();
             }
 
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A))
             {
                 view.anim.SetBool("Idle", false);
                 view.anim.SetBool("IdleCombat", false);
-            }     
+            }
             if (!Input.GetKey(KeyCode.W)) pushW = false;
             if (!Input.GetKey(KeyCode.S)) pushS = false;
             if (!Input.GetKey(KeyCode.D)) pushD = false;
             if (!Input.GetKey(KeyCode.A)) pushA = false;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && model.stamina > 0)
+            if (Input.GetKey(KeyCode.LeftShift))
             {
                 view.FalseTrotAnim();
                 model.isRuning = true;
@@ -129,7 +129,7 @@ public class Controller : MonoBehaviour
             }
 
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.acceleration = 0;
-           
+
 
             if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir)
             {
@@ -142,17 +142,6 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.J)) StartCoroutine(model.PlatformJump());
 
-            if (Input.GetKeyDown(KeyCode.Keypad1)) model.DrinkPotion(1);
-            if (Input.GetKeyDown(KeyCode.Keypad2)) model.DrinkPotion(2);
-            if (Input.GetKeyDown(KeyCode.Keypad3)) model.DrinkPotion(3);
-            if (Input.GetKeyDown(KeyCode.Keypad4)) model.DrinkPotion(4);
-            if (Input.GetKeyDown(KeyCode.Keypad5)) model.DrinkPotion(5);
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                model.mana -= 10;
-                view.UpdateManaBar(model.mana / model.totalMana);
-            }
         }
     }
 
@@ -165,8 +154,8 @@ public class Controller : MonoBehaviour
                 if (!pushS) pushW = true;
                 if (!pushS && pushW)
                 {
+
                     model.Movement(model.mainCamera.forward, true, false, false);
-                    if (model.isInCombat && !model.isRuning) view.AnimWalkW();
                     if (model.isInCombat && model.isRuning) view.RunSword();
                 }
             }
@@ -181,8 +170,8 @@ public class Controller : MonoBehaviour
                 if (!pushW) pushS = true;
                 if (!pushW && pushS)
                 {
-                  view.RunSword();
-                  model.Movement(-model.mainCamera.forward, true, false, false);
+                    view.RunSword();
+                    model.Movement(-model.mainCamera.forward, true, false, false);
                 }
             }
             if (Input.GetKey(KeyCode.S) && !model.isDead && model.isInCombat && !model.isRuning)
@@ -190,23 +179,21 @@ public class Controller : MonoBehaviour
                 if (!pushW) pushS = true;
                 if (!pushW && pushS)
                 {
-                    view.AnimWalkS();
                     model.Movement(-model.mainCamera.forward, false, true, false);
                 }
             }
             if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !model.isDead && !model.isInCombat)
             {
-              if (!pushA) pushD = true;
-              if (!pushA && pushD)
-              model.Movement(model.mainCamera.right, true, false, false);
+                if (!pushA) pushD = true;
+                if (!pushA && pushD)
+                    model.Movement(model.mainCamera.right, true, false, false);
             }
             if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !model.isDead && model.isInCombat && !model.isRuning)
             {
                 if (!pushA) pushD = true;
                 if (!pushA && pushD)
                 {
-                    view.AnimWalkD();
-                    model.Movement(model.mainCamera.right, false, false,true);
+                    model.Movement(model.mainCamera.right, false, false, true);
                 }
             }
 
@@ -222,9 +209,9 @@ public class Controller : MonoBehaviour
             if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !model.isDead && !model.isInCombat)
             {
 
-              if(!pushD) pushA = true;
-              if(!pushD && pushA)  
-              model.Movement(-model.mainCamera.right, true, false, false);
+                if (!pushD) pushA = true;
+                if (!pushD && pushA)
+                    model.Movement(-model.mainCamera.right, true, false, false);
             }
 
             if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !model.isDead && model.isInCombat && !model.isRuning)
@@ -232,7 +219,6 @@ public class Controller : MonoBehaviour
                 if (!pushD) pushA = true;
                 if (!pushD && pushA)
                 {
-                    view.AnimWalkA();
                     model.Movement(-model.transform.right, false, false, true);
                 }
             }
@@ -247,17 +233,16 @@ public class Controller : MonoBehaviour
                 }
             }
 
-             if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && !model.isDead && !model.isInCombat) model.MovementBizectriz(model.mainCamera.forward, model.mainCamera.right, true,false);
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && !model.isDead && !model.isInCombat) model.MovementBizectriz(model.mainCamera.forward, model.mainCamera.right, true, false);
 
-             if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && !model.isDead && !model.isInCombat) model.MovementBizectriz(model.mainCamera.forward, -model.mainCamera.right, true,false);
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && !model.isDead && !model.isInCombat) model.MovementBizectriz(model.mainCamera.forward, -model.mainCamera.right, true, false);
 
-             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && !model.isInCombat) model.MovementBizectriz(-model.mainCamera.forward, model.mainCamera.right, true,false);
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && !model.isInCombat) model.MovementBizectriz(-model.mainCamera.forward, model.mainCamera.right, true, false);
 
-             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && !model.isInCombat) model.MovementBizectriz(-model.mainCamera.forward, -model.mainCamera.right, true,false);
+            if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && !model.isInCombat) model.MovementBizectriz(-model.mainCamera.forward, -model.mainCamera.right, true, false);
 
             if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat)
             {
-                view.AnimWalkW();
                 model.MovementBizectriz(model.mainCamera.forward, model.mainCamera.right, true, false);
             }
 
@@ -269,7 +254,6 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat)
             {
-                view.AnimWalkW();
                 model.MovementBizectriz(model.mainCamera.forward, -model.mainCamera.right, true, false);
             }
 
@@ -281,12 +265,10 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat && !model.isRuning)
             {
-                view.AnimWalkS();
                 model.MovementBizectriz(-model.mainCamera.forward, model.mainCamera.right, true, true);
             }
             if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat && !model.isRuning)
             {
-                view.AnimWalkS();
                 model.MovementBizectriz(-model.mainCamera.forward, -model.mainCamera.right, true, true);
             }
 

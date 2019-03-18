@@ -310,7 +310,14 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0
-        functionName: NoBackEstocada
+        functionName: CountAnimZero
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: DesactivateAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -13,19 +13,22 @@ public abstract class EnemyClass: MonoBehaviour  {
     public bool createAttack;
     public bool isAttack;
     public bool myTimeToAttack;
+    public bool isBackHome;
     public bool firstSearch;
     public float dileyToAttack;
     public float bleedingDamage;
-    public float areaToPatrol;
-    public float distanceToPatrol;
     public float life;
-    public Vector3 vectAvoidance;
-    public Vector3 startPosition;
-    public Vector3 vectTurnDirecction;
-    public Collider closeObstacle;
     public Rigidbody rb;
     public GameObject target;
     public ESMovemnt currentMovement;
     public List<ModelEnemy> myFriends = new List<ModelEnemy>();
     public EnemyScreenSpace ess;
+    public int currentIndex = 0;
+    public List<Cell> pathToTarget = new List<Cell>();
+    public Cell cellToPatrol;
+    public Cell startCell;
+    public GridSearcher myGridSearcher;
+    public Grid myGrid;
+    public Vector3 avoidVect;
+
 }

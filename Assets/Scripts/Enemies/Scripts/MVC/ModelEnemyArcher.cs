@@ -74,30 +74,32 @@ public class ModelEnemyArcher : EnemyClass {
 
     public override IEnumerator SearchingForPlayer()
     {
-        viewDistanceFollow = starDistaceToFollow;
-        while (countTimesForSearch < 5)
-        {
-            Vector3 dirToTarget;
-            var randomVect = new Vector3(Random.Range(-1, 2), 0, Random.Range(-1, 2));
+        yield return new WaitForSeconds(1f);
+        /*  viewD     yield return new WaitForSeconds(knockedTime);istanceFollow = starDistaceToFollow;
+          while (countTimesForSearch < 5)
+          {
+              Vector3 dirToTarget;
+              var randomVect = new Vector3(Random.Range(-1, 2), 0, Random.Range(-1, 2));
 
-            if (isFollow) break;
+              if (isFollow) break;
 
-            if (closeObstacle) dirToTarget = vectTurnDirecction;
+              if (closeObstacle) dirToTarget = vectTurnDirecction;
 
-            else
-            {
-                dirToTarget = (target.transform.position - transform.position).normalized;
-                dirToTarget += randomVect;
-            }
+              else
+              {
+                  dirToTarget = (target.transform.position - transform.position).normalized;
+                  dirToTarget += randomVect;
+              }
 
-            dirToTarget.y = 0;
-            currentMovement = new EnemySearching(this, target.transform, speed,dirToTarget);
-            countTimesForSearch++;
-            yield return new WaitForSeconds(2.5f);
-        }
-        countTimesForSearch = 0;
-        currentMovement = null;
-        increaseFollowRadio = true;
+              dirToTarget.y = 0;
+              currentMovement = new EnemySearching(this, target.transform, speed,dirToTarget);
+              countTimesForSearch++;
+              yield return new WaitForSeconds(2.5f);
+          }
+          countTimesForSearch = 0;
+          currentMovement = null;
+          increaseFollowRadio = true;
+          */
     }
 
     public override IEnumerator Stuned(float stunedTimed)
@@ -132,15 +134,13 @@ public class ModelEnemyArcher : EnemyClass {
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
-        ess = GetComponent<EnemyScreenSpace>();
+       // ess = GetComponent<EnemyScreenSpace>();
     }
 	
 	// Update is called once per frame
 	void Update () {
         WrapperStates();
         GetObstacles();
-        closeObstacle = GetCloserOb();
-        vectAvoidance = getObstacleAvoidance();
 
         if (currentMovement != null && !isOcuped) currentMovement.ESMove();
          
@@ -206,7 +206,7 @@ public class ModelEnemyArcher : EnemyClass {
     public override void GetDamage(float damage)
     {
         life -= damage;
-        ess.UpdateLifeBar(life);
+        //ess.UpdateLifeBar(life);
         dileyToAttack += 0.8f;
         if (life <= 0)
         {
@@ -274,9 +274,8 @@ public class ModelEnemyArcher : EnemyClass {
 
     Vector3 getObstacleAvoidance()
     {
-        if (closeObstacle)
-        return transform.position - closeObstacle.transform.position;
-        else return Vector3.zero;
+
+         return Vector3.zero;
     }
 
     void GetObstacles()
@@ -284,4 +283,6 @@ public class ModelEnemyArcher : EnemyClass {
         obstacles.Clear();
         obstacles.AddRange(Physics.OverlapSphere(transform.position, radObst, obstacle));
     }
+
+
 }

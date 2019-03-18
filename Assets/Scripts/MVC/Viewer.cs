@@ -17,6 +17,10 @@ public class Viewer : MonoBehaviour {
     public Image power3;
     public Image power4;
 
+    public GameObject youDied;
+    public GameObject youWin;
+    public GameObject phParticles;
+
     public Image lifeBar;
     public Image staminaBar;
     public Image manaBar;
@@ -24,10 +28,6 @@ public class Viewer : MonoBehaviour {
 
     public Text[] potions;
     public Text potionTimer;
-
-    public GameObject youDied;
-    public GameObject youWin;
-    public GameObject phParticles;
 
     public List<GameObject> particlesSowrd;
 
@@ -37,17 +37,32 @@ public class Viewer : MonoBehaviour {
         Destroy(p);
     }
 
+    public void Update()
+    {
+
+        var velocityX = Input.GetAxis("Vertical") ;
+        var velocityZ = Input.GetAxis("Horizontal") ;
+
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat) velocityZ = 0;
+   
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat) velocityZ = 0;
+
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat) velocityZ = 0;
+
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat) velocityZ = 0;
+
+
+        if (velocityX >1) velocityX = 1;
+        if (velocityZ >1) velocityZ = 1;
+
+        anim.SetFloat("VelX", velocityX);
+        anim.SetFloat("VelZ", velocityZ);
+    }
+
     public void Awake()
     {
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
-    }
-
-    public void SpawParticleSword(int pos)
-    {
-      //  var p = Instantiate(particlesSowrd[pos]);
-       // p.transform.position = phParticles.transform.position;
-       // StartCoroutine(DestroyParticles(p));
     }
 
     public void RunSword()
@@ -76,6 +91,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseRunAnim()
     {
+        
         anim.SetBool("runAnim", false);
     }
 
@@ -83,42 +99,7 @@ public class Viewer : MonoBehaviour {
     {
         anim.SetBool("runSword", false);
     }
-
-    public void AnimWalkW()
-    {
-        anim.SetBool("runSword", false);
-        anim.SetBool("WalkW", true);
-        anim.SetBool("WalkS", false);
-        anim.SetBool("WalkD", false);
-        anim.SetBool("WalkA", false);
-    }
-
-    public void AnimWalkS()
-    {
-        anim.SetBool("runSword", false);
-        anim.SetBool("WalkW", false);
-        anim.SetBool("WalkS", true);
-        anim.SetBool("WalkD", false);
-        anim.SetBool("WalkA", false);
-    }
-
-    public void AnimWalkD()
-    {
-        anim.SetBool("runSword", false);
-        anim.SetBool("WalkW", false);
-        anim.SetBool("WalkS", false);
-        anim.SetBool("WalkD", true);
-        anim.SetBool("WalkA", false);
-    }
-
-    public void AnimWalkA()
-    {
-        anim.SetBool("runSword", false);
-        anim.SetBool("WalkW", false);
-        anim.SetBool("WalkS", false);
-        anim.SetBool("WalkD", false);
-        anim.SetBool("WalkA", true);
-    }
+  
 
     public void FalseAnimWalk()
     {
@@ -129,7 +110,6 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("WalkA", false);
         
     }
-
     public void UpdateLifeBar(float val)
     {
         lifeBar.fillAmount = val;
@@ -203,11 +183,6 @@ public class Viewer : MonoBehaviour {
     public void DesactivateAttack()
     {
         anim.SetBool("attack", false);
-    }
-
-    public void DesactivateAttack2()
-    {
-        anim.SetBool("attack", false);   
     }
 
     public void TakeSword()

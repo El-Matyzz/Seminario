@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class EnemyScreenSpace : MonoBehaviour
 {
-    EnemyClass enemy;
+   /* EnemyClass enemy;
     float maxLife;
 
     public Canvas canvas;
@@ -58,4 +58,5 @@ public class EnemyScreenSpace : MonoBehaviour
             canvas.GetComponent<ScreenSpaceCanvas>().RemoveFromCanvas(healthBar);
         Destroy(healthBar);
     }
+    */
 }

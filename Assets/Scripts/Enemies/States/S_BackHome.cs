@@ -23,17 +23,14 @@ public class S_BackHome : EnemyState
     public override void Execute()
     {
         base.Execute();
-
-        if (_enemy.cellToPatrol != null)
-        {
-
+    
             if (_enemy.pathToTarget == null || _enemy.currentIndex == _enemy.pathToTarget.Count)
             {
                 return;
 
             }
             float d = Vector3.Distance(_enemy.pathToTarget[_enemy.currentIndex].transform.position, _enemy.transform.position);
-            if (d >= 1)
+            if (d >= 0.25f)
             {
                 Quaternion targetRotation;
                 _dir = (_enemy.pathToTarget[_enemy.currentIndex].transform.position - _enemy.transform.position).normalized;
@@ -48,7 +45,6 @@ public class S_BackHome : EnemyState
             else
                 _enemy.currentIndex++;
 
-        }
     }
 
     public override void Sleep()

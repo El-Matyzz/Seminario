@@ -13,32 +13,43 @@ public class ModelEnemyArcher : EnemyClass {
     public bool isOcuped;
     public bool isReloading;
     public bool isScape;
-    public bool startScape;
-    public bool timeToScape;
+    public bool isOnPatrol;
+    public bool isAttackMelle;
     bool startSearch;
     bool increaseFollowRadio;
+    public bool resting;
+    public bool timeToAttack;
+    bool OnAttack;
 
     public EnemyAmmo munition;
     public List<Collider> obstacles;
 
+    public EnemyCombatManager cm;
     public Transform attackPivot;
     public LayerMask obstacle;
     public LayerMask player;
     public ViewerEnemy view;
+    List<Cell> playerCells = new List<Cell>();
 
     public float radObst;
     public float sightSpeed;
     public float viewAngleFollow;
     public float viewDistanceFollow;
-    public float viewAngleScape;
-    public float viewDistanceScape;
-    public float viewDistanceAttack;
-    public float viewAngleAttack;
+    public float viewDistanceAttackRange;
+    public float viewAngleAttackRange;
+    public float viewAngleAttackMelle;
+    public float viewDistanceAttackMelle;
     public float speed;
     float timeToShoot;
     public float shootTime;
     float starDistaceToFollow;
     int countTimesForSearch;
+    public float knockbackForce;
+    float maxDileyToAttack;
+    public float radiusAttack;
+    public float attackDamage;
+    public float radiusAvoid;
+    public float avoidWeight;
 
     public StateMachine sm;  
 
@@ -49,15 +60,6 @@ public class ModelEnemyArcher : EnemyClass {
         isBleeding = false;
     }
 
-    public override IEnumerator FillFriends()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.25f);
-            myFriends.Clear();
-        }              
-    }
-
     public override IEnumerator Knocked(float knockedTime)
     {
         isKnocked = true;
@@ -65,34 +67,13 @@ public class ModelEnemyArcher : EnemyClass {
         isKnocked = false;
     }
 
-    public override IEnumerator SearchingForPlayer()
+    public IEnumerator Resting()
     {
-        yield return new WaitForSeconds(1f);
-        /*  viewD     yield return new WaitForSeconds(knockedTime);istanceFollow = starDistaceToFollow;
-          while (countTimesForSearch < 5)
-          {
-              Vector3 dirToTarget;
-              var randomVect = new Vector3(Random.Range(-1, 2), 0, Random.Range(-1, 2));
-
-              if (isFollow) break;
-
-              if (closeObstacle) dirToTarget = vectTurnDirecction;
-
-              else
-              {
-                  dirToTarget = (target.transform.position - transform.position).normalized;
-                  dirToTarget += randomVect;
-              }
-
-              dirToTarget.y = 0;
-              currentMovement = new EnemySearching(this, target.transform, speed,dirToTarget);
-              countTimesForSearch++;
-              yield return new WaitForSeconds(2.5f);
-          }
-          countTimesForSearch = 0;
-          currentMovement = null;
-          increaseFollowRadio = true;
-          */
+        resting = true;
+        OnAttack = true;
+        yield return new WaitForSeconds(2);
+        resting = false;
+        OnAttack = false;
     }
 
     public override IEnumerator Stuned(float stunedTimed)
@@ -102,26 +83,10 @@ public class ModelEnemyArcher : EnemyClass {
         isStuned = false;
     }
 
-    public IEnumerator ScapeTime()
-    {
-        isScape = false;
-        startScape = true;
-        yield return new WaitForSeconds(2);
-        startScape = false;
-        currentMovement = null;
-        StartCoroutine(TimeToScapeAgain());
-    }
-
-    public IEnumerator TimeToScapeAgain()
-    {
-        timeToScape = false;
-        yield return new WaitForSeconds(10);
-        timeToScape = true;
-    }
-
     // Use this for initialization
     void Start () {
 
+        startRotation = transform.forward;
         timeToShoot = shootTime;
         startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         sm = new StateMachine();
@@ -130,10 +95,8 @@ public class ModelEnemyArcher : EnemyClass {
         sm.AddState(new S_BackHome(sm, this, speed));
         sm.AddState(new S_Aiming(sm, this, target.transform, sightSpeed));
         view = GetComponent<ViewerEnemy>();
-        timeToScape = true;
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
-        StartCoroutine(FillFriends());
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);
         // ess = GetComponent<EnemyScreenSpace>();
     }
@@ -143,25 +106,38 @@ public class ModelEnemyArcher : EnemyClass {
 
         WrapperStates();
         sm.Update();
-               
-        if (target != null && !isOcuped && timeToScape) isScape = SearchForTarget.SearchTarget(target, viewDistanceScape, viewAngleScape, gameObject, true);
+        playerCells.Clear();
+        playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
 
-        if (isScape) StartCoroutine(ScapeTime());
-
-        if (target != null && !isAttack && !isOcuped && !startScape) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
+        if (target != null && !isAttack && !isAttackMelle && !isOcuped && playerCells.Count>0) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
         else isPersuit = false;
 
-        if (target != null && !isOcuped && !startScape) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        if (target != null && !isOcuped  && playerCells.Count > 0 && !isAttackMelle) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttackRange, viewAngleAttackRange, gameObject, true);
         else isAttack = false;
+
+        if (target != null && !isOcuped && playerCells.Count > 0) isAttackMelle = SearchForTarget.SearchTarget(target, viewDistanceAttackMelle, viewAngleAttackMelle, gameObject, true);
+        else isAttackMelle = false;
+
+        if (isAttackMelle)
+        {
+            avoidVect = avoidance() * avoidWeight;
+            AttackMelle();
+        }
 
         if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
 
+        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !isAttackMelle) BackHome();
+
         if (life <= 0)
             print(name + " is fucking dead!");
+
+        if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !isAttackMelle) isOnPatrol = true;
+        else isOnPatrol = false;
     }
 
-    public void Attack()
+    public void AttackRange()
     {
+
         timeToShoot -= Time.deltaTime;
        // if (timeToShoot > 4) view.AttackVisorLight();
         sm.SetState<S_Aiming>();
@@ -186,14 +162,69 @@ public class ModelEnemyArcher : EnemyClass {
                 newArrow.transform.forward = transform.forward;
                 Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
                 arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.2f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
-                // view.DesactivateLightAttack();
                 timeToShoot = shootTime;               
             }
         }
     }
 
-    public void Follow()
+    public void Patrol()
+    {       
+        Quaternion rotateAngle = Quaternion.LookRotation(transform.forward + new Vector3(Mathf.Sin(Time.time * 0.5f),0,0), Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotateAngle, 5 * Time.deltaTime);
+    }
+
+    public void AttackMelle()
     {
+        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+
+        if (targetCell != null)
+        {
+            if (timeToAttack) dileyToAttack -= Time.deltaTime;
+            if (dileyToAttack <= 0)
+            {
+                rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
+                timeToAttack = false;
+                StartCoroutine(Resting());
+                cm.ResetTimes();
+                dileyToAttack = UnityEngine.Random.Range(4f, 6f);
+                maxDileyToAttack = dileyToAttack;
+            }
+
+            if (OnAttack)
+            {
+                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).First();
+                if (player != null)
+                {
+                    player.GetDamage(attackDamage, transform, false);
+                    rb.AddForce(-transform.forward * knockbackForce * 1.3f, ForceMode.Impulse);
+                    OnAttack = false;
+                }
+            }
+        }
+        else
+        {
+            isAttack = false;
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            sm.SetState<S_BackHome>();
+            isBackHome = true;
+        }
+    }
+
+    public void Waiting()
+    {
+        if (!resting && cm.times > 0 && !timeToAttack)
+        {
+            timeToAttack = true;
+            cm.times--;
+        }
+
+        sm.SetState<S_Waiting>();
+    }
+
+    public void Persuit()
+    {
+        Debug.Log(1);
         pathToTarget.Clear();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
@@ -213,12 +244,16 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void BackHome()
     {
-
+        Debug.Log(2);
         pathToTarget.Clear();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
         var distance = Vector3.Distance(transform.position, startCell.transform.position);
-        if (distance <= 1) isBackHome = false;
+        if (distance <= 2)
+        {
+            transform.forward = startRotation;
+            isBackHome = false;
+        }
         sm.SetState<S_BackHome>();
 
     }
@@ -242,32 +277,36 @@ public class ModelEnemyArcher : EnemyClass {
 
     void OnDrawGizmos()
     {
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, viewDistanceAttackMelle);
+
+        Vector3 rightLimit = Quaternion.AngleAxis(viewAngleAttackMelle, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistanceAttackMelle));
+
+        Vector3 leftLimit = Quaternion.AngleAxis(-viewAngleAttackMelle, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistanceAttackMelle));
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, viewDistanceAttack);
+        Gizmos.DrawWireSphere(transform.position, viewDistanceAttackRange);
 
-        Vector3 rightLimit = Quaternion.AngleAxis(viewAngleAttack, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (rightLimit * viewDistanceAttack));
+        Vector3 rightLimit2 = Quaternion.AngleAxis(viewAngleAttackRange, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (rightLimit2 * viewDistanceAttackRange));
 
-        Vector3 leftLimit = Quaternion.AngleAxis(-viewAngleAttack, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (leftLimit * viewDistanceAttack));
+        Vector3 leftLimit2 = Quaternion.AngleAxis(-viewAngleAttackRange, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (leftLimit2 * viewDistanceAttackRange));
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, viewDistanceFollow);
 
-        Vector3 rightLimit2 = Quaternion.AngleAxis(viewAngleFollow, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (rightLimit2 * viewDistanceFollow));
+        Vector3 rightLimit3 = Quaternion.AngleAxis(viewAngleFollow, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (rightLimit3 * viewDistanceFollow));
 
-        Vector3 leftLimit2 = Quaternion.AngleAxis(-viewAngleFollow, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (leftLimit2 * viewDistanceFollow));
+        Vector3 leftLimit3 = Quaternion.AngleAxis(-viewAngleFollow, transform.up) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + (leftLimit3 * viewDistanceFollow));
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, viewDistanceScape);
-
-        Vector3 rightLimit3 = Quaternion.AngleAxis(viewAngleScape, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (rightLimit3 * viewDistanceScape));
-
-        Vector3 leftLimit3 = Quaternion.AngleAxis(-viewAngleScape, transform.up) * transform.forward;
-        Gizmos.DrawLine(transform.position, transform.position + (leftLimit3 * viewDistanceScape));
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPivot.position, radiusAttack);
     }
 
     public void WrapperStates()
@@ -276,5 +315,20 @@ public class ModelEnemyArcher : EnemyClass {
         else isOcuped = false;
     }
 
-  
+    Vector3 avoidance()
+    {
+        var friends = Physics.OverlapSphere(transform.position, radiusAvoid).Where(x => x.GetComponent<ModelEnemy>() && x != this).Select(x => x.GetComponent<ModelEnemy>());
+        if (friends.Count() > 0)
+        {
+            var dir = transform.position - friends.First().transform.position;
+            return dir.normalized;
+        }
+        else return Vector3.zero;
+    }
+
+    public void Dead()
+    {
+        gameObject.SetActive(false);
+        isDead = true;
+    }
 }

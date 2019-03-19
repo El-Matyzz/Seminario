@@ -10,14 +10,14 @@ public class EnemyCombatManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        times = Random.Range(1,2);
+        times = Random.Range(1,3);
      
 	}
 
     public void ResetTimes()
     {
         times--;
-        if(times<=0) times = Random.Range(1, 2); 
+        if(times<=0) times = Random.Range(1, 3); 
     }
 
 }

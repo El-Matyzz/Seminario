@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ModelEnemyArcher : EnemyClass {
 
-    public bool isFollow;
+    public bool isPersuit;
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
@@ -34,20 +35,12 @@ public class ModelEnemyArcher : EnemyClass {
     public float viewDistanceAttack;
     public float viewAngleAttack;
     public float speed;
-    public float radFlock;
-    public float separationWeight;
-    public float timeToShoot;
+    float timeToShoot;
+    public float shootTime;
     float starDistaceToFollow;
     int countTimesForSearch;
 
-
-    public IEnumerator Reloading()
-    {
-        isReloading = true;
-        yield return new WaitForSeconds(5);
-        isReloading = false;
-    }
-
+    public StateMachine sm;  
 
     public override IEnumerator Bleeding(float bleedingTime)
     {
@@ -129,27 +122,34 @@ public class ModelEnemyArcher : EnemyClass {
     // Use this for initialization
     void Start () {
 
+        timeToShoot = shootTime;
+        startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        sm = new StateMachine();
+        sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
+        sm.AddState(new S_Patrol(sm, this, speed));
+        sm.AddState(new S_BackHome(sm, this, speed));
+        sm.AddState(new S_Aiming(sm, this, target.transform, sightSpeed));
         view = GetComponent<ViewerEnemy>();
         timeToScape = true;
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
         StartCoroutine(FillFriends());
-       // ess = GetComponent<EnemyScreenSpace>();
+        dileyToAttack = UnityEngine.Random.Range(2f, 3f);
+        // ess = GetComponent<EnemyScreenSpace>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        WrapperStates();
-        GetObstacles();
 
-        if (currentMovement != null && !isOcuped) currentMovement.ESMove();
-         
+        WrapperStates();
+        sm.Update();
+               
         if (target != null && !isOcuped && timeToScape) isScape = SearchForTarget.SearchTarget(target, viewDistanceScape, viewAngleScape, gameObject, true);
 
         if (isScape) StartCoroutine(ScapeTime());
 
-        if (target != null && !isAttack && !isOcuped && !startScape) isFollow = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
-        else isFollow = false;
+        if (target != null && !isAttack && !isOcuped && !startScape) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
+        else isPersuit = false;
 
         if (target != null && !isOcuped && !startScape) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
         else isAttack = false;
@@ -162,11 +162,11 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void Attack()
     {
-        timeToShoot += Time.deltaTime;
-        if (timeToShoot > 4) view.AttackVisorLight();
-        currentMovement = new EnemySightFollow(this, target.transform, sightSpeed);
+        timeToShoot -= Time.deltaTime;
+       // if (timeToShoot > 4) view.AttackVisorLight();
+        sm.SetState<S_Aiming>();
 
-        if (!isReloading)
+        if (timeToShoot<=0)
         {
             attackPivot.LookAt(target.transform.position);
 
@@ -186,16 +186,41 @@ public class ModelEnemyArcher : EnemyClass {
                 newArrow.transform.forward = transform.forward;
                 Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
                 arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.2f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
-                timeToShoot = 0;
-                view.DesactivateLightAttack();
-                StartCoroutine(Reloading());
+                // view.DesactivateLightAttack();
+                timeToShoot = shootTime;               
             }
         }
     }
 
     public void Follow()
     {
-        currentMovement = new EnemyFollow(this, target, speed);
+        pathToTarget.Clear();
+        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        if (targetCell != null)
+        {
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
+            sm.SetState<S_Persuit>();
+        }
+        else
+        {
+            isPersuit = false;
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            sm.SetState<S_BackHome>();
+            isBackHome = true;
+        }
+    }
+
+    public void BackHome()
+    {
+
+        pathToTarget.Clear();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+        var distance = Vector3.Distance(transform.position, startCell.transform.position);
+        if (distance <= 1) isBackHome = false;
+        sm.SetState<S_BackHome>();
+
     }
 
     public void Scape()
@@ -251,38 +276,5 @@ public class ModelEnemyArcher : EnemyClass {
         else isOcuped = false;
     }
 
-    Collider GetCloserOb()
-    {
-        if (obstacles.Count > 0)
-        {
-            Collider closer = null;
-            float dist = 99999;
-            foreach (var item in obstacles)
-            {
-                var newDist = Vector3.Distance(item.transform.position, transform.position);
-                if (newDist < dist)
-                {
-                    dist = newDist;
-                    closer = item;
-                }
-            }
-            return closer;
-        }
-        else
-            return null;
-    }
-
-    Vector3 getObstacleAvoidance()
-    {
-
-         return Vector3.zero;
-    }
-
-    void GetObstacles()
-    {
-        obstacles.Clear();
-        obstacles.AddRange(Physics.OverlapSphere(transform.position, radObst, obstacle));
-    }
-
-
+  
 }

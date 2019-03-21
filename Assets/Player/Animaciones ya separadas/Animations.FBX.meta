@@ -511,14 +511,14 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: NoReciveDamage
+        functionName: FalseOnDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: FalseOnDamage
+        functionName: NoReciveDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

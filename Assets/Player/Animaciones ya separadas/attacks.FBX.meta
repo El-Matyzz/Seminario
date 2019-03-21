@@ -475,15 +475,15 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
-        functionName: DesactivateAttack
+      - time: 0.42442006
+        functionName: MakeDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6420857
-        functionName: MakeDamage
+      - time: 1
+        functionName: DesactivateAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

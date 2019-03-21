@@ -141,7 +141,7 @@ public class ModelEnemyArcher : EnemyClass {
         timeToShoot -= Time.deltaTime;
        // if (timeToShoot > 4) view.AttackVisorLight();
         sm.SetState<S_Aiming>();
-
+        target.GetComponent<Model>().CombatState();
         if (timeToShoot<=0)
         {
             attackPivot.LookAt(target.transform.position);
@@ -175,6 +175,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void AttackMelle()
     {
+        target.GetComponent<Model>().CombatState();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
 
@@ -193,7 +194,7 @@ public class ModelEnemyArcher : EnemyClass {
 
             if (OnAttack)
             {
-                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).First();
+                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
                 if (player != null)
                 {
                     player.GetDamage(attackDamage, transform, false);

@@ -38,6 +38,7 @@ public class Model : MonoBehaviour
     public float powerStamina;
     public float dashStamina;
     public float recoveryStamina;
+    public float timeAnimCombat;
 
     public int[] potions = new int[5];
     public IPotionEffect currentPotionEffect;
@@ -254,6 +255,18 @@ public class Model : MonoBehaviour
 
         if (currentPotionEffect != null)
             currentPotionEffect.PotionEffect();
+
+
+        if(countAnimAttack>0)
+        {
+            timeAnimCombat -= Time.deltaTime;
+            if (timeAnimCombat < 0)
+            {
+                countAnimAttack = 0;
+                view.currentAttackAnimation = 0;
+                view.anim.SetInteger("AttackAnim", 0);            
+            }
+        }
     }
 
     public void DrinkPotion(int i)
@@ -447,19 +460,15 @@ public class Model : MonoBehaviour
 
     public void NormalAttack()
     {
-        if (!isDead && stamina - attackStamina >= 0)
+        if (!isDead && stamina - attackStamina >= 0 )
         {
-            Attack();
-            //view.SpawParticleSword(countAnimAttack);
+            timeAnimCombat = 0.5f;
             countAnimAttack++;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
+            Attack();        
         }
-        if (!InActionAttack)
-        {
-            StopCoroutine(CountAttack());
-            StartCoroutine(CountAttack());
-            InActionAttack = true;
-        }
+        if (!InActionAttack) InActionAttack = true;
+        
     }
 
     public void MakeDamage()
@@ -523,7 +532,7 @@ public class Model : MonoBehaviour
 
     public void CountAnimZero()
     {
-        countAnimAttack = 0;
+        //countAnimAttack = 0;
     }
 
     public void GetDamage(float damage, Transform enemy, bool isProyectile)

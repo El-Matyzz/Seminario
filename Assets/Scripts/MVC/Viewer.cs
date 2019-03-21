@@ -10,6 +10,9 @@ public class Viewer : MonoBehaviour {
     public Controller controller;
     public Animator anim;
     bool turn;
+    bool melleCombo1;
+    bool melleCombo2;
+    bool melleCombo3;
     CamShake camShake;
 
     public Image power1;
@@ -31,10 +34,18 @@ public class Viewer : MonoBehaviour {
 
     public List<GameObject> particlesSowrd;
 
+    public int currentAttackAnimation;
+
     public IEnumerator DestroyParticles(GameObject p)
     {
         yield return new WaitForSeconds(0.5f);
         Destroy(p);
+    }
+
+    public IEnumerator SaveSwordAnim()
+    {
+        yield return new WaitForSeconds(0.5f);
+        anim.SetLayerWeight(1, 0);
     }
 
     public void Update()
@@ -57,6 +68,8 @@ public class Viewer : MonoBehaviour {
 
         anim.SetFloat("VelX", velocityX);
         anim.SetFloat("VelZ", velocityZ);
+
+       
     }
 
     public void Awake()
@@ -64,6 +77,8 @@ public class Viewer : MonoBehaviour {
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
     }
+
+   
 
     public void RunSword()
     {
@@ -187,7 +202,7 @@ public class Viewer : MonoBehaviour {
 
     public void TakeSword()
     {
-        anim.SetLayerWeight(1, 1);
+        //  anim.SetLayerWeight(1, 1);
         anim.SetBool("SaveSword", false);
         anim.SetBool("TakeSword", true);
     }
@@ -195,7 +210,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseTakeSword()
     {
-        anim.SetBool("TakeSword", false);
+        //  anim.SetBool("TakeSword", false);
     }
 
     public void SaveSword()
@@ -203,38 +218,39 @@ public class Viewer : MonoBehaviour {
         anim.SetLayerWeight(1, 1);
         anim.SetBool("SaveSword", true);
         controller.useSword = false;
+        StartCoroutine(SaveSwordAnim());
     }
 
     public void FalseSaveSword()
     {
 
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
         controller.useSword = false;
     }
 
     public void DesactivateLayer()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("SaveSword", false);
         anim.SetBool("TakeSword", false);
     }
 
     public void Estocada()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("EstocadaBool", true);
     }
 
     public void NoEstocada()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("EstocadaBool", false);
     }
 
     public void BackEstocada()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("BackEstocada", true);
     }
 
@@ -245,7 +261,7 @@ public class Viewer : MonoBehaviour {
 
     public void GolpeGiratorio()
     {
-        anim.SetLayerWeight(1, 0);
+        // anim.SetLayerWeight(1, 0);
         if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", true);
 
         else anim.SetBool("GolpeGiratorio", true);
@@ -253,7 +269,7 @@ public class Viewer : MonoBehaviour {
 
     public void NoGolpeGiratorio()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", false);
 
         else anim.SetBool("GolpeGiratorio",false);
@@ -271,37 +287,37 @@ public class Viewer : MonoBehaviour {
 
     public void SaltoyGolpe1()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", true);
     }
 
     public void NoSaltoyGolpe1()
     {
-        anim.SetLayerWeight(1, 0);
+        // anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack", false);
     }
 
     public void SaltoyGolpe2()
     {
-        anim.SetLayerWeight(1, 0);
+        // anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", true);
     }
 
     public void NoSaltoyGolpe2()
     {
-        anim.SetLayerWeight(1, 0);
+        // anim.SetLayerWeight(1, 0);
         anim.SetBool("JumpAttack2", false);
     }
 
     public void Uppercut()
     {
-        anim.SetLayerWeight(1, 0);
+        // anim.SetLayerWeight(1, 0);
         anim.SetBool("Uppercut", true);
     }
 
     public void FalseUppercut()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetBool("Uppercut", false);
     }
 
@@ -310,7 +326,7 @@ public class Viewer : MonoBehaviour {
         if (!model.onPowerState)
         {
             camShake.ShakeCamera(3.5f, 1);
-            anim.SetLayerWeight(1, 0);
+            //  anim.SetLayerWeight(1, 0);
             var random = Random.Range(1, 4);
             anim.SetInteger("TakeDamage", random);
         }
@@ -318,52 +334,17 @@ public class Viewer : MonoBehaviour {
 
     public void NoReciveDamage()
     {
-        anim.SetLayerWeight(1, 0);
+        //  anim.SetLayerWeight(1, 0);
         anim.SetInteger("TakeDamage", 0);
     }
 
     public void BasicAttack()
     {
-        anim.SetLayerWeight(1, 0);
-
-        if (model.countAnimAttack == 0)
-        {
-            anim.SetBool("attack", true);
-            anim.SetBool("SaveSword", false);
-            anim.SetBool("TakeSword", true);
-        }
-        if (model.countAnimAttack == 1) BasicAttack2();
-
-        if (model.countAnimAttack >= 2) BasicAttack3();
+        currentAttackAnimation ++;
+        Mathf.Clamp(currentAttackAnimation, 0, 3);
+        anim.SetInteger("AttackAnim", currentAttackAnimation);
     }
-
-    public void BasicAttack2()
-    {
-      
-        anim.SetBool("attack", false);
-        anim.SetBool("attack2", true);
-        StartCoroutine(Triggers1());      
-    }
-
-    public void BasicAttack3()
-    {
-        anim.SetBool("attack2", false);
-        anim.SetBool("attack3", true);
-        StartCoroutine(Triggers2());       
-    }
-
-    IEnumerator Triggers1()
-    {
-        yield return new WaitForSeconds(0.5f);
-        anim.SetBool("attack2", false);
-    }
-
-    IEnumerator Triggers2()
-    {
-        yield return new WaitForSeconds(0.5f);
-        anim.SetBool("attack3", false);
-    }
-   
+     
 
     public void Dead()
     {

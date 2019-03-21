@@ -108,7 +108,7 @@ public class ModelEnemy :  EnemyClass
     // Update is called once per frame
     void Update()
     {
-         sm.Update();
+        sm.Update();
         playerCells.Clear();
         playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
         
@@ -194,7 +194,7 @@ public class ModelEnemy :  EnemyClass
 
     public void Attack()
     {
-
+        target.GetComponent<Model>().CombatState();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
 
@@ -213,7 +213,7 @@ public class ModelEnemy :  EnemyClass
 
             if (OnAttack)
             {
-                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).First();
+                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
                 if (player != null)
                 {
                     player.GetDamage(attackDamage, transform, false);

@@ -10,7 +10,7 @@ public class S_Persuit : EnemyState
 
     public S_Persuit(StateMachine sm, EnemyClass e, Model player, float speed) : base(sm, e)
     {
-        player.CombatState();
+       // player.CombatState();
         _enemy = e;
         _speed = speed;
     }

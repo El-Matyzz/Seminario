@@ -91,8 +91,6 @@ public class Model : MonoBehaviour
     public Action SaltoyGolpe2;
     public Action Uppercut;
     public Action OnDamage;
-    public event Action Combat;
-    public event Action Safe;
     public Action Fall;
     public Action Dead;
 
@@ -215,11 +213,16 @@ public class Model : MonoBehaviour
     void Update()
     {
         timeOnCombat -= Time.deltaTime;
+        if (timeOnCombat > 0)
+        {
+            view.anim.SetBool("IdleCombat", true);
+            
+        }
         if (timeOnCombat <= 0) timeOnCombat = 0;
         if (timeOnCombat <= 0 && isInCombat)
         {
-            Safe();
-            view.FalseTakeSword();
+            view.anim.SetBool("IdleCombat", false);
+            view.anim.SetBool("Idle", true);
             isInCombat = false;
         }
 
@@ -483,9 +486,7 @@ public class Model : MonoBehaviour
             if (item.GetComponent<EnemyClass>())
             {
                
-                view.StartCoroutine(view.SlowSpeed());
-                //if (item.GetComponent<ModelEnemy>() && item.GetComponent<ModelEnemy>().createAttack)
-                //item.GetComponent<ModelEnemy>().GetBack(transform.position);
+                view.StartCoroutine(view.SlowSpeed());              
                 item.GetComponent<EnemyClass>().GetDamage(10);
                 item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
             }
@@ -504,12 +505,8 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 10;
-        if (!isInCombat && !view.anim.GetBool("attack")
-                        && !view.anim.GetBool("Uppercut")
-                        && !view.anim.GetBool("GolpeGiratorio2")
-                        && !view.anim.GetBool("GolpeGiratorio")
-                        && !view.anim.GetBool("EstocadaBool")) Combat();
+        timeOnCombat = 10;      
+        view.anim.SetBool("IdleCombat", true);
         isInCombat = true;
     }
 
@@ -528,11 +525,6 @@ public class Model : MonoBehaviour
     public void FalseOnDamage()
     {
         onDamage = false;
-    }
-
-    public void CountAnimZero()
-    {
-        //countAnimAttack = 0;
     }
 
     public void GetDamage(float damage, Transform enemy, bool isProyectile)

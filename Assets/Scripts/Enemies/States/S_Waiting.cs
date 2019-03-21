@@ -11,7 +11,7 @@ public class S_Waiting : EnemyState
     public S_Waiting(StateMachine sm, EnemyClass e, ModelEnemy model, GameObject player) : base(sm, e)
     {
         var modelPlayer = player.GetComponent<Model>();
-        modelPlayer.CombatState();
+       // modelPlayer.CombatState();
         _model = model;
         _player = player;
     }

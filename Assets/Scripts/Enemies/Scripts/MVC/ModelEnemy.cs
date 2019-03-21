@@ -132,8 +132,9 @@ public class ModelEnemy :  EnemyClass
     public void Persuit()
     {
         pathToTarget.Clear();
+        target.GetComponent<Model>().CombatState();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         if (targetCell != null)
         {
             pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
@@ -196,7 +197,7 @@ public class ModelEnemy :  EnemyClass
     {
         target.GetComponent<Model>().CombatState();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
 
         if (targetCell != null)
         {

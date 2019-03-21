@@ -50,6 +50,7 @@ public class Viewer : MonoBehaviour {
 
     public void Update()
     {
+        
 
         var velocityX = Input.GetAxis("Vertical") ;
         var velocityZ = Input.GetAxis("Horizontal") ;
@@ -76,6 +77,7 @@ public class Viewer : MonoBehaviour {
     {
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
+    
     }
 
    
@@ -193,40 +195,6 @@ public class Viewer : MonoBehaviour {
     public void FalseFall()
     {
         anim.SetBool("FallBool", false);
-    }
-
-    public void DesactivateAttack()
-    {
-        anim.SetBool("attack", false);
-    }
-
-    public void TakeSword()
-    {
-        //  anim.SetLayerWeight(1, 1);
-        anim.SetBool("SaveSword", false);
-        anim.SetBool("TakeSword", true);
-    }
-
-
-    public void FalseTakeSword()
-    {
-        //  anim.SetBool("TakeSword", false);
-    }
-
-    public void SaveSword()
-    {
-        anim.SetLayerWeight(1, 1);
-        anim.SetBool("SaveSword", true);
-        controller.useSword = false;
-        StartCoroutine(SaveSwordAnim());
-    }
-
-    public void FalseSaveSword()
-    {
-
-        //  anim.SetLayerWeight(1, 0);
-        anim.SetBool("SaveSword", false);
-        controller.useSword = false;
     }
 
     public void DesactivateLayer()

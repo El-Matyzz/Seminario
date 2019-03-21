@@ -137,7 +137,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void AttackRange()
     {
-
+        target.GetComponent<Model>().CombatState();
         timeToShoot -= Time.deltaTime;
        // if (timeToShoot > 4) view.AttackVisorLight();
         sm.SetState<S_Aiming>();
@@ -177,7 +177,7 @@ public class ModelEnemyArcher : EnemyClass {
     {
         target.GetComponent<Model>().CombatState();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
 
         if (targetCell != null)
         {
@@ -225,10 +225,10 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void Persuit()
     {
-        Debug.Log(1);
+        target.GetComponent<Model>().CombatState();
         pathToTarget.Clear();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         if (targetCell != null)
         {
             pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
@@ -247,7 +247,7 @@ public class ModelEnemyArcher : EnemyClass {
     {
         Debug.Log(2);
         pathToTarget.Clear();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
         var distance = Vector3.Distance(transform.position, startCell.transform.position);
         if (distance <= 2)

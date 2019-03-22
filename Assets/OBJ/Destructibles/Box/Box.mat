@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Box
   m_Shader: {fileID: 4800000, guid: 139921226f3e5b64cbb017ed9ad82417, type: 3}
   m_ShaderKeywords: 
@@ -40,5 +41,5 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Opacity: 0
-    - __dirty: 1
+    - __dirty: 0
     m_Colors: []

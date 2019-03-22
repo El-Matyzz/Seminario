@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1952680142854579482}
   - component: {fileID: 823687662860655101}
   m_Layer: 0
-  m_Name: Banner
+  m_Name: BannerApple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

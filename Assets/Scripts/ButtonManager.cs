@@ -14,9 +14,9 @@ public class ButtonManager : MonoBehaviour {
         }
     }
 
-    public void Restart()
+    public void LoadLevel1()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void Quit()

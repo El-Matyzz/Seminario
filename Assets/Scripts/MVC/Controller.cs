@@ -104,7 +104,7 @@ public class Controller : MonoBehaviour
             if (!Input.GetKey(KeyCode.D)) pushD = false;
             if (!Input.GetKey(KeyCode.A)) pushA = false;
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && model.stamina>5 )
             {
                 view.FalseTrotAnim();
                 model.isRuning = true;

@@ -129,7 +129,7 @@ public class Viewer : MonoBehaviour {
     }
     public void UpdateLifeBar(float val)
     {
-        lifeBar.fillAmount = val;
+        StartCoroutine(BarSmooth(val));
     }
 
     public void UpdateStaminaBar(float val)
@@ -145,6 +145,26 @@ public class Viewer : MonoBehaviour {
     public void UpdateArmorBar(float val)
     {
         armor.fillAmount = val;
+    }
+
+    public IEnumerator BarSmooth(float target)
+    {
+        bool timerRunning = true;
+        float smoothTimer = 0;
+
+        float current = lifeBar.fillAmount;
+
+        if (current - target <= 0.025f)
+            lifeBar.fillAmount = target;
+
+        while (timerRunning)
+        {
+            smoothTimer += Time.deltaTime * 1.5f;
+            lifeBar.fillAmount = Mathf.Lerp(current, target, smoothTimer);
+            if (smoothTimer > 1)
+                timerRunning = false;
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     public void UpdatePotions(int i)
@@ -332,7 +352,7 @@ public class Viewer : MonoBehaviour {
             youDied.GetComponent<Image>().color = tempColor;
             if (alpha >= 1)
             {
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(2);
                 /*
                 camController.blockMouse = false;
                 for (int i = 0; i < youDied.transform.childCount; i++)
@@ -355,7 +375,7 @@ public class Viewer : MonoBehaviour {
             tempColor.a = alpha;
             youWin.GetComponent<Image>().color = tempColor;
             if (alpha >= 1)
-                SceneManager.LoadScene(2);
+                SceneManager.LoadScene(3);
             yield return new WaitForEndOfFrame();
         }
     }

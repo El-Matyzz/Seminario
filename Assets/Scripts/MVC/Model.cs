@@ -216,7 +216,7 @@ public class Model : MonoBehaviour
         if (timeOnCombat > 0)
         {
             view.anim.SetBool("IdleCombat", true);
-            
+
         }
         if (timeOnCombat <= 0) timeOnCombat = 0;
         if (timeOnCombat <= 0 && isInCombat)
@@ -260,14 +260,14 @@ public class Model : MonoBehaviour
             currentPotionEffect.PotionEffect();
 
 
-        if(countAnimAttack>0)
+        if (countAnimAttack > 0)
         {
             timeAnimCombat -= Time.deltaTime;
             if (timeAnimCombat < 0)
             {
                 countAnimAttack = 0;
                 view.currentAttackAnimation = 0;
-                view.anim.SetInteger("AttackAnim", 0);            
+                view.anim.SetInteger("AttackAnim", 0);
             }
         }
     }
@@ -283,10 +283,10 @@ public class Model : MonoBehaviour
             potionEffects[i] = new Health(this, life, totalLife);
         else
             if (i == (int)PotionName.Stamina)
-                potionEffects[i] = new Stamina(this, stamina, totalStamina);
-            else
+            potionEffects[i] = new Stamina(this, stamina, totalStamina);
+        else
                 if (i == (int)PotionName.Mana)
-                    potionEffects[i] = new Mana(this, mana, totalMana);
+            potionEffects[i] = new Mana(this, mana, totalMana);
 
         potions[i]--;
         view.UpdatePotions(i);
@@ -463,33 +463,36 @@ public class Model : MonoBehaviour
 
     public void NormalAttack()
     {
-        if (!isDead && stamina - attackStamina >= 0 )
+        if (!isDead && stamina - attackStamina >= 0)
         {
             timeAnimCombat = 0.5f;
             countAnimAttack++;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
-            Attack();        
+            Attack();
         }
         if (!InActionAttack) InActionAttack = true;
-        
+
     }
 
     public void MakeDamage()
     {
         stamina -= attackStamina;
         view.UpdateStaminaBar(stamina / totalStamina);
-       
+
         if (countAnimAttack > 1) rb.AddForce(transform.forward * 2, ForceMode.Impulse);
-        var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x=> x.GetComponent<EnemyClass>());
+        var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyClass>()).Select(x => x.GetComponent<EnemyClass>());
+        var desMesh = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<DestructibleOBJ>()).Select(x => x.GetComponent<DestructibleOBJ>()); ;
         foreach (var item in col)
         {
-            if (item.GetComponent<EnemyClass>())
-            {
-               
-                view.StartCoroutine(view.SlowSpeed());              
-                item.GetComponent<EnemyClass>().GetDamage(10);
-                item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
-            }
+            view.StartCoroutine(view.SlowSpeed());
+            item.GetDamage(10);
+            item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
+        }
+
+        Debug.Log(desMesh.Count());
+        foreach (var item in desMesh)
+        {
+            item.StartCoroutine(item.startDisolve());
         }
     }
 
@@ -505,7 +508,7 @@ public class Model : MonoBehaviour
 
     public void CombatState()
     {
-        timeOnCombat = 10;      
+        timeOnCombat = 10;
         view.anim.SetBool("IdleCombat", true);
         isInCombat = true;
     }

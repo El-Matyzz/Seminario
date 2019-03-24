@@ -4,11 +4,17 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Wall Closed-Curve(Left) Up (Final) Back
     400000: //RootNode
-    2100000: Establo
+    400002: Wall Closed-Curve(Left) Up (Final) Back
+    2100000: 01 - Default
     2300000: //RootNode
+    2300002: Wall Closed-Curve(Left) Up (Final) Back
     3300000: //RootNode
+    3300002: Wall Closed-Curve(Left) Up (Final) Back
     4300000: Wall Closed-Curve(Left)
+    4300002: Wall Closed-Curve(Left) Up (Final) Back
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

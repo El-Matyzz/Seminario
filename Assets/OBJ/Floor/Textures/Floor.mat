@@ -43,5 +43,5 @@ Material:
     - _TessMin: 10
     - _TessValue: 15
     - _TesselIntensity: 0.039
-    - __dirty: 0
+    - __dirty: 1
     m_Colors: []

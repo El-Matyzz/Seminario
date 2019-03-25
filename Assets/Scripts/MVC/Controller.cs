@@ -119,7 +119,7 @@ public class Controller : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.acceleration = 0;
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !smashBool && !model.onAir && model.countAnimAttack<3)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && !smashBool && !model.onAir && model.countAnimAttack<4)
             {
                 StartCoroutine(DelaySmash());
                 useSword = true;

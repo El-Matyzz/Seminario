@@ -63,6 +63,7 @@ public class Model : MonoBehaviour
     public bool onDefence;
     public bool onDash;
     public bool biz;
+    bool sleepAnim;
 
     bool cdPower1;
     bool cdPower2;
@@ -463,11 +464,12 @@ public class Model : MonoBehaviour
 
     public void NormalAttack()
     {
-        if (!isDead && stamina - attackStamina >= 0)
-        {
-            timeAnimCombat = 0.5f;
+        if (!isDead && stamina - attackStamina >= 0 && !sleepAnim)
+        {      
+            if(countAnimAttack==1) timeAnimCombat = 0.9f;
+            else timeAnimCombat = 0.6f;
             countAnimAttack++;
-            countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 3);
+            countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 4);
             Attack();
         }
         if (!InActionAttack) InActionAttack = true;
@@ -528,6 +530,16 @@ public class Model : MonoBehaviour
     public void FalseOnDamage()
     {
         onDamage = false;
+    }
+
+    public void SleepCombo()
+    {
+        sleepAnim = true;
+    }
+
+    public void AwakeCombo()
+    {
+        sleepAnim = false;
     }
 
     public void GetDamage(float damage, Transform enemy, bool isProyectile)

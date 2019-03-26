@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4079800262441354}
   - component: {fileID: 3794292393929704619}
   - component: {fileID: 1647376208892138510}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: CellPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,10 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa77320eb3b691141bd4d13926352c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  room: 0
   pos: {x: 0, y: 0}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   untransitableColor: {r: 0, g: 0, b: 0, a: 1}
   colorPath: {r: 0, g: 0, b: 0, a: 0}
+  transitable: 1
 --- !u!65 &1647376208892138510
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -74,7 +76,7 @@ GameObject:
   - component: {fileID: 223590488275420184}
   - component: {fileID: 114947527140248298}
   - component: {fileID: 114032600136025556}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +174,7 @@ GameObject:
   - component: {fileID: 224518478890087318}
   - component: {fileID: 222153236375845504}
   - component: {fileID: 114272906693637510}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: CostText
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -55,6 +55,7 @@ public class S_Patrol : EnemyState
     {
 
         base.Sleep();
-        
+
     }
 }
+

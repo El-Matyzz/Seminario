@@ -88,11 +88,11 @@ public class ModelEnemyArcher : EnemyClass {
 
         startRotation = transform.forward;
         timeToShoot = shootTime;
-        startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+       // startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
-        sm.AddState(new S_Patrol(sm, this, speed));
-        sm.AddState(new S_BackHome(sm, this, speed));
+       // sm.AddState(new S_Patrol(sm, this, speed));
+      //  sm.AddState(new S_BackHome(sm, this, speed));
         sm.AddState(new S_Aiming(sm, this, target.transform, sightSpeed));
         view = GetComponent<ViewerEnemy>();
         munition = FindObjectOfType<EnemyAmmo>();
@@ -206,7 +206,7 @@ public class ModelEnemyArcher : EnemyClass {
         else
         {
             isAttack = false;
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+           // pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
             sm.SetState<S_BackHome>();
             isBackHome = true;
         }
@@ -226,18 +226,18 @@ public class ModelEnemyArcher : EnemyClass {
     public void Persuit()
     {
         target.GetComponent<Model>().CombatState();
-        pathToTarget.Clear();
+       // pathToTarget.Clear();
         var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
         if (targetCell != null)
         {
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
+            //pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
             sm.SetState<S_Persuit>();
         }
         else
         {
             isPersuit = false;
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            //pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
             sm.SetState<S_BackHome>();
             isBackHome = true;
         }
@@ -245,23 +245,23 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void BackHome()
     {
-        Debug.Log(2);
-        pathToTarget.Clear();
+       /* Debug.Log(2);
+       // pathToTarget.Clear();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-        var distance = Vector3.Distance(transform.position, startCell.transform.position);
+        //pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+        //var distance = Vector3.Distance(transform.position, startCell.transform.position);
         if (distance <= 2)
         {
             transform.forward = startRotation;
             isBackHome = false;
         }
         sm.SetState<S_BackHome>();
-
+        */
     }
 
     public void Scape()
     {
-       currentMovement = new EnemyScape(this, target.transform, speed);
+       //currentMovement = new EnemyScape(this, target.transform, speed);
     }
 
     public override void GetDamage(float damage)
@@ -332,4 +332,6 @@ public class ModelEnemyArcher : EnemyClass {
         gameObject.SetActive(false);
         isDead = true;
     }
+
+    
 }

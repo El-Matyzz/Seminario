@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class ModelEnemy :  EnemyClass
+public class ModelEnemy : EnemyClass
 {
     public ViewerEnemy view;
     public EnemyCombatManager cm;
@@ -23,13 +23,14 @@ public class ModelEnemy :  EnemyClass
 
     bool startSearch;
     bool increaseFollowRadio;
-    
+
     public List<Collider> obstacles;
 
     public Transform attackPivot;
     public LayerMask layerObst;
     public StateMachine sm;
     List<Cell> playerCells = new List<Cell>();
+    List<Cell> transitableCells = new List<Cell>();
     public float attackDamage;
     public float radiusAttack;
     public float viewAnglePersuit;
@@ -43,7 +44,7 @@ public class ModelEnemy :  EnemyClass
     public float knockbackForce;
     float maxDileyToAttack;
     float timeToChangePatrol;
-      
+
     public IEnumerator Resting()
     {
         resting = true;
@@ -86,8 +87,8 @@ public class ModelEnemy :  EnemyClass
     void Start()
     {
         startRotation = transform.forward;
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable));
         startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
-        cellToPatrol = startCell;     
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_Waiting(sm, this, this, target));
@@ -96,13 +97,11 @@ public class ModelEnemy :  EnemyClass
         sm.SetState<S_Patrol>();
         rb = GetComponent<Rigidbody>();
         cm = FindObjectOfType<EnemyCombatManager>();
-        dileyToAttack = UnityEngine.Random.Range(2f, 3f);
-        int randomCell1 = UnityEngine.Random.Range(0, myGrid.size.x);
-        int randomCell2 = UnityEngine.Random.Range(0, myGrid.size.x);
-        cellToPatrol = myGrid.cells[randomCell1,randomCell2];
+        dileyToAttack = UnityEngine.Random.Range(2f, 3f);       
+        cellToPatrol = transitableCells[UnityEngine.Random.Range(0, transitableCells.Count())];
         timeToChangePatrol = 10;
-       
-       
+        
+
     }
 
     // Update is called once per frame
@@ -111,8 +110,8 @@ public class ModelEnemy :  EnemyClass
         sm.Update();
         playerCells.Clear();
         playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
-        
-        if (!isAttack && !isOcuped && playerCells.Count >0 ) isPersuit = SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, gameObject, true);
+
+        if (!isAttack && !isOcuped && playerCells.Count > 0) isPersuit = SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, gameObject, true);
 
         if (target != null && !isOcuped && playerCells.Count > 0) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
 
@@ -151,7 +150,7 @@ public class ModelEnemy :  EnemyClass
 
     public void BackHome()
     {
-        
+
         pathToTarget.Clear();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
@@ -167,18 +166,20 @@ public class ModelEnemy :  EnemyClass
 
     public void Patrol()
     {
+        pathToTarget.Clear();
+        transitableCells.Clear();
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable));
         timeToChangePatrol -= Time.deltaTime;
-        if(timeToChangePatrol<=0)
+        if (timeToChangePatrol <= 0)
         {
-            int randomCell1 = UnityEngine.Random.Range(0, myGrid.size.x);
-            int randomCell2 = UnityEngine.Random.Range(0, myGrid.size.x);
-            cellToPatrol = myGrid.cells[randomCell1, randomCell2];
+
+            cellToPatrol = transitableCells[UnityEngine.Random.Range(0, transitableCells.Count())];
             timeToChangePatrol = 10;
         }
         pathToTarget.Clear();
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
-        
+
         sm.SetState<S_Patrol>();
     }
 
@@ -189,7 +190,7 @@ public class ModelEnemy :  EnemyClass
             timeToAttack = true;
             cm.times--;
         }
-       
+
         sm.SetState<S_Waiting>();
     }
 
@@ -231,7 +232,7 @@ public class ModelEnemy :  EnemyClass
             isBackHome = true;
         }
 
-       
+
     }
 
 
@@ -276,7 +277,7 @@ public class ModelEnemy :  EnemyClass
         }
         else return Vector3.zero;
     }
-   
+
     public void Dead()
     {
         gameObject.SetActive(false);

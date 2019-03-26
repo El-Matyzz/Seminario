@@ -233,16 +233,6 @@
     <Compile Include="Assets\Scripts\Enemies\Scripts\MVC\ModelEnemyArcher.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\MVC\ViewerEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemies\Scripts\SearchForTarget.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\E_Patrol.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\E_Persuit.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\E_Waiting.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemyFollow.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemyMeleAttack.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemyPatrol.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemyScape.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemySearching.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\EnemySightFollow.cs" />
-    <Compile Include="Assets\Scripts\Enemies\Scripts\Strategy\ESMovent.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\EnemyState.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_Aiming.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_BackHome.cs" />

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Cell : MonoBehaviour
 {
     //Evento al seleccionar
+    public int room;
     public event Action<Cell> OnSelect = delegate { };
 
     public Vector2Int pos;//Posicion en la grilla
@@ -37,8 +38,11 @@ public class Cell : MonoBehaviour
         {
             //SetColor(value ? defaultColor : untransitableColor);
             costText.gameObject.SetActive(value);
-            gameObject.layer = value ? transitableLayer : blockedLayer;
-            transitable = value;
+            //gameObject.layer = value ? transitableLayer : blockedLayer;
+            //transitable = value;
+            gameObject.layer = 9;
+            transitable = false;
+            colorPath = Color.red;
         }
     }
 
@@ -58,6 +62,7 @@ public class Cell : MonoBehaviour
 
     private void Awake()
     {
+        
         /* var obstacles = Physics.OverlapSphere(transform.position, 01f);
          foreach (var item in obstacles)
          {
@@ -80,10 +85,15 @@ public class Cell : MonoBehaviour
         Reset();
     }
 
+    public void Start()
+    {
+       
+    }
+
     public void Reset()
     {
         Cost = 1;
-        Transitable = true;
+        //Transitable = true;
         //SetColor(defaultColor);
     }
 

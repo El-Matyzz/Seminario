@@ -481,7 +481,7 @@ public class Model : MonoBehaviour
         stamina -= attackStamina;
         view.UpdateStaminaBar(stamina / totalStamina);
 
-        if (countAnimAttack > 1) rb.AddForce(transform.forward * 2, ForceMode.Impulse);
+        
         var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyClass>()).Select(x => x.GetComponent<EnemyClass>());
         var desMesh = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<DestructibleOBJ>()).Select(x => x.GetComponent<DestructibleOBJ>()); ;
         foreach (var item in col)
@@ -540,6 +540,12 @@ public class Model : MonoBehaviour
     public void AwakeCombo()
     {
         sleepAnim = false;
+    }
+
+    public void Impulse()
+    {
+        if (countAnimAttack==2) rb.AddForce(transform.forward * 3, ForceMode.Impulse);
+        else rb.AddForce(transform.forward * 2, ForceMode.Impulse);
     }
 
     public void GetDamage(float damage, Transform enemy, bool isProyectile)

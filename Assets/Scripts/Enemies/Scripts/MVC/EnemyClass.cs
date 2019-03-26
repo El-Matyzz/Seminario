@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyClass: MonoBehaviour  {
+public abstract class EnemyClass : MonoBehaviour
+{
 
     public abstract void GetDamage(float damage);
     public abstract IEnumerator Stuned(float stunedTimed);
@@ -18,7 +19,6 @@ public abstract class EnemyClass: MonoBehaviour  {
     public float life;
     public Rigidbody rb;
     public GameObject target;
-    public ESMovemnt currentMovement;
     public List<ModelEnemy> myFriends = new List<ModelEnemy>();
     public EnemyScreenSpace ess;
     public int currentIndex = 0;

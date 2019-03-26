@@ -23,27 +23,27 @@ public class S_BackHome : EnemyState
     public override void Execute()
     {
         base.Execute();
-    
-            if (_enemy.pathToTarget == null || _enemy.currentIndex == _enemy.pathToTarget.Count)
-            {
-                return;
 
-            }
-            float d = Vector3.Distance(_enemy.pathToTarget[_enemy.currentIndex].transform.position, _enemy.transform.position);
-            if (d >= 0.25f)
-            {
-                Quaternion targetRotation;
-                _dir = (_enemy.pathToTarget[_enemy.currentIndex].transform.position - _enemy.transform.position).normalized;
-                _dir.y = 0;
-                var forwardDir = (_enemy.startCell.transform.position - _enemy.transform.position).normalized;
-                forwardDir.y = 0;
-                targetRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
-                _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
-                _enemy.rb.MovePosition(_enemy.rb.position + _dir * _speed * Time.deltaTime);
+        if (_enemy.pathToTarget == null || _enemy.currentIndex == _enemy.pathToTarget.Count)
+        {
+            return;
 
-            }
-            else
-                _enemy.currentIndex++;
+        }
+        float d = Vector3.Distance(_enemy.pathToTarget[_enemy.currentIndex].transform.position, _enemy.transform.position);
+        if (d >= 0.25f)
+        {
+            Quaternion targetRotation;
+            _dir = (_enemy.pathToTarget[_enemy.currentIndex].transform.position - _enemy.transform.position).normalized;
+            _dir.y = 0;
+            var forwardDir = (_enemy.startCell.transform.position - _enemy.transform.position).normalized;
+            forwardDir.y = 0;
+            targetRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
+            _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
+            _enemy.rb.MovePosition(_enemy.rb.position + _dir * _speed * Time.deltaTime);
+
+        }
+        else
+            _enemy.currentIndex++;
 
     }
 

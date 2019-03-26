@@ -12,7 +12,7 @@ using UnityEngine;
         public float closestDistance = 0.5f;            // the closest distance the camera can be from the target
         public bool protecting { get; private set; }    // used for determining if there is an object between the target and the camera
         public string dontClipTag = "Player";           // don't clip against objects with this tag (useful for not clipping against the targeted object)
-
+        public bool hitCam;
         private Transform m_Cam;                  // the transform of the camera
         private Transform m_Pivot;                // the point at which the camera pivots around
         private float m_OriginalDist;             // the original distance to the camera before any modification are made
@@ -108,11 +108,13 @@ using UnityEngine;
                 }
             }
 
-            // visualise the cam clip effect in the editor
-            if (hitSomething)
-            {
-                Debug.DrawRay(m_Ray.origin, -m_Pivot.forward*(targetDist + sphereCastRadius), Color.red);
-            }
+        // visualise the cam clip effect in the editor
+        if (hitSomething)
+        {
+            hitCam = true;
+            Debug.DrawRay(m_Ray.origin, -m_Pivot.forward * (targetDist + sphereCastRadius), Color.red);
+        }
+        else hitCam = false;
 
             // hit something so move the camera to a better position
             protecting = hitSomething;

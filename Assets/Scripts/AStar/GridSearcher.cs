@@ -305,25 +305,7 @@ public class GridSearcher : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.N))
-        {
-            showNumbers = !showNumbers;
-            foreach (var cell in grid.cells) cell.ShowText(showNumbers);
-        }
-        if (Input.GetKeyUp(KeyCode.C))
-        {
-            start = end = null;
-            ClearAll();
-        }
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            start = end = null;
-            ResetCosts();
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Search(start,end);
-        }
+       
     }
 
     private void OnDrawGizmos()

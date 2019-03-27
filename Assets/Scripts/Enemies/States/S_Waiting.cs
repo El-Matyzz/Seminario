@@ -26,9 +26,9 @@ public class S_Waiting : EnemyState
     {
         base.Execute();
 
-        if (_model.avoidVect != Vector3.zero)
+        if (_model.avoidVectFriends != Vector3.zero)
         {
-            _model.transform.position += _model.avoidVect * _model.speed * Time.deltaTime;
+            _model.transform.position += _model.avoidVectFriends * _model.speed * Time.deltaTime;
         }
         _dirToTarget = (_player.transform.position - _model.transform.position).normalized;
         _dirToTarget.y = 0;

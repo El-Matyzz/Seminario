@@ -120,7 +120,7 @@ public class ModelEnemyArcher : EnemyClass {
 
         if (isAttackMelle)
         {
-            avoidVect = avoidance() * avoidWeight;
+            avoidVectFriends = avoidance() * avoidWeight;
             AttackMelle();
         }
 

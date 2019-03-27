@@ -19,6 +19,7 @@ public class ModelEnemy : EnemyClass
     public bool timeToAttack;
     public bool isOnPatrol;
     public bool resting;
+    public bool lostTarget;
     bool OnAttack;
 
     bool startSearch;
@@ -32,6 +33,7 @@ public class ModelEnemy : EnemyClass
     List<Cell> playerCells = new List<Cell>();
     List<Cell> transitableCells = new List<Cell>();
     public float attackDamage;
+    public float distanceToBack;
     public float radiusAttack;
     public float viewAnglePersuit;
     public float viewDistancePersuit;
@@ -44,6 +46,7 @@ public class ModelEnemy : EnemyClass
     public float knockbackForce;
     float maxDileyToAttack;
     float timeToChangePatrol;
+    public float timeOfLook;
 
     public IEnumerator Resting()
     {
@@ -87,10 +90,18 @@ public class ModelEnemy : EnemyClass
     void Start()
     {
         startRotation = transform.forward;
-        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable));
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x=>
+        {
+            var d = Vector3.Distance(x.transform.position, transform.position);
+            if (d > 12) return false;
+            else return true;
+
+        }));
+
         startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
+        sm.AddState(new S_LookForTarget(sm, this, speed));
         sm.AddState(new S_Waiting(sm, this, this, target));
         sm.AddState(new S_Patrol(sm, this, speed));
         sm.AddState(new S_BackHome(sm, this, speed));
@@ -100,6 +111,7 @@ public class ModelEnemy : EnemyClass
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);       
         cellToPatrol = transitableCells[UnityEngine.Random.Range(0, transitableCells.Count())];
         timeToChangePatrol = 10;
+        timeOfLook = 10;
         
 
     }
@@ -110,14 +122,23 @@ public class ModelEnemy : EnemyClass
         sm.Update();
         playerCells.Clear();
         playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
+        avoidVectObstacles = AvoidObstacles();
 
-        if (!isAttack && !isOcuped && playerCells.Count > 0) isPersuit = SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, gameObject, true);
+        var d = Vector3.Distance(startCell.transform.position, transform.position);
 
-        if (target != null && !isOcuped && playerCells.Count > 0) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        if (d > distanceToBack) isBackHome = true;
+
+        if (!isAttack && !isOcuped && playerCells.Count > 0 && !isBackHome) isPersuit = SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, gameObject, true);
+        else isPersuit = false;
+
+        if (target != null && !isOcuped && playerCells.Count > 0 && !isBackHome) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        else isAttack = false;
+
+        if (lostTarget && !isPersuit && !isAttack && !isBackHome) LookForTarget();
 
         if (isAttack)
         {
-            avoidVect = avoidance() * avoidWeight;
+            avoidVectFriends = avoidance() * avoidWeight;
             Attack();
         }
 
@@ -130,28 +151,33 @@ public class ModelEnemy : EnemyClass
 
     public void Persuit()
     {
-        pathToTarget.Clear();
-        target.GetComponent<Model>().CombatState();
-        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        if (targetCell != null)
-        {
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
-            sm.SetState<S_Persuit>();
-        }
+        lostTarget = true;
+        timeOfLook = 10;
+        sm.SetState<S_Persuit>();
+    }
+
+    public void LookForTarget()
+    {
+        timeOfLook -= Time.deltaTime;
+        if(timeOfLook<=0) lostTarget = false;
+       
         else
-        {
-            isPersuit = false;
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            sm.SetState<S_BackHome>();
-            isBackHome = true;
-        }
+            sm.SetState<S_LookForTarget>();
+
     }
 
     public void BackHome()
     {
 
         pathToTarget.Clear();
+        transitableCells.Clear();
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
+        {
+            var d = Vector3.Distance(x.transform.position, startCell.transform.position);
+            if (d > 12) return false;
+            else return true;
+
+        }));
         var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
         pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
         var distance = Vector3.Distance(transform.position, startCell.transform.position);
@@ -168,7 +194,13 @@ public class ModelEnemy : EnemyClass
     {
         pathToTarget.Clear();
         transitableCells.Clear();
-        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable));
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
+        {
+            var d = Vector3.Distance(x.transform.position, startCell.transform.position);
+            if (d > 12) return false;
+            else return true;
+
+        }));
         timeToChangePatrol -= Time.deltaTime;
         if (timeToChangePatrol <= 0)
         {
@@ -270,6 +302,17 @@ public class ModelEnemy : EnemyClass
     Vector3 avoidance()
     {
         var friends = Physics.OverlapSphere(transform.position, radiusAvoid).Where(x => x.GetComponent<ModelEnemy>() && x != this).Select(x => x.GetComponent<ModelEnemy>());
+        if (friends.Count() > 0)
+        {
+            var dir = transform.position - friends.First().transform.position;
+            return dir.normalized;
+        }
+        else return Vector3.zero;
+    }
+
+    Vector3 AvoidObstacles()
+    {
+        var friends = Physics.OverlapSphere(transform.position, 2).Where(x => x.gameObject.layer == LayerMask.NameToLayer("Obstacles"));
         if (friends.Count() > 0)
         {
             var dir = transform.position - friends.First().transform.position;

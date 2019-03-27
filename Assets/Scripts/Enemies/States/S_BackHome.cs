@@ -35,11 +35,11 @@ public class S_BackHome : EnemyState
             Quaternion targetRotation;
             _dir = (_enemy.pathToTarget[_enemy.currentIndex].transform.position - _enemy.transform.position).normalized;
             _dir.y = 0;
-            var forwardDir = (_enemy.startCell.transform.position - _enemy.transform.position).normalized;
-            forwardDir.y = 0;
-            targetRotation = Quaternion.LookRotation(forwardDir, Vector3.up);
+            var avoid = _enemy.avoidVectObstacles.normalized;
+            avoid.y = 0;
+            targetRotation = Quaternion.LookRotation(_dir + avoid, Vector3.up);
             _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
-            _enemy.rb.MovePosition(_enemy.rb.position + _dir * _speed * Time.deltaTime);
+            _enemy.rb.MovePosition(_enemy.rb.position + _enemy.transform.forward * _speed * Time.deltaTime);
 
         }
         else
@@ -51,6 +51,6 @@ public class S_BackHome : EnemyState
     {
 
         base.Sleep();
-
+      
     }
 }

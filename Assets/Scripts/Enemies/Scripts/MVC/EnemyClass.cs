@@ -27,7 +27,9 @@ public abstract class EnemyClass : MonoBehaviour
     public Cell startCell;
     public GridSearcher myGridSearcher;
     public Grid myGrid;
-    public Vector3 avoidVect;
+    public Vector3 avoidVectFriends;
+    public Vector3 avoidVectObstacles;
     public Vector3 startRotation;
+    public Vector3 lastTargetPosition;
 
 }

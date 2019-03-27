@@ -236,6 +236,7 @@
     <Compile Include="Assets\Scripts\Enemies\States\EnemyState.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_Aiming.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_BackHome.cs" />
+    <Compile Include="Assets\Scripts\Enemies\States\S_LookForTarget.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_Patrol.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_Persuit.cs" />
     <Compile Include="Assets\Scripts\Enemies\States\S_Waiting.cs" />

@@ -28,7 +28,7 @@ public class SearchForTarget : MonoBehaviour {
             if (detector)
             {
                 if (Physics.Raycast(_enemy.transform.position, _dirToTarget, out rch, _distanceToTarget))
-                    if (rch.collider.gameObject.layer == 8)
+                    if (rch.collider.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
                         obstaclesBetween = true;
             }
             if (!obstaclesBetween)

@@ -15,22 +15,23 @@ public class ModelEnemy : EnemyClass
     public bool isBleeding;
     public bool isDead;
     public bool isOcuped;
-    public bool subscribed;
     public bool timeToAttack;
     public bool isOnPatrol;
     public bool resting;
     public bool lostTarget;
+    public bool flankTarget;
     bool OnAttack;
-
+    bool startback;
     bool startSearch;
     bool increaseFollowRadio;
+   
 
     public List<Collider> obstacles;
 
     public Transform attackPivot;
     public LayerMask layerObst;
+    public LayerMask layerPlayer;
     public StateMachine sm;
-    List<Cell> playerCells = new List<Cell>();
     List<Cell> transitableCells = new List<Cell>();
     public float attackDamage;
     public float distanceToBack;
@@ -45,7 +46,7 @@ public class ModelEnemy : EnemyClass
     public float speed;
     public float knockbackForce;
     float maxDileyToAttack;
-    float timeToChangePatrol;
+    public float timeToChangePatrol;
     public float timeOfLook;
 
     public IEnumerator Resting()
@@ -90,51 +91,54 @@ public class ModelEnemy : EnemyClass
     void Start()
     {
         startRotation = transform.forward;
-        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x=>
-        {
-            var d = Vector3.Distance(x.transform.position, transform.position);
-            if (d > 12) return false;
-            else return true;
+        transitableCells.AddRange(GetTransitableCells());
 
-        }));
-
-        startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        startCell = GetCloseCell(transform.position);
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_LookForTarget(sm, this, speed));
-        sm.AddState(new S_Waiting(sm, this, this, target));
+        sm.AddState(new S_Waiting(sm, this, this, target, speed));
         sm.AddState(new S_Patrol(sm, this, speed));
         sm.AddState(new S_BackHome(sm, this, speed));
         sm.SetState<S_Patrol>();
         rb = GetComponent<Rigidbody>();
         cm = FindObjectOfType<EnemyCombatManager>();
-        dileyToAttack = UnityEngine.Random.Range(2f, 3f);       
-        cellToPatrol = transitableCells[UnityEngine.Random.Range(0, transitableCells.Count())];
-        timeToChangePatrol = 10;
+        dileyToAttack = UnityEngine.Random.Range(2f, 3f);
+        cellToPatrol = GetRandomCell();
+        timeToChangePatrol = 0;
         timeOfLook = 10;
         
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         sm.Update();
-        playerCells.Clear();
-        playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
+       
         avoidVectObstacles = AvoidObstacles();
 
         var d = Vector3.Distance(startCell.transform.position, transform.position);
 
         if (d > distanceToBack) isBackHome = true;
 
-        if (!isAttack && !isOcuped && playerCells.Count > 0 && !isBackHome) isPersuit = SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, gameObject, true);
+        if (!isAttack && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, transform, true, layerPlayer)) isPersuit = true;
         else isPersuit = false;
 
-        if (target != null && !isOcuped && playerCells.Count > 0 && !isBackHome) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, gameObject, true);
+        if (target != null && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, transform, true, layerPlayer)) isAttack = true;
         else isAttack = false;
 
-        if (lostTarget && !isPersuit && !isAttack && !isBackHome) LookForTarget();
+
+        if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !lostTarget) isOnPatrol = true;
+        else isOnPatrol = false;
+
+
+    }
+
+
+    private void FixedUpdate()
+    {
+
+        if (lostTarget && !isPersuit && !isAttack && !isBackHome && !answerCall) LookForTarget();
 
         if (isAttack)
         {
@@ -142,27 +146,41 @@ public class ModelEnemy : EnemyClass
             Attack();
         }
 
-        if (isBackHome && !isAttack && !isPersuit && !isOcuped) BackHome();
-
-        if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !lostTarget) isOnPatrol = true;
-        else isOnPatrol = false;
-
+        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !answerCall) BackHome();
+     
+        
     }
 
     public void Persuit()
     {
+        AnswerCall();
+        answerCall = false;   
         lostTarget = true;
         timeOfLook = 10;
+        timeToChangePatrol = 0;
         lastTargetPosition = target.transform.position;
         sm.SetState<S_Persuit>();
     }
 
+    public override void Founded()
+    {
+        pathToTarget.Clear();
+        currentIndex = 2;
+        cellToPatrol = GetCloseCell(target.position);   
+        var myCell = GetCloseCell(transform.position);
+        pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+    }
+
     public void LookForTarget()
     {
+        answerCall = false;
         timeOfLook -= Time.deltaTime;
         isOnPatrol = false;
-        if(timeOfLook<=0) lostTarget = false;
-       
+        if (timeOfLook <= 0)
+        {
+            lostTarget = false;
+            isBackHome = true;
+        }
         else
             sm.SetState<S_LookForTarget>();
 
@@ -170,23 +188,26 @@ public class ModelEnemy : EnemyClass
 
     public void BackHome()
     {
-
-        pathToTarget.Clear();
-        transitableCells.Clear();
-        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
+        answerCall = false;
+        if (!startback)
         {
-            var d = Vector3.Distance(x.transform.position, startCell.transform.position);
-            if (d > 12) return false;
-            else return true;
-
-        }));
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
-        pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            pathToTarget.Clear();
+            var myCell = GetCloseCell(transform.position);
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            startback = true;
+        }
+        
+        transitableCells.Clear();
+        transitableCells.AddRange(GetTransitableCells());
+           
         var distance = Vector3.Distance(transform.position, startCell.transform.position);
-        if (distance <= 2)
+
+        if (distance <= 1)
         {
             transform.forward = startRotation;
             isBackHome = false;
+            lostTarget = false;
+            isOnPatrol = true;
         }
         sm.SetState<S_BackHome>();
 
@@ -196,62 +217,73 @@ public class ModelEnemy : EnemyClass
     {
         if (!lostTarget)
         {
-            pathToTarget.Clear();
-            transitableCells.Clear();
-            transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
-            {
-                var d = Vector3.Distance(x.transform.position, startCell.transform.position);
-                if (d > 12) return false;
-                else return true;
+             
+             transitableCells.Clear();
+             transitableCells.AddRange(GetTransitableCells());
 
-            }));
-            timeToChangePatrol -= Time.deltaTime;
-            if (timeToChangePatrol <= 0)
-            {
+             timeToChangePatrol -= Time.deltaTime;
+             if (timeToChangePatrol <= 0)
+             {
+                pathToTarget.Clear();
+                currentIndex = 0;
+                var myCell = GetCloseCell(transform.position);
 
-                cellToPatrol = transitableCells[UnityEngine.Random.Range(0, transitableCells.Count())];
-                timeToChangePatrol = 10;
-            }
-            pathToTarget.Clear();
-            var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
 
-            sm.SetState<S_Patrol>();
+                cellToPatrol = GetRandomCell();
+
+                if (cellToPatrol == null) cellToPatrol = myCell;    
+               
+                timeToChangePatrol = UnityEngine.Random.Range(6,10);
+                pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+             }
+
+             sm.SetState<S_Patrol>();
         }
+      
     }
 
     public void WaitTurn()
     {
-        if (!resting && cm.times > 0 && !timeToAttack)
+        answerCall = false;
+        target.GetComponent<Model>().CombatState();
+
+        bool aux = false;
+        foreach (var item in myFriends)  if (item.flankTarget) aux = true;
+        
+        if (!resting && cm.times > 0 && !timeToAttack && !aux)
         {
+            var speed = UnityEngine.Random.Range(0, 1);
+            sm.AddState(new S_Waiting(sm, this, this, target, speed));
             timeToAttack = true;
             cm.times--;
+            if (cm.times <= 0)
+            {
+                flankTarget = true;
+            }
         }
-
+       
         sm.SetState<S_Waiting>();
     }
 
     public void Attack()
     {
-        target.GetComponent<Model>().CombatState();
-        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
+        answerCall = false;
+        AnswerCall();
 
-        if (targetCell != null)
+        if (timeToAttack) dileyToAttack -= Time.deltaTime;
+        if (dileyToAttack <= 0)
         {
-            if (timeToAttack) dileyToAttack -= Time.deltaTime;
-            if (dileyToAttack <= 0)
-            {
-                rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
-                timeToAttack = false;
-                StartCoroutine(Resting());
-                cm.ResetTimes();
-                dileyToAttack = UnityEngine.Random.Range(4f, 6f);
-                maxDileyToAttack = dileyToAttack;
-            }
+            rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
+            timeToAttack = false;
+            StartCoroutine(Resting());
+            cm.times++;
+            dileyToAttack = UnityEngine.Random.Range(4f, 6f);
+            maxDileyToAttack = dileyToAttack;
+            flankTarget = false;
+        }
 
-            if (OnAttack)
-            {
+        if (OnAttack)
+        {
                 var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
                 if (player != null)
                 {
@@ -259,19 +291,61 @@ public class ModelEnemy : EnemyClass
                     rb.AddForce(-transform.forward * knockbackForce * 1.5f, ForceMode.Impulse);
                     OnAttack = false;
                 }
-            }
         }
-        else
-        {
-            isAttack = false;
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            sm.SetState<S_BackHome>();
-            isBackHome = true;
-        }
-
-
+        
+        
     }
 
+    public void AnswerCall()
+    {
+
+        int friendsOnBatle = 1;
+        foreach (var item in myFriends)
+        {
+            if (item.isPersuit || item.isAttack) friendsOnBatle++;
+        }
+
+        if (friendsOnBatle <= myFriends.Count + 1)
+        {
+            foreach (var item in myFriends)
+            {
+                if (!item.isPersuit && !item.isAttack)
+                {
+                    item.Founded();
+                    item.answerCall = true;
+                }
+            }     
+        }
+    }
+
+    List<Cell> GetTransitableCells()
+    {
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
+        {
+            var d = Vector3.Distance(x.transform.position, transform.position);
+            if (d > 12) return false;
+            else return true;
+
+        }));
+
+        return transitableCells;
+    }
+
+    Cell GetCloseCell(Vector3 enemy)
+    {
+        return FindObjectsOfType<Cell>().Where(x =>
+        {
+            var d = Vector3.Distance(x.transform.position, enemy);
+            if (d <1f) return true;
+            else return false;
+
+        }).Where(x=> x.transitable).First();      
+    }
+
+    Cell GetRandomCell()
+    {
+      return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
+    }
 
 
     void OnDrawGizmos()
@@ -317,10 +391,10 @@ public class ModelEnemy : EnemyClass
 
     Vector3 AvoidObstacles()
     {
-        var friends = Physics.OverlapSphere(transform.position, 2).Where(x => x.gameObject.layer == LayerMask.NameToLayer("Obstacles"));
-        if (friends.Count() > 0)
+        var obs = Physics.OverlapSphere(transform.position, 2,layerObst);
+        if (obs.Count() > 0)
         {
-            var dir = transform.position - friends.First().transform.position;
+            var dir = transform.position - obs.First().transform.position;
             return dir.normalized;
         }
         else return Vector3.zero;
@@ -330,5 +404,10 @@ public class ModelEnemy : EnemyClass
     {
         gameObject.SetActive(false);
         isDead = true;
+    }
+
+    public override IEnumerator FoundTarget(float time)
+    {
+        throw new NotImplementedException();
     }
 }

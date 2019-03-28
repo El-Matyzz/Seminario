@@ -274,10 +274,11 @@ ModelImporter:
     animationImportWarnings: Event NoReciveDamage has a time (0.512333) outside the
       clip's valid range (0.000000..0.512333). It will never be firedEvent FalseOnDamage
       has a time (0.512333) outside the clip's valid range (0.000000..0.512333). It
-      will never be firedEvent NoReciveDamage has a time (0.840000) outside the clip's
-      valid range (0.000000..0.840000). It will never be firedEvent FalseOnDamage
+      will never be firedEvent ActiveAttack has a time (0.840000) outside the clip's
+      valid range (0.000000..0.840000). It will never be firedEvent NoReciveDamage
       has a time (0.840000) outside the clip's valid range (0.000000..0.840000). It
-      will never be fired
+      will never be firedEvent FalseOnDamage has a time (0.840000) outside the clip's
+      valid range (0.000000..0.840000). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -440,6 +441,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.98688436
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -468,6 +476,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 1
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 1
         functionName: NoReciveDamage
         data: 
@@ -519,6 +534,13 @@ ModelImporter:
         messageOptions: 0
       - time: 1
         functionName: NoReciveDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.99614334
+        functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

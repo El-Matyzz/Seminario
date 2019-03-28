@@ -25,7 +25,7 @@ public class Grid : MonoBehaviour
 
                 cell.transform.parent = transform;
                 cell.transform.localPosition = new Vector3(i * tileSize, j * tileSize);
-              
+            
                 cell.pos = new Vector2Int(i, j);
 
                 var obst = Physics.OverlapSphere(cell.transform.position, 0.1f);

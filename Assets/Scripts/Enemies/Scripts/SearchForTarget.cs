@@ -6,7 +6,7 @@ public class SearchForTarget : MonoBehaviour {
 
   
 
-    public static bool SearchTarget(GameObject target, float viewDistance, float viewAngle, GameObject follower, bool detector)
+   public static bool SearchTarget(Transform target, float viewDistance, float viewAngle, Transform follower, bool detector, LayerMask layer)
     {
         var _viewAngle = viewAngle;
         var _viewDistance = viewDistance;
@@ -14,31 +14,40 @@ public class SearchForTarget : MonoBehaviour {
 
         if (target == null) return false;
 
-        var _dirToTarget = (target.transform.position - _enemy.transform.position).normalized;
+        var _dirToTarget = (target.position - _enemy.position).normalized;
 
-        var _angleToTarget = Vector3.Angle(_enemy.transform.forward, _dirToTarget);
+        var _angleToTarget = Vector3.Angle(_enemy.forward, _dirToTarget);
 
-        var _distanceToTarget = Vector3.Distance(_enemy.transform.position, target.transform.position);
+        var _distanceToTarget = Vector3.Distance(_enemy.position, target.position);
 
-        if (_angleToTarget <= _viewAngle && _distanceToTarget <= _viewDistance)
+        bool obstaclesBetween = false;
+
+        RaycastHit hit;
+
+        if (detector)
+        {         
+            if (Physics.Raycast(_enemy.position, _dirToTarget , out hit, _distanceToTarget, layer))
+            {
+
+                if (hit.transform.name == target.name)
+                {
+                    Debug.DrawLine(_enemy.position, hit.point, Color.yellow);
+                }
+                else
+                {
+                    Debug.DrawLine(_enemy.position, hit.point, Color.red);
+                    obstaclesBetween = true;
+                }
+                
+                
+            }
+
+             
+        }
+
+        if (_angleToTarget <= _viewAngle && _distanceToTarget <= _viewDistance && !obstaclesBetween)
         {
-            RaycastHit rch;
-            bool obstaclesBetween = false;
-
-            if (detector)
-            {
-                if (Physics.Raycast(_enemy.transform.position, _dirToTarget, out rch, _distanceToTarget))
-                    if (rch.collider.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
-                        obstaclesBetween = true;
-            }
-            if (!obstaclesBetween)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+              return true;
         }
         else
         {

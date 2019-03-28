@@ -109,14 +109,14 @@ public class ModelEnemyArcher : EnemyClass {
         playerCells.Clear();
         playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
 
-        if (target != null && !isAttack && !isAttackMelle && !isOcuped && playerCells.Count>0) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, gameObject, true);
-        else isPersuit = false;
+        //if (target != null && !isAttack && !isAttackMelle && !isOcuped && playerCells.Count>0) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, transform, true);
+        //else isPersuit = false;
 
-        if (target != null && !isOcuped  && playerCells.Count > 0 && !isAttackMelle) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttackRange, viewAngleAttackRange, gameObject, true);
-        else isAttack = false;
+        //if (target != null && !isOcuped  && playerCells.Count > 0 && !isAttackMelle) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttackRange, viewAngleAttackRange, transform, true);
+        //else isAttack = false;
 
-        if (target != null && !isOcuped && playerCells.Count > 0) isAttackMelle = SearchForTarget.SearchTarget(target, viewDistanceAttackMelle, viewAngleAttackMelle, gameObject, true);
-        else isAttackMelle = false;
+        //if (target != null && !isOcuped && playerCells.Count > 0) isAttackMelle = SearchForTarget.SearchTarget(target, viewDistanceAttackMelle, viewAngleAttackMelle, transform, true);
+        //else isAttackMelle = false;
 
         if (isAttackMelle)
         {
@@ -187,7 +187,7 @@ public class ModelEnemyArcher : EnemyClass {
                 rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
                 timeToAttack = false;
                 StartCoroutine(Resting());
-                cm.ResetTimes();
+                cm.times++;
                 dileyToAttack = UnityEngine.Random.Range(4f, 6f);
                 maxDileyToAttack = dileyToAttack;
             }
@@ -333,5 +333,13 @@ public class ModelEnemyArcher : EnemyClass {
         isDead = true;
     }
 
-    
+    public override IEnumerator FoundTarget(float time)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Founded()
+    {
+        throw new System.NotImplementedException();
+    }
 }

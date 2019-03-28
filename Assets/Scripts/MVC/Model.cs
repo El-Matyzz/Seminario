@@ -491,7 +491,6 @@ public class Model : MonoBehaviour
             item.GetComponent<Rigidbody>().AddForce(-item.transform.forward * 2, ForceMode.Impulse);
         }
 
-        Debug.Log(desMesh.Count());
         foreach (var item in desMesh)
         {
             item.StartCoroutine(item.startDisolve());
@@ -512,6 +511,7 @@ public class Model : MonoBehaviour
     {
         timeOnCombat = 10;
         view.anim.SetBool("IdleCombat", true);
+        view.anim.SetBool("Idle", true);
         isInCombat = true;
     }
 

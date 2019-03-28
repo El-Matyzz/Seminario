@@ -244,7 +244,7 @@ public class SpatialGrid : MonoBehaviour
 
                                 if (n.GetComponent<Model>())
                                 {
-                                    enemy.target = n.gameObject;
+                                    //enemy.target = n.gameObject;
                                     //player = true;
                                 }
 

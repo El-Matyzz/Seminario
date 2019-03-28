@@ -67,10 +67,11 @@ public class CamController : MonoBehaviour {
               distance += 35 * Time.deltaTime;
               if (distance >= 5) distance = 5;
             }     
-            if(!wallCam.hitCam)
+            else
             {
+
                 distance -= 35 * Time.deltaTime;
-                if (distance <= 4) distance = 4;
+                if (distance <= 1) distance = 1;
             }
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
@@ -78,20 +79,7 @@ public class CamController : MonoBehaviour {
             transform.LookAt(player.position);
         }
 
-       /* if(getObstacleAvoidance()== true)
-        {
-            Debug.Log(2);
-            distance += 35 * Time.deltaTime;
-         
-        }
 
-        else
-        {
-            Debug.Log(1);
-            distance -= 35 * Time.deltaTime;
-            if (distance <= 4) distance = 4;
-        }
-        */
     }
 
     public void RotateRB()

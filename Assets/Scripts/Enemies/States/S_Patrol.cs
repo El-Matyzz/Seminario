@@ -40,7 +40,7 @@ public class S_Patrol : EnemyState
                 _dir.y = 0;
                 var avoid = _enemy.avoidVectObstacles.normalized;
                 avoid.y = 0;
-                targetRotation = Quaternion.LookRotation(_dir + avoid, Vector3.up);
+                targetRotation = Quaternion.LookRotation(_dir, Vector3.up);
                 _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, 7 * Time.deltaTime);
                 _enemy.rb.MovePosition(_enemy.rb.position + _enemy.transform.forward * _speed * Time.deltaTime);
                

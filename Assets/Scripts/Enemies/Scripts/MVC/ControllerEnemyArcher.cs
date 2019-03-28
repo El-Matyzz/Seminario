@@ -15,7 +15,13 @@ public class ControllerEnemyArcher : MonoBehaviour {
     {
       if (_model.isAttack) _model.AttackRange();
       if (_model.isAttackMelle) _model.Waiting();
-      if (_model.isPersuit) _model.Persuit();
-      if (_model.isOnPatrol) _model.Patrol();
+     
+    }
+
+    private void FixedUpdate()
+    {
+        if (_model.isPersuit) _model.Persuit();
+        if (_model.isOnPatrol) _model.Patrol();
+        if (_model.isBackHome && !_model.isAttack && !_model.isPersuit && !_model.isOcuped && !_model.isAttackMelle) _model.BackHome();
     }
 }

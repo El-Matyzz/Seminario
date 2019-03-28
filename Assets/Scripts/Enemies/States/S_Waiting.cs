@@ -5,14 +5,15 @@ using UnityEngine;
 public class S_Waiting : EnemyState
 {
     Transform _player;
+    Model _modelPlayer;
     ModelEnemy _model;
     Vector3 _dirToTarget;
     float _flankSpeed;
 
     public S_Waiting(StateMachine sm, EnemyClass e, ModelEnemy model, Transform player, float rotateSpeed) : base(sm, e)
     {
-        var modelPlayer = player.GetComponent<Model>();
-        modelPlayer.CombatState();
+        _modelPlayer = player.GetComponent<Model>();
+        _modelPlayer.CombatState();
         _model = model;
         _player = player;
         _flankSpeed = rotateSpeed;
@@ -27,6 +28,8 @@ public class S_Waiting : EnemyState
     public override void Execute()
     {
         base.Execute();
+
+        _modelPlayer.CombatState();
 
         if (_model.avoidVectFriends != Vector3.zero && !_model.flankTarget)
         {

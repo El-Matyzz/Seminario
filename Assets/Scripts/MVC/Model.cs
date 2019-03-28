@@ -63,7 +63,7 @@ public class Model : MonoBehaviour
     public bool onDefence;
     public bool onDash;
     public bool biz;
-    bool sleepAnim;
+    public bool sleepAnim;
 
     bool cdPower1;
     bool cdPower2;

@@ -9,7 +9,6 @@ public class ModelEnemy : EnemyClass
     public ViewerEnemy view;
     public EnemyCombatManager cm;
 
-    public bool isPersuit;
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
@@ -24,7 +23,12 @@ public class ModelEnemy : EnemyClass
     bool startback;
     bool startSearch;
     bool increaseFollowRadio;
-   
+
+    public Action AttackEvent;
+    public Action IdleEvent;
+    public Action IdleEventBack;
+    public Action TakeDamageEvent;
+    public Action DeadEvent;
 
     public List<Collider> obstacles;
 
@@ -153,6 +157,8 @@ public class ModelEnemy : EnemyClass
 
     public void Persuit()
     {
+        IdleEventBack();
+        startback = false;
         AnswerCall();
         answerCall = false;   
         lostTarget = true;
@@ -188,10 +194,12 @@ public class ModelEnemy : EnemyClass
 
     public void BackHome()
     {
+        lostTarget = false;
         answerCall = false;
         if (!startback)
         {
             pathToTarget.Clear();
+            currentIndex = 0;
             var myCell = GetCloseCell(transform.position);
             pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
             startback = true;
@@ -202,7 +210,7 @@ public class ModelEnemy : EnemyClass
            
         var distance = Vector3.Distance(transform.position, startCell.transform.position);
 
-        if (distance <= 1)
+        if (distance <= 2)
         {
             transform.forward = startRotation;
             isBackHome = false;
@@ -215,6 +223,9 @@ public class ModelEnemy : EnemyClass
 
     public void Patrol()
     {
+        if (currentIndex < pathToTarget.Count) IdleEventBack();
+        if (currentIndex >= pathToTarget.Count) IdleEvent();
+
         if (!lostTarget)
         {
              
@@ -244,11 +255,12 @@ public class ModelEnemy : EnemyClass
 
     public void WaitTurn()
     {
+        startback = false;
         answerCall = false;
         target.GetComponent<Model>().CombatState();
 
         bool aux = false;
-        foreach (var item in myFriends)  if (item.flankTarget) aux = true;
+        if(myFriends.Count>0) foreach (var item in myFriends.Where(x=> x.GetComponent<ModelEnemy>()).Select(x=> x.GetComponent<ModelEnemy>()))  if (item.flankTarget) aux = true;
         
         if (!resting && cm.times > 0 && !timeToAttack && !aux)
         {
@@ -270,9 +282,12 @@ public class ModelEnemy : EnemyClass
         answerCall = false;
         AnswerCall();
 
+        if (flankTarget) IdleEventBack();
+        else IdleEvent();
+
         if (timeToAttack) dileyToAttack -= Time.deltaTime;
         if (dileyToAttack <= 0)
-        {
+        {            
             rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
             timeToAttack = false;
             StartCoroutine(Resting());
@@ -280,6 +295,7 @@ public class ModelEnemy : EnemyClass
             dileyToAttack = UnityEngine.Random.Range(4f, 6f);
             maxDileyToAttack = dileyToAttack;
             flankTarget = false;
+            AttackEvent();
         }
 
         if (OnAttack)
@@ -288,7 +304,7 @@ public class ModelEnemy : EnemyClass
                 if (player != null)
                 {
                     player.GetDamage(attackDamage, transform, false);
-                    rb.AddForce(-transform.forward * knockbackForce * 1.5f, ForceMode.Impulse);
+                    rb.AddForce(-transform.forward * knockbackForce * 1.25f, ForceMode.Impulse);
                     OnAttack = false;
                 }
         }
@@ -333,11 +349,10 @@ public class ModelEnemy : EnemyClass
 
     Cell GetCloseCell(Vector3 enemy)
     {
-        return FindObjectsOfType<Cell>().Where(x =>
+        return FindObjectsOfType<Cell>().OrderBy(x =>
         {
-            var d = Vector3.Distance(x.transform.position, enemy);
-            if (d <1f) return true;
-            else return false;
+            float d = Vector3.Distance(x.transform.position, enemy);
+            return d;
 
         }).Where(x=> x.transitable).First();      
     }
@@ -370,12 +385,14 @@ public class ModelEnemy : EnemyClass
     public override void GetDamage(float damage)
     {
         dileyToAttack += 0.25f;
+        TakeDamageEvent();
         if (dileyToAttack > maxDileyToAttack)
         {
             dileyToAttack = maxDileyToAttack;
         }
         life -= damage;
         if (life <= 0) Dead();
+
     }
 
     Vector3 avoidance()
@@ -402,7 +419,7 @@ public class ModelEnemy : EnemyClass
 
     public void Dead()
     {
-        gameObject.SetActive(false);
+        DeadEvent();       
         isDead = true;
     }
 

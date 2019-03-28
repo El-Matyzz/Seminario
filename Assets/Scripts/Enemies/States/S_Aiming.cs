@@ -33,7 +33,7 @@ public class S_Aiming : EnemyState
         _dirToTarget.y = 0;
         targetRotation = Quaternion.LookRotation(_dirToTarget, Vector3.up);
         _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRotation, _sightSpeed * Time.deltaTime);
-
+        _enemy.rb.MovePosition(_enemy.rb.position + _enemy.avoidVectFriends * 10 * Time.deltaTime);
     }
 
     public override void Sleep()

@@ -13,6 +13,7 @@ public abstract class EnemyClass : MonoBehaviour
     public abstract void Founded();
     public bool createAttack;
     public bool isAttack;
+    public bool isPersuit;
     public bool myTimeToAttack;
     public bool isBackHome;
     public bool IsOnSearching;
@@ -23,7 +24,7 @@ public abstract class EnemyClass : MonoBehaviour
     public float life;
     public Rigidbody rb;
     public Transform target;
-    public List<ModelEnemy> myFriends = new List<ModelEnemy>();
+    public List<EnemyClass> myFriends = new List<EnemyClass>();
     public EnemyScreenSpace ess;
     public int currentIndex = 0;
     public List<Cell> pathToTarget = new List<Cell>();

@@ -5,7 +5,6 @@ using System.Linq;
 
 public class ModelEnemyArcher : EnemyClass {
 
-    public bool isPersuit;
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
@@ -15,6 +14,8 @@ public class ModelEnemyArcher : EnemyClass {
     public bool isScape;
     public bool isOnPatrol;
     public bool isAttackMelle;
+    public bool lostTarget;
+    bool startback;
     bool startSearch;
     bool increaseFollowRadio;
     public bool resting;
@@ -26,11 +27,10 @@ public class ModelEnemyArcher : EnemyClass {
 
     public EnemyCombatManager cm;
     public Transform attackPivot;
-    public LayerMask obstacle;
+    public LayerMask obstacleLayer;
     public LayerMask player;
     public ViewerEnemy view;
-    List<Cell> playerCells = new List<Cell>();
-
+    List<Cell> transitableCells = new List<Cell>();
     public float radObst;
     public float sightSpeed;
     public float viewAngleFollow;
@@ -50,6 +50,8 @@ public class ModelEnemyArcher : EnemyClass {
     public float attackDamage;
     public float radiusAvoid;
     public float avoidWeight;
+    public float timeOfLook;
+    public float distanceToBack;
 
     public StateMachine sm;  
 
@@ -88,16 +90,21 @@ public class ModelEnemyArcher : EnemyClass {
 
         startRotation = transform.forward;
         timeToShoot = shootTime;
-       // startCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).First();
+        startCell = GetCloseCell(transform.position);
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
-       // sm.AddState(new S_Patrol(sm, this, speed));
-      //  sm.AddState(new S_BackHome(sm, this, speed));
+        sm.AddState(new S_RangePatrol(sm, this, speed));
+        sm.AddState(new S_Patrol(sm, this, speed));
+        sm.AddState(new S_LookForTarget(sm, this, speed));
+        sm.AddState(new S_BackHome(sm, this, speed));
         sm.AddState(new S_Aiming(sm, this, target.transform, sightSpeed));
+        sm.AddState(new S_WaitingArcher(sm,this,target));
         view = GetComponent<ViewerEnemy>();
         munition = FindObjectOfType<EnemyAmmo>();
         rb = GetComponent<Rigidbody>();
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);
+        sm.SetState<S_RangePatrol>();
+        timeOfLook = 10;
         // ess = GetComponent<EnemyScreenSpace>();
     }
 	
@@ -106,40 +113,49 @@ public class ModelEnemyArcher : EnemyClass {
 
         WrapperStates();
         sm.Update();
-        playerCells.Clear();
-        playerCells.AddRange(Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()));
 
-        //if (target != null && !isAttack && !isAttackMelle && !isOcuped && playerCells.Count>0) isPersuit = SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, transform, true);
-        //else isPersuit = false;
+        var d = Vector3.Distance(startCell.transform.position, transform.position);
 
-        //if (target != null && !isOcuped  && playerCells.Count > 0 && !isAttackMelle) isAttack = SearchForTarget.SearchTarget(target, viewDistanceAttackRange, viewAngleAttackRange, transform, true);
-        //else isAttack = false;
+        if (d > distanceToBack) isBackHome = true;
 
-        //if (target != null && !isOcuped && playerCells.Count > 0) isAttackMelle = SearchForTarget.SearchTarget(target, viewDistanceAttackMelle, viewAngleAttackMelle, transform, true);
-        //else isAttackMelle = false;
+        if (target != null && !isAttack && !isAttackMelle && !isOcuped && SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, transform, true, obstacleLayer)) isPersuit = true;
+        else isPersuit = false;
+
+        if (target != null && !isOcuped && !isAttackMelle && SearchForTarget.SearchTarget(target, viewDistanceAttackRange, viewAngleAttackRange, transform, true, obstacleLayer)) isAttack = true;
+        else isAttack = false;
+
+        if (target != null && !isOcuped && SearchForTarget.SearchTarget(target, viewDistanceAttackMelle, viewAngleAttackMelle, transform, true, obstacleLayer)) isAttackMelle = true;
+        else isAttackMelle = false;
 
         if (isAttackMelle)
         {
             avoidVectFriends = avoidance() * avoidWeight;
-            AttackMelle();
+            AttackMelee();
         }
 
         if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
 
-        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !isAttackMelle) BackHome();
+       
 
         if (life <= 0)
             print(name + " is fucking dead!");
 
-        if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !isAttackMelle) isOnPatrol = true;
+        if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !isAttackMelle && !answerCall) isOnPatrol = true;
         else isOnPatrol = false;
+    }
+
+    public void FixedUpdate()
+    {
+        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !isAttackMelle && !answerCall) BackHome();
+
+        if (lostTarget && !isPersuit && !isAttack && !isBackHome && !answerCall) LookForTarget();
     }
 
     public void AttackRange()
     {
+        startback = false;
         target.GetComponent<Model>().CombatState();
         timeToShoot -= Time.deltaTime;
-       // if (timeToShoot > 4) view.AttackVisorLight();
         sm.SetState<S_Aiming>();
         target.GetComponent<Model>().CombatState();
         if (timeToShoot<=0)
@@ -167,101 +183,165 @@ public class ModelEnemyArcher : EnemyClass {
         }
     }
 
-    public void Patrol()
-    {       
-        Quaternion rotateAngle = Quaternion.LookRotation(transform.forward + new Vector3(Mathf.Sin(Time.time * 0.5f),0,0), Vector3.up);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotateAngle, 5 * Time.deltaTime);
+    public override void Founded()
+    {
+        pathToTarget.Clear();
+        currentIndex = 2;
+        cellToPatrol = GetCloseCell(target.position);
+        var myCell = GetCloseCell(transform.position);
+        pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+        sm.SetState<S_Patrol>();
     }
 
-    public void AttackMelle()
+    public void Patrol()
     {
-        target.GetComponent<Model>().CombatState();
-        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
+        Quaternion rotateAngle = Quaternion.LookRotation(transform.forward + new Vector3(Mathf.Sin(Time.time * 0.5f),0,0), Vector3.up);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotateAngle, 5 * Time.deltaTime);
+        sm.SetState<S_RangePatrol>();
+    }
 
-        if (targetCell != null)
+    public void AttackMelee()
+    {
+        answerCall = false;
+        AnswerCall();
+        timeToShoot = shootTime;
+        if (timeToAttack) dileyToAttack -= Time.deltaTime;
+        if (dileyToAttack <= 0)
         {
-            if (timeToAttack) dileyToAttack -= Time.deltaTime;
-            if (dileyToAttack <= 0)
-            {
-                rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
-                timeToAttack = false;
-                StartCoroutine(Resting());
-                cm.times++;
-                dileyToAttack = UnityEngine.Random.Range(4f, 6f);
-                maxDileyToAttack = dileyToAttack;
-            }
-
-            if (OnAttack)
-            {
-                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
-                if (player != null)
-                {
-                    player.GetDamage(attackDamage, transform, false);
-                    rb.AddForce(-transform.forward * knockbackForce * 1.3f, ForceMode.Impulse);
-                    OnAttack = false;
-                }
-            }
+            rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
+            timeToAttack = false;
+            StartCoroutine(Resting());
+            cm.times++;
+            dileyToAttack = UnityEngine.Random.Range(4f, 6f);
+            maxDileyToAttack = dileyToAttack;
         }
-        else
+
+        if (OnAttack)
         {
-            isAttack = false;
-           // pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            sm.SetState<S_BackHome>();
-            isBackHome = true;
+            var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
+            if (player != null)
+            {
+                player.GetDamage(attackDamage, transform, false);
+                rb.AddForce(-transform.forward * knockbackForce * 1.5f, ForceMode.Impulse);
+                OnAttack = false;
+            }
         }
     }
 
     public void Waiting()
     {
+        startback = false;
         if (!resting && cm.times > 0 && !timeToAttack)
         {
             timeToAttack = true;
             cm.times--;
         }
 
-        sm.SetState<S_Waiting>();
+        sm.SetState<S_WaitingArcher>();
     }
 
     public void Persuit()
     {
-        target.GetComponent<Model>().CombatState();
-       // pathToTarget.Clear();
-        var targetCell = Physics.OverlapSphere(target.transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        if (targetCell != null)
+        startback = false;
+        AnswerCall();
+        answerCall = false;
+        lostTarget = true;
+        timeOfLook = 10;
+        lastTargetPosition = target.transform.position;
+        sm.SetState<S_Persuit>();
+    }
+
+    public void LookForTarget()
+    {
+        answerCall = false;
+        timeOfLook -= Time.deltaTime;
+        isOnPatrol = false;
+        if (timeOfLook <= 0)
         {
-            //pathToTarget.AddRange(myGridSearcher.Search(myCell, targetCell));
-            sm.SetState<S_Persuit>();
-        }
-        else
-        {
-            isPersuit = false;
-            //pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            sm.SetState<S_BackHome>();
+            lostTarget = false;
             isBackHome = true;
         }
+        else
+            sm.SetState<S_LookForTarget>();
+
     }
 
     public void BackHome()
     {
-       /* Debug.Log(2);
-       // pathToTarget.Clear();
-        var myCell = Physics.OverlapSphere(transform.position, 0.1f).Where(x => x.GetComponent<Cell>()).Select(x => x.GetComponent<Cell>()).FirstOrDefault();
-        //pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-        //var distance = Vector3.Distance(transform.position, startCell.transform.position);
-        if (distance <= 2)
+
+        answerCall = false;
+        if (!startback)
+        {
+            pathToTarget.Clear();
+            currentIndex = 0;
+            var myCell = GetCloseCell(transform.position);
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+            startback = true;
+        }
+
+        transitableCells.Clear();
+        transitableCells.AddRange(GetTransitableCells());
+
+        var distance = Vector3.Distance(transform.position, startCell.transform.position);
+
+        if (distance <= 1)
         {
             transform.forward = startRotation;
             isBackHome = false;
+            lostTarget = false;
+            isOnPatrol = true;
         }
         sm.SetState<S_BackHome>();
-        */
     }
 
-    public void Scape()
+    public void AnswerCall()
     {
-       //currentMovement = new EnemyScape(this, target.transform, speed);
+
+        int friendsOnBatle = 1;
+        foreach (var item in myFriends)
+        {
+            if (item.isPersuit || item.isAttack) friendsOnBatle++;
+        }
+
+        if (friendsOnBatle <= myFriends.Count + 1)
+        {
+            foreach (var item in myFriends)
+            {
+                if (!item.isPersuit && !item.isAttack)
+                {
+                    item.Founded();
+                    item.answerCall = true;
+                }
+            }
+        }
+    }
+
+    List<Cell> GetTransitableCells()
+    {
+        transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
+        {
+            var d = Vector3.Distance(x.transform.position, transform.position);
+            if (d > 12) return false;
+            else return true;
+
+        }));
+
+        return transitableCells;
+    }
+
+    Cell GetCloseCell(Vector3 enemy)
+    {
+        return FindObjectsOfType<Cell>().OrderBy(x =>
+        {
+            float d = Vector3.Distance(x.transform.position, enemy);
+            return d;
+
+        }).Where(x => x.transitable).First();
+    }
+
+    Cell GetRandomCell()
+    {
+        return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
     }
 
     public override void GetDamage(float damage)
@@ -338,8 +418,5 @@ public class ModelEnemyArcher : EnemyClass {
         throw new System.NotImplementedException();
     }
 
-    public override void Founded()
-    {
-        throw new System.NotImplementedException();
-    }
+   
 }

@@ -8,7 +8,10 @@ public class DestructibleOBJ : MonoBehaviour
     public GameObject destructibleMesh;
     public Animator anim;
     BoxCollider col;
+    Material mat;
+    float time;
     bool first;
+    bool change;
     public Rigidbody rb;
 
 
@@ -38,6 +41,23 @@ public class DestructibleOBJ : MonoBehaviour
         rb = destructibleMesh.GetComponent<Rigidbody>();
         anim = destructibleMesh.GetComponent<Animator>();
         col = destructibleMesh.GetComponent<BoxCollider>();
+        mat = principalMesh.GetComponent<MeshRenderer>().materials[0];
+    }
+
+    public void Update()
+    {
+        if (!change)
+        {
+            time -= Time.deltaTime;
+            if (time <= 0) change = true;
+        }
+        else
+        {
+            time += Time.deltaTime;
+            if (time >= 1) change = false;
+        }
+        
+        mat.SetFloat("_Opacity", time);
     }
 
 

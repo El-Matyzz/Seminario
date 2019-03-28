@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class ControllerEnemy : MonoBehaviour {
 
-    public ModelEnemy _model;
+     ModelEnemy _model;
+    ViewerEnemy _view;
 
 	void Awake () {
-		
+
+        _model = GetComponent<ModelEnemy>();
+        _view = GetComponent<ViewerEnemy>();
+
+        _model.AttackEvent += _view.AttackAnim;
+        _model.IdleEvent += _view.IdleAnim;
+        _model.IdleEventBack += _view.BackFromIdle;
+        _model.TakeDamageEvent += _view.TakeDamageAnim;
+        _model.DeadEvent += _view.DeadAnim;
 	}
 	
 	void Update () {

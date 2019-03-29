@@ -13,7 +13,6 @@ public class S_WaitingArcher : EnemyState
     public S_WaitingArcher(StateMachine sm, EnemyClass e, Transform player) : base(sm, e)
     {
         _modelPlayer = player.GetComponent<Model>();
-        _modelPlayer.CombatState();
         _player = player;
         _enemy = e;
     }

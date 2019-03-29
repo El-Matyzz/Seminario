@@ -8,11 +8,11 @@ public class S_Aiming : EnemyState
     Transform _target;
     float _sightSpeed;
     Vector3 _dirToTarget;
+    Model _model;
 
     public S_Aiming(StateMachine sm, EnemyClass e, Transform target, float sightSpeed) : base(sm, e)
     {
-        var model = target.GetComponent<Model>();
-        model.CombatState();
+        _model = target.GetComponent<Model>();
         _enemy = e;
         _target = target;
         _sightSpeed = sightSpeed;
@@ -27,7 +27,7 @@ public class S_Aiming : EnemyState
     public override void Execute()
     {
         base.Execute();
-
+        _model.CombatState();
         Quaternion targetRotation;
         _dirToTarget = (_target.transform.position - _enemy.transform.position).normalized;
         _dirToTarget.y = 0;

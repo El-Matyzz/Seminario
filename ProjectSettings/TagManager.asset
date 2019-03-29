@@ -17,9 +17,9 @@ TagManager:
   - Obstacles
   - Blocked
   - Player
-  - 
-  - 
-  - 
+  - Bullet
+  - Enemy
+  - GoBack
   - 
   - 
   - 

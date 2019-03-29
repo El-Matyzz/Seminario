@@ -94,6 +94,7 @@ public class GridSearcher : MonoBehaviour
 
     public List<Cell> Search(Cell myCell, Cell targetCell)
     {
+
         start = myCell;
         end = targetCell;
         if (start == null || end == null) return new List<Cell>();

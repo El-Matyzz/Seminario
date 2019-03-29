@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class ControllerEnemyArcher : MonoBehaviour {
 
-    public ModelEnemyArcher _model;
+     ModelEnemyArcher _model;
+    ViewerArcher _view;
 
     void Awake()
     {
+        _model = GetComponent<ModelEnemyArcher>();
+        _view = GetComponent<ViewerArcher>();
 
+        _model.TakeDamageEvent += _view.TakeDamageAnim;
+        _model.IdleEvent += _view.IdleAnim;
+        _model.WalkEvent += _view.BackFromIdle;
+        _model.DeadEvent += _view.DeadAnim;
+        _model.RangeAttackEvent += _view.AttackRangeAnim;
+        _model.MeleeAttackEvent += _view.AttackMeleeAnim;
     }
 
     void Update()

@@ -200,6 +200,7 @@ public class Model : MonoBehaviour
 
     void Start()
     {
+        timeOnCombat = -1;
         rb = GetComponent<Rigidbody>();
         powerManager = FindObjectOfType<PowerManager>();
         powerPool = new Pool<Powers>(10, PowersFactory, Powers.InitializePower, Powers.DisposePower, true);
@@ -219,7 +220,9 @@ public class Model : MonoBehaviour
             view.anim.SetBool("IdleCombat", true);
 
         }
+
         if (timeOnCombat <= 0) timeOnCombat = 0;
+
         if (timeOnCombat <= 0 && isInCombat)
         {
             view.anim.SetBool("IdleCombat", false);
@@ -499,11 +502,17 @@ public class Model : MonoBehaviour
 
     public void Defence()
     {
+        stamina -= 0.25f;
+        InAction = true;
+        InActionAttack = true;
+        view.UpdateStaminaBar(stamina / totalStamina);
         onDefence = true;
     }
 
     public void StopDefence()
     {
+        InActionAttack = false;
+        InAction = false;
         onDefence = false;
     }
 

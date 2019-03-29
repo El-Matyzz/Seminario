@@ -62,23 +62,31 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space) && pushS && pushA && !pushW) model.StartCoroutine(model.Dash(-transform.forward));
 
-          /*  if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
+            /*  if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
 
-            if (Input.GetKeyUp(KeyCode.Alpha2)) model.CastPower2();
+              if (Input.GetKeyUp(KeyCode.Alpha2)) model.CastPower2();
 
-            if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
+              if (Input.GetKeyUp(KeyCode.Alpha3)) model.CastPower3();
 
-            if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
-            */
-            if (Input.GetKeyDown(KeyCode.Mouse1) && model.isInCombat) view.Defence();
-
-            if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
+              if (Input.GetKeyUp(KeyCode.Alpha4)) model.CastPower4();
+              */
+            if (Input.GetKey(KeyCode.E) && model.isInCombat)
+            {
+                model.Defence();
+                view.Defence();
+            }
+            if (Input.GetKeyUp(KeyCode.E))
+            {
+                view.NoDefence();
+                model.StopDefence();
+            }
+            /*if (Input.GetKeyUp(KeyCode.C) && !model.isInCombat)
             {
 
                 model.CombatState();
 
             }
-
+            */
             if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
             {
 

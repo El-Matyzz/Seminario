@@ -101,6 +101,7 @@ public class ModelEnemy : EnemyClass
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_LookForTarget(sm, this, speed));
+        sm.AddState(new S_Idle(sm, this));
         sm.AddState(new S_Waiting(sm, this, this, target, speed));
         sm.AddState(new S_Patrol(sm, this, speed));
         sm.AddState(new S_BackHome(sm, this, speed));
@@ -157,15 +158,18 @@ public class ModelEnemy : EnemyClass
 
     public void Persuit()
     {
-        IdleEventBack();
-        startback = false;
-        AnswerCall();
-        answerCall = false;   
-        lostTarget = true;
-        timeOfLook = 10;
-        timeToChangePatrol = 0;
-        lastTargetPosition = target.transform.position;
-        sm.SetState<S_Persuit>();
+        if (!isDead)
+        {
+            IdleEventBack();
+            startback = false;
+            AnswerCall();
+            answerCall = false;
+            lostTarget = true;
+            timeOfLook = 10;
+            timeToChangePatrol = 0;
+            lastTargetPosition = target.transform.position;
+            sm.SetState<S_Persuit>();
+        }
     }
 
     public override void Founded()
@@ -173,133 +177,157 @@ public class ModelEnemy : EnemyClass
         pathToTarget.Clear();
         currentIndex = 2;
         cellToPatrol = GetCloseCell(target.position);   
-        var myCell = GetCloseCell(transform.position);
-        pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+        myCell = GetCloseCell(transform.position);        
+        if(cellToPatrol!=null)  pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
     }
 
     public void LookForTarget()
     {
-        answerCall = false;
-        timeOfLook -= Time.deltaTime;
-        isOnPatrol = false;
-        if (timeOfLook <= 0)
+        if (!isDead)
         {
-            lostTarget = false;
-            isBackHome = true;
+            answerCall = false;
+            timeOfLook -= Time.deltaTime;
+            isOnPatrol = false;
+            if (timeOfLook <= 0)
+            {
+                lostTarget = false;
+                isBackHome = true;
+            }
+            else
+                sm.SetState<S_LookForTarget>();
         }
-        else
-            sm.SetState<S_LookForTarget>();
 
     }
 
     public void BackHome()
     {
-        lostTarget = false;
-        answerCall = false;
-        if (!startback)
+        if (!isDead)
         {
-            pathToTarget.Clear();
-            currentIndex = 0;
-            var myCell = GetCloseCell(transform.position);
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            startback = true;
-        }
-        
-        transitableCells.Clear();
-        transitableCells.AddRange(GetTransitableCells());
-           
-        var distance = Vector3.Distance(transform.position, startCell.transform.position);
-
-        if (distance <= 2)
-        {
-            transform.forward = startRotation;
-            isBackHome = false;
             lostTarget = false;
-            isOnPatrol = true;
-        }
-        sm.SetState<S_BackHome>();
+            answerCall = false;
+            if (!startback)
+            {
+                pathToTarget.Clear();
+                currentIndex = 0;
+                myCell = GetCloseCell(transform.position);
+                while(cellToPatrol==null)
+                {
+                    myCell = GetCloseCell(transform.position);
+                }
+                pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+                startback = true;
+            }
 
+            transitableCells.Clear();
+            transitableCells.AddRange(GetTransitableCells());
+
+            var distance = Vector3.Distance(transform.position, startCell.transform.position);
+
+            if (distance <= 2)
+            {
+                transform.forward = startRotation;
+                isBackHome = false;
+                lostTarget = false;
+                isOnPatrol = true;
+            }
+            sm.SetState<S_BackHome>();
+        }
     }
 
     public void Patrol()
     {
-        if (currentIndex < pathToTarget.Count) IdleEventBack();
-        if (currentIndex >= pathToTarget.Count) IdleEvent();
 
-        if (!lostTarget)
+        if (!isDead)
         {
-             
-             transitableCells.Clear();
-             transitableCells.AddRange(GetTransitableCells());
+            if (currentIndex < pathToTarget.Count) IdleEventBack();
+            if (currentIndex >= pathToTarget.Count) IdleEvent();
 
-             timeToChangePatrol -= Time.deltaTime;
-             if (timeToChangePatrol <= 0)
-             {
-                pathToTarget.Clear();
-                currentIndex = 0;
-                var myCell = GetCloseCell(transform.position);
+            if (!lostTarget)
+            {
+
+                transitableCells.Clear();
+                transitableCells.AddRange(GetTransitableCells());
+
+                timeToChangePatrol -= Time.deltaTime;
+                if (timeToChangePatrol <= 0)
+                {
+                    pathToTarget.Clear();
+                    currentIndex = 0;
+                    myCell = GetCloseCell(transform.position);
 
 
-                cellToPatrol = GetRandomCell();
+                    cellToPatrol = GetRandomCell();
 
-                if (cellToPatrol == null) cellToPatrol = myCell;    
-               
-                timeToChangePatrol = UnityEngine.Random.Range(6,10);
-                pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
-             }
+                    if (cellToPatrol == null) cellToPatrol = myCell;
 
-             sm.SetState<S_Patrol>();
+                    timeToChangePatrol = UnityEngine.Random.Range(6, 10);
+                    pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+                }
+
+                sm.SetState<S_Patrol>();
+            }
         }
-      
     }
 
     public void WaitTurn()
     {
-        startback = false;
-        answerCall = false;
-        target.GetComponent<Model>().CombatState();
-
-        bool aux = false;
-        if(myFriends.Count>0) foreach (var item in myFriends.Where(x=> x.GetComponent<ModelEnemy>()).Select(x=> x.GetComponent<ModelEnemy>()))  if (item.flankTarget) aux = true;
-        
-        if (!resting && cm.times > 0 && !timeToAttack && !aux)
+        if (!isDead)
         {
-            var speed = UnityEngine.Random.Range(0, 1);
-            sm.AddState(new S_Waiting(sm, this, this, target, speed));
-            timeToAttack = true;
-            cm.times--;
-            if (cm.times <= 0)
+            startback = false;
+            answerCall = false;
+            target.GetComponent<Model>().CombatState();
+
+            bool aux = false;
+            if (myFriends.Count > 0) foreach (var item in myFriends.Where(x => x.GetComponent<ModelEnemy>()).Select(x => x.GetComponent<ModelEnemy>())) if (item.flankTarget) aux = true;
+
+            if (!resting && cm.times > 0 && !timeToAttack && !aux)
             {
-                flankTarget = true;
+                var speed = UnityEngine.Random.Range(0, 1);
+                sm.AddState(new S_Waiting(sm, this, this, target, speed));
+                timeToAttack = true;
+                cm.times--;
+
+
+                if (cm.times <= 0 && !aux && !cm.flanTicket)
+                {
+                    flankTarget = true;
+                    cm.flanTicket = true;
+                }
             }
+
+            sm.SetState<S_Waiting>();
         }
-       
-        sm.SetState<S_Waiting>();
     }
 
     public void Attack()
     {
-        answerCall = false;
-        AnswerCall();
-
-        if (flankTarget) IdleEventBack();
-        else IdleEvent();
-
-        if (timeToAttack) dileyToAttack -= Time.deltaTime;
-        if (dileyToAttack <= 0)
-        {            
-            rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
-            timeToAttack = false;
-            StartCoroutine(Resting());
-            cm.times++;
-            dileyToAttack = UnityEngine.Random.Range(4f, 6f);
-            maxDileyToAttack = dileyToAttack;
-            flankTarget = false;
-            AttackEvent();
-        }
-
-        if (OnAttack)
+        if (!isDead)
         {
+            answerCall = false;
+            AnswerCall();
+
+            if (flankTarget) IdleEventBack();
+            else IdleEvent();
+
+            if (timeToAttack) dileyToAttack -= Time.deltaTime;
+            if (dileyToAttack <= 0)
+            {
+                rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
+                timeToAttack = false;
+                StartCoroutine(Resting());
+                cm.times++;
+                dileyToAttack = UnityEngine.Random.Range(4f, 6f);
+                maxDileyToAttack = dileyToAttack;
+                if (flankTarget)
+                {
+                    cm.flanTicket = false;
+                    flankTarget = false;
+                }
+                AttackEvent();
+            }
+
+            if (OnAttack)
+            {
                 var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
                 if (player != null)
                 {
@@ -307,8 +335,8 @@ public class ModelEnemy : EnemyClass
                     rb.AddForce(-transform.forward * knockbackForce * 1.25f, ForceMode.Impulse);
                     OnAttack = false;
                 }
+            }
         }
-        
         
     }
 
@@ -336,13 +364,14 @@ public class ModelEnemy : EnemyClass
 
     List<Cell> GetTransitableCells()
     {
+        transitableCells.Clear();
         transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
         {
             var d = Vector3.Distance(x.transform.position, transform.position);
             if (d > 12) return false;
             else return true;
 
-        }));
+        }).Where(x=>  x.room == myGrid.roomNumber));
 
         return transitableCells;
     }
@@ -354,12 +383,15 @@ public class ModelEnemy : EnemyClass
             float d = Vector3.Distance(x.transform.position, enemy);
             return d;
 
-        }).Where(x=> x.transitable).First();      
+        }).Where(x=> x.transitable && x.room == myGrid.roomNumber).FirstOrDefault();      
+      
+        
     }
 
     Cell GetRandomCell()
     {
-      return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
+        transitableCells.Clear();
+        return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
     }
 
 
@@ -421,10 +453,18 @@ public class ModelEnemy : EnemyClass
     {
         DeadEvent();       
         isDead = true;
+        sm.SetState<S_Idle>();
     }
 
     public override IEnumerator FoundTarget(float time)
     {
         throw new NotImplementedException();
     }
+
+    public void OnTriggerEnter(Collider c)
+    {
+        if(c.gameObject.layer == LayerMask.NameToLayer("GoBack"))
+        isBackHome = true;     
+    }
+
 }

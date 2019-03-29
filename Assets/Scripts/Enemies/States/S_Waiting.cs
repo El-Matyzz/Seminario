@@ -13,7 +13,6 @@ public class S_Waiting : EnemyState
     public S_Waiting(StateMachine sm, EnemyClass e, ModelEnemy model, Transform player, float rotateSpeed) : base(sm, e)
     {
         _modelPlayer = player.GetComponent<Model>();
-        _modelPlayer.CombatState();
         _model = model;
         _player = player;
         _flankSpeed = rotateSpeed;
@@ -48,9 +47,11 @@ public class S_Waiting : EnemyState
             if (angle < 120)
             {
                 var d = Vector3.Distance(_model.transform.position, _player.position);
+
                 _model.transform.RotateAround(_model.target.position, Vector3.up, rotateSpeed * Time.deltaTime);
+
                 if (_model.avoidVectObstacles != Vector3.zero || _model.avoidVectFriends != Vector3.zero) _model.transform.position += _model.transform.forward * 4 * Time.deltaTime;
-                if (d<5 && (_model.avoidVectObstacles == Vector3.zero || _model.avoidVectFriends == Vector3.zero)) _model.transform.position += -_model.transform.forward * 4 * Time.deltaTime;
+                if (d<2 && (_model.avoidVectObstacles == Vector3.zero || _model.avoidVectFriends == Vector3.zero)) _model.transform.position += -_model.transform.forward * 4 * Time.deltaTime;
             }
         }
 

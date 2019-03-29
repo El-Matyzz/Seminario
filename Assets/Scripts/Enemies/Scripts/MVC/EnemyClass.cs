@@ -30,6 +30,7 @@ public abstract class EnemyClass : MonoBehaviour
     public List<Cell> pathToTarget = new List<Cell>();
     public Cell cellToPatrol;
     public Cell startCell;
+    public Cell myCell;
     public GridSearcher myGridSearcher;
     public Grid myGrid;
     public Vector3 avoidVectFriends;

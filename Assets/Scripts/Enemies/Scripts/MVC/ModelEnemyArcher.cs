@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class ModelEnemyArcher : EnemyClass {
 
@@ -21,6 +22,13 @@ public class ModelEnemyArcher : EnemyClass {
     public bool resting;
     public bool timeToAttack;
     bool OnAttack;
+
+    public Action TakeDamageEvent;
+    public Action MeleeAttackEvent;
+    public Action RangeAttackEvent;
+    public Action IdleEvent;
+    public Action WalkEvent;
+    public Action DeadEvent;
 
     public EnemyAmmo munition;
     public List<Collider> obstacles;
@@ -95,6 +103,7 @@ public class ModelEnemyArcher : EnemyClass {
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_RangePatrol(sm, this, speed));
         sm.AddState(new S_Patrol(sm, this, speed));
+        sm.AddState(new S_Idle(sm, this));
         sm.AddState(new S_LookForTarget(sm, this, speed));
         sm.AddState(new S_BackHome(sm, this, speed));
         sm.AddState(new S_Aiming(sm, this, target.transform, sightSpeed));
@@ -135,10 +144,6 @@ public class ModelEnemyArcher : EnemyClass {
 
         if (isBleeding && !isOcuped) life -= bleedingDamage * Time.deltaTime;
 
-       
-
-        if (life <= 0)
-            print(name + " is fucking dead!");
 
         if (!isAttack && !isPersuit && !isOcuped && !isBackHome && !isAttackMelle && !answerCall) isOnPatrol = true;
         else isOnPatrol = false;
@@ -153,32 +158,41 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void AttackRange()
     {
-        startback = false;
-        target.GetComponent<Model>().CombatState();
-        timeToShoot -= Time.deltaTime;
-        sm.SetState<S_Aiming>();
-        target.GetComponent<Model>().CombatState();
-        if (timeToShoot<=0)
+        if (!isDead)
         {
-            attackPivot.LookAt(target.transform.position);
+            IdleEvent();
 
-            Vector3 localPlayerPos = transform.InverseTransformPoint(target.transform.position);
-            Vector3 localEnemyPos = transform.InverseTransformPoint(attackPivot.position);
-            Vector3 localPlayerDir = localPlayerPos - localEnemyPos;
-            Vector3 v = localPlayerDir;
-            v.y = 0f;
-            localPlayerDir = Quaternion.FromToRotation(v, Vector3.forward) * localPlayerDir;
-            Vector3 raycastDirection = transform.TransformDirection(localPlayerDir);
+            startback = false;
+            target.GetComponent<Model>().CombatState();
+            timeToShoot -= Time.deltaTime;
+            sm.SetState<S_Aiming>();
+            target.GetComponent<Model>().CombatState();
 
-            if (Physics.Raycast(attackPivot.position, raycastDirection, Mathf.Infinity, player))
+            //if (timeToShoot <= 1) PrepareAttackEvent();
+
+            if (timeToShoot <= 0)
             {
-                Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
-                newArrow.ammoAmount = munition;
-                newArrow.transform.position = attackPivot.position;
-                newArrow.transform.forward = transform.forward;
-                Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
-                arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.2f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
-                timeToShoot = shootTime;               
+                attackPivot.LookAt(target.transform.position);
+
+                Vector3 localPlayerPos = transform.InverseTransformPoint(target.transform.position);
+                Vector3 localEnemyPos = transform.InverseTransformPoint(attackPivot.position);
+                Vector3 localPlayerDir = localPlayerPos - localEnemyPos;
+                Vector3 v = localPlayerDir;
+                v.y = 0f;
+                localPlayerDir = Quaternion.FromToRotation(v, Vector3.forward) * localPlayerDir;
+                Vector3 raycastDirection = transform.TransformDirection(localPlayerDir);
+
+                if (Physics.Raycast(attackPivot.position, raycastDirection, Mathf.Infinity, player))
+                {
+                    RangeAttackEvent();
+                    Arrow newArrow = munition.arrowsPool.GetObjectFromPool();
+                    newArrow.ammoAmount = munition;
+                    newArrow.transform.position = attackPivot.position;
+                    newArrow.transform.forward = transform.forward;
+                    Rigidbody arrowRb = newArrow.GetComponent<Rigidbody>();
+                    arrowRb.AddForce(new Vector3(transform.forward.x, attackPivot.forward.y + 0.2f, transform.forward.z) * 950 * Time.deltaTime, ForceMode.Impulse);
+                    timeToShoot = shootTime;
+                }
             }
         }
     }
@@ -189,109 +203,139 @@ public class ModelEnemyArcher : EnemyClass {
         currentIndex = 2;
         cellToPatrol = GetCloseCell(target.position);
         var myCell = GetCloseCell(transform.position);
-        pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
-        sm.SetState<S_Patrol>();
+        if (cellToPatrol != null)
+        {
+            pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+            sm.SetState<S_Patrol>();
+        }
     }
 
     public void Patrol()
     {
-        Quaternion rotateAngle = Quaternion.LookRotation(transform.forward + new Vector3(Mathf.Sin(Time.time * 0.5f),0,0), Vector3.up);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotateAngle, 5 * Time.deltaTime);
-        sm.SetState<S_RangePatrol>();
+        if (!isDead)
+        {
+
+            IdleEvent();
+            sm.SetState<S_RangePatrol>();
+        }
     }
 
     public void AttackMelee()
     {
-        answerCall = false;
-        AnswerCall();
-        timeToShoot = shootTime;
-        if (timeToAttack) dileyToAttack -= Time.deltaTime;
-        if (dileyToAttack <= 0)
+        if (!isDead)
         {
-            rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
-            timeToAttack = false;
-            StartCoroutine(Resting());
-            cm.times++;
-            dileyToAttack = UnityEngine.Random.Range(4f, 6f);
-            maxDileyToAttack = dileyToAttack;
-        }
+            IdleEvent();
 
-        if (OnAttack)
-        {
-            var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
-            if (player != null)
+            answerCall = false;
+            AnswerCall();
+            timeToShoot = shootTime;
+            if (timeToAttack) dileyToAttack -= Time.deltaTime;
+            if (dileyToAttack <= 0)
             {
-                player.GetDamage(attackDamage, transform, false);
-                rb.AddForce(-transform.forward * knockbackForce * 1.5f, ForceMode.Impulse);
-                OnAttack = false;
+                MeleeAttackEvent();
+                rb.AddForce(transform.forward * knockbackForce, ForceMode.Impulse);
+                timeToAttack = false;
+                StartCoroutine(Resting());
+                dileyToAttack = UnityEngine.Random.Range(4f, 6f);
+                maxDileyToAttack = dileyToAttack;
+            }
+
+            if (OnAttack)
+            {
+                var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
+                if (player != null)
+                {
+                    player.GetDamage(attackDamage, transform, false);
+                    rb.AddForce(-transform.forward * knockbackForce * 1.5f, ForceMode.Impulse);
+                    OnAttack = false;
+                }
             }
         }
     }
 
     public void Waiting()
     {
-        startback = false;
-        if (!resting && cm.times > 0 && !timeToAttack)
+        if (!isDead)
         {
-            timeToAttack = true;
-            cm.times--;
-        }
+            IdleEvent();
 
-        sm.SetState<S_WaitingArcher>();
+            startback = false;
+            if (!resting && !timeToAttack)
+            {
+                timeToAttack = true;
+            }
+
+            sm.SetState<S_WaitingArcher>();
+        }
     }
 
     public void Persuit()
     {
-        startback = false;
-        AnswerCall();
-        answerCall = false;
-        lostTarget = true;
-        timeOfLook = 10;
-        lastTargetPosition = target.transform.position;
-        sm.SetState<S_Persuit>();
+        if (!isDead)
+        {
+            WalkEvent();
+
+            startback = false;
+            AnswerCall();
+            answerCall = false;
+            lostTarget = true;
+            timeOfLook = 10;
+            lastTargetPosition = target.transform.position;
+            sm.SetState<S_Persuit>();
+        }
     }
 
     public void LookForTarget()
     {
-        answerCall = false;
-        timeOfLook -= Time.deltaTime;
-        isOnPatrol = false;
-        if (timeOfLook <= 0)
+        if (!isDead)
         {
-            lostTarget = false;
-            isBackHome = true;
+            WalkEvent();
+
+            answerCall = false;
+            timeOfLook -= Time.deltaTime;
+            isOnPatrol = false;
+            if (timeOfLook <= 0)
+            {
+                lostTarget = false;
+                isBackHome = true;
+            }
+            else
+                sm.SetState<S_LookForTarget>();
         }
-        else
-            sm.SetState<S_LookForTarget>();
 
     }
 
     public void BackHome()
     {
-
-        answerCall = false;
-        if (!startback)
+        if(!isDead)
         {
-            pathToTarget.Clear();
-            currentIndex = 0;
-            var myCell = GetCloseCell(transform.position);
-            pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
-            startback = true;
+
+            WalkEvent();
+
+            answerCall = false;
+            if (!startback)
+            {
+                pathToTarget.Clear();
+                currentIndex = 0;
+                var myCell = GetCloseCell(transform.position);
+                pathToTarget.AddRange(myGridSearcher.Search(myCell, startCell));
+                startback = true;
+            }
+
+            transitableCells.Clear();
+            transitableCells.AddRange(GetTransitableCells());
+
+            var distance = Vector3.Distance(transform.position, startCell.transform.position);
+
+            if (distance <= 1)
+            {
+                transform.forward = startRotation;
+                isBackHome = false;
+                lostTarget = false;
+                isOnPatrol = true;
+            }
+            sm.SetState<S_BackHome>();
         }
-
-        transitableCells.Clear();
-        transitableCells.AddRange(GetTransitableCells());
-
-        var distance = Vector3.Distance(transform.position, startCell.transform.position);
-
-        if (distance <= 1)
-        {
-            transform.forward = startRotation;
-            isBackHome = false;
-            lostTarget = false;
-            isOnPatrol = true;
-        }
-        sm.SetState<S_BackHome>();
     }
 
     public void AnswerCall()
@@ -318,13 +362,14 @@ public class ModelEnemyArcher : EnemyClass {
 
     List<Cell> GetTransitableCells()
     {
+        transitableCells.Clear();
         transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
         {
             var d = Vector3.Distance(x.transform.position, transform.position);
             if (d > 12) return false;
             else return true;
 
-        }));
+        }).Where(x => x.room == myGrid.roomNumber));
 
         return transitableCells;
     }
@@ -336,11 +381,14 @@ public class ModelEnemyArcher : EnemyClass {
             float d = Vector3.Distance(x.transform.position, enemy);
             return d;
 
-        }).Where(x => x.transitable).First();
+        }).Where(x => x.transitable && x.room == myGrid.roomNumber).FirstOrDefault();
+
+
     }
 
     Cell GetRandomCell()
     {
+        transitableCells.Clear();
         return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
     }
 
@@ -348,11 +396,12 @@ public class ModelEnemyArcher : EnemyClass {
     {
         life -= damage;
         //ess.UpdateLifeBar(life);
-        dileyToAttack += 0.8f;
+        TakeDamageEvent();
+        dileyToAttack += 0.25f;
         if (life <= 0)
         {
             isDead = true;
-            Destroy(gameObject);
+            Dead();
         }
     }
 
@@ -409,8 +458,9 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void Dead()
     {
-        gameObject.SetActive(false);
+        DeadEvent();
         isDead = true;
+        sm.SetState<S_Idle>();
     }
 
     public override IEnumerator FoundTarget(float time)

@@ -6,7 +6,7 @@ using System.Linq;
 public class EnemyCombatManager : MonoBehaviour {
 
     public int times;
-
+    public bool flanTicket;
 	// Use this for initialization
 	void Start () {
 

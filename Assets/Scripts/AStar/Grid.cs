@@ -10,7 +10,7 @@ public class Grid : MonoBehaviour
     public Cell cellPrefab;
     public Vector2Int size = new Vector2Int(10, 10);
     public float tileSize = 1f;
-
+    public int roomNumber;
     public Cell[,] cells;
 
     private void Awake()
@@ -28,6 +28,8 @@ public class Grid : MonoBehaviour
             
                 cell.pos = new Vector2Int(i, j);
 
+                cell.room = roomNumber;
+                cell.name = "cell" + i + j;
                 var obst = Physics.OverlapSphere(cell.transform.position, 0.1f);
                 foreach (var item in obst)
                 {

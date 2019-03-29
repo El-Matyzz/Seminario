@@ -23,6 +23,7 @@ public class Viewer : MonoBehaviour {
     public GameObject youDied;
     public GameObject youWin;
     public GameObject phParticles;
+    public GameObject trail;
 
     public Image lifeBar;
     public Image staminaBar;
@@ -75,12 +76,21 @@ public class Viewer : MonoBehaviour {
 
     public void Awake()
     {
+        trail.SetActive(false);
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
     
     }
 
-   
+    public void AwakeTrail()
+    {
+        trail.SetActive(true);
+    } 
+
+    public void SleepTrail()
+    {
+        trail.SetActive(false);
+    }
 
     public void RunSword()
     {

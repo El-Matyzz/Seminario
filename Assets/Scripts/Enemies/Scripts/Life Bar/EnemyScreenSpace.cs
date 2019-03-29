@@ -5,24 +5,25 @@ using UnityEngine.UI;
 
 public class EnemyScreenSpace : MonoBehaviour
 {
-   /* EnemyClass enemy;
+    EnemyClass enemy;
     float maxLife;
 
     public Canvas canvas;
     public GameObject barPrefab;
 
     GameObject healthBar;
-    Slider healthSlider;
+    Image healthFill;
 
     DepthUI depthUI;
-    public Renderer enemyRenderer;
+
+    public float offset;
 
     void Start()
     {
         enemy = GetComponent<EnemyClass>();
         healthBar = Instantiate(barPrefab);
         healthBar.transform.SetParent(canvas.transform, false);
-        healthSlider = healthBar.GetComponent<Slider>();
+        healthFill = healthBar.transform.GetChild(0).GetComponent<Image>();
 
         depthUI = healthBar.GetComponent<DepthUI>();
         canvas.GetComponent<ScreenSpaceCanvas>().AddToCanvas(healthBar);
@@ -32,9 +33,8 @@ public class EnemyScreenSpace : MonoBehaviour
 
     void Update()
     {
-        Vector3 worldPos = transform.position + Vector3.up;
+        Vector3 worldPos = transform.position + (Vector3.up * offset);
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-        healthBar.transform.position = screenPos;
 
         float distance = Vector3.Distance(worldPos, Camera.main.transform.position);
         depthUI.depth = -distance;
@@ -42,21 +42,38 @@ public class EnemyScreenSpace : MonoBehaviour
         Vector3 vp = Camera.main.WorldToViewportPoint(worldPos);
 
         if (distance < 15 && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
+        {
             healthBar.SetActive(true);
+            healthBar.transform.position = screenPos;
+        }
         else
             healthBar.SetActive(false);
     }
 
-    public void UpdateLifeBar (float val)
+    public IEnumerator BarSmooth(float target)
     {
-        healthSlider.value = val / maxLife;
+        bool timerRunning = true;
+        float smoothTimer = 0;
+
+        float current = healthFill.fillAmount;
+
+        if (current - target <= 0.025f)
+            healthFill.fillAmount = target;
+
+        while (timerRunning)
+        {
+            smoothTimer += Time.deltaTime * 1.5f;
+            healthFill.fillAmount = Mathf.Lerp(current, target, smoothTimer);
+            if (smoothTimer > 1)
+                timerRunning = false;
+            yield return new WaitForEndOfFrame();
+        }
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
         if (canvas)
             canvas.GetComponent<ScreenSpaceCanvas>().RemoveFromCanvas(healthBar);
         Destroy(healthBar);
     }
-    */
 }

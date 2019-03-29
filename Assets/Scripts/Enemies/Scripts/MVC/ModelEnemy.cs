@@ -53,6 +53,9 @@ public class ModelEnemy : EnemyClass
     public float timeToChangePatrol;
     public float timeOfLook;
 
+    EnemyScreenSpace ess;
+    float maxLife;
+
     public IEnumerator Resting()
     {
         resting = true;
@@ -112,8 +115,9 @@ public class ModelEnemy : EnemyClass
         cellToPatrol = GetRandomCell();
         timeToChangePatrol = 0;
         timeOfLook = 10;
-        
 
+        ess = GetComponent<EnemyScreenSpace>();
+        maxLife = life;
     }
 
     void Update()
@@ -423,8 +427,9 @@ public class ModelEnemy : EnemyClass
             dileyToAttack = maxDileyToAttack;
         }
         life -= damage;
-        if (life <= 0) Dead();
+        StartCoroutine(ess.BarSmooth(life / maxLife));
 
+        if (life <= 0) Dead();
     }
 
     Vector3 avoidance()

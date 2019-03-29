@@ -61,7 +61,10 @@ public class ModelEnemyArcher : EnemyClass {
     public float timeOfLook;
     public float distanceToBack;
 
-    public StateMachine sm;  
+    public StateMachine sm;
+
+    EnemyScreenSpace ess;
+    float maxLife;
 
     public override IEnumerator Bleeding(float bleedingTime)
     {
@@ -114,7 +117,8 @@ public class ModelEnemyArcher : EnemyClass {
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);
         sm.SetState<S_RangePatrol>();
         timeOfLook = 10;
-        // ess = GetComponent<EnemyScreenSpace>();
+        ess = GetComponent<EnemyScreenSpace>();
+        maxLife = life;
     }
 	
 	// Update is called once per frame
@@ -395,7 +399,7 @@ public class ModelEnemyArcher : EnemyClass {
     public override void GetDamage(float damage)
     {
         life -= damage;
-        //ess.UpdateLifeBar(life);
+        StartCoroutine(ess.BarSmooth(life / maxLife));
         TakeDamageEvent();
         dileyToAttack += 0.25f;
         if (life <= 0)

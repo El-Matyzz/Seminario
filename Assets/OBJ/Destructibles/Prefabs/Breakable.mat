@@ -10,7 +10,7 @@ Material:
   m_Name: Breakable
   m_Shader: {fileID: 4800000, guid: b33dd929115dd774fb42504f9a1cea71, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 0
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -28,9 +28,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Cutoff: 0.5
     - _FresnelBias: 0
     - _FresnelPower: 5
     - _FresnelScale: 1.93
+    - _MaxWidth: 0.005
+    - _MinWidth: 0
     - _Opacity: 1
     - __dirty: 0
-    m_Colors: []
+    m_Colors:
+    - _Color: {r: 1, g: 0.5217904, b: 0, a: 0}

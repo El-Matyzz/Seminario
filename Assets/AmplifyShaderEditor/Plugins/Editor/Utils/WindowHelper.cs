@@ -59,8 +59,10 @@ public static class WindowHelper
 		public void AddTab( EditorWindow pane )
 		{
 			var method = m_type.GetMethod( "AddTab", BindingFlags.Instance | BindingFlags.Public, null, new System.Type[] { typeof( EditorWindow ) }, null );
-
+            if (method != null)
+            {
                 method.Invoke(m_instance, new object[] { pane });
+            }
          
 		}
 	}

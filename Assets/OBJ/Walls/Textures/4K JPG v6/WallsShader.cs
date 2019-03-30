@@ -16,7 +16,7 @@ public class WallsShader : MonoBehaviour
 
     private void Start()
     {
-        mat = this.GetComponent<Renderer>().sharedMaterial;
+        mat = this.GetComponent<Renderer>().material;
     }
 
     private void Update()
@@ -30,7 +30,7 @@ public class WallsShader : MonoBehaviour
     }
     void UpdateThis()
     {
-        mat = this.GetComponent<Renderer>().sharedMaterial;
+        mat = this.GetComponent<Renderer>().material;
         mat.SetInt("_TesselDir", tessellationDirection);
         mat.SetFloat("_TesselIntensity", tessellationIntensity);
     }

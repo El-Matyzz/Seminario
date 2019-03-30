@@ -44,7 +44,7 @@ public class S_Waiting : EnemyState
 
             var dir = _model.target.position - _model.transform.position;
             var angle = Vector3.Angle(dir, _model.transform.forward);
-            if (angle < 120)
+            if (angle < 100)
             {
                 var d = Vector3.Distance(_model.transform.position, _player.position);
 

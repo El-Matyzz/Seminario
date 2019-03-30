@@ -253,6 +253,7 @@
     <Compile Include="Assets\Scripts\Enemies2019\FSM\StateConfigurer.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\FSM\Transition.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Melee MVC\ModelE_Melee.cs" />
+    <Compile Include="Assets\Scripts\Enemies2019\Melee MVC\ViewerE_Melee.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\MyBFS\MyBFS.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\MyBFS\Node.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_AttackMeleeWarrior.cs" />

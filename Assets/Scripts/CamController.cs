@@ -12,8 +12,6 @@ public class CamController : MonoBehaviour {
     float currentY = 0;
     public float sensitivityX;
     public float sensitivityY;
-    float yaw;
-    float pitch;
     public float viewUp;
     public float viewDown;
     public float smooth;
@@ -23,12 +21,15 @@ public class CamController : MonoBehaviour {
     public float rayDistance;
     public LayerMask layerObst;
     Vector3 startPositionPivot;
+    public Camera mainCam;
 
     void Start () {
         if (invertY)
             sensitivityY = -sensitivityY;
         model = FindObjectOfType<Model>();
         transform.position = player.position;
+        transform.forward = player.transform.forward;
+        mainCam.transform.forward = model.transform.forward;
 
     }
 
@@ -81,20 +82,6 @@ public class CamController : MonoBehaviour {
 
 
     }
-
-    public void RotateRB()
-    {
-        yaw += sensitivityX * Input.GetAxis("Mouse X");
-        pitch -= sensitivityY * Input.GetAxis("Mouse Y");
-
-        pitch = Mathf.Clamp(pitch, viewDown, viewUp);
-
-        transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
-
-        var newForward = transform.forward;
-
-        transform.forward = newForward;
-       
-    }   
+   
     
 }

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface i_EnemyActions 
 {
-     void Actions();
+    void Actions();
 }

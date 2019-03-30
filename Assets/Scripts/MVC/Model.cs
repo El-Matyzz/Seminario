@@ -381,13 +381,16 @@ public class Model : MonoBehaviour
             if (backward)
             {
                 var turnDir = -direction;
+                turnDir.y = 0;
                 targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
             if (rotate)
             {
-                targetRotation = Quaternion.LookRotation(mainCamera.forward, Vector3.up);
+                var camDir = mainCamera.forward;
+                camDir.y = 0;
+                targetRotation = Quaternion.LookRotation(camDir, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
 
@@ -432,6 +435,7 @@ public class Model : MonoBehaviour
             if (backward)
             {
                 var turnDir = (d1 + (-d2)) / 2;
+                turnDir.y = 0;
                 targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
             }
@@ -489,8 +493,10 @@ public class Model : MonoBehaviour
     {
         if (starChangeDirAttack)
         {
+            var camDir = mainCamera.forward.normalized;
+            camDir.y =0;
             Quaternion targetRotation;          
-            targetRotation = Quaternion.LookRotation(mainCamera.forward, Vector3.up);
+            targetRotation = Quaternion.LookRotation(camDir, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
         }
         
@@ -507,7 +513,7 @@ public class Model : MonoBehaviour
         view.UpdateStaminaBar(stamina / totalStamina);
 
         
-        var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyClass>()).Select(x => x.GetComponent<EnemyClass>());
+        var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyEntity>()).Select(x => x.GetComponent<EnemyEntity>());
         var desMesh = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<DestructibleOBJ>()).Select(x => x.GetComponent<DestructibleOBJ>()); ;
         foreach (var item in col)
         {

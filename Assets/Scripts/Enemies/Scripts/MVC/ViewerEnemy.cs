@@ -40,7 +40,6 @@ public class ViewerEnemy : MonoBehaviour {
 	void Update () {
 
         DamageShader();
-
     }
 
     public void DeadAnim()

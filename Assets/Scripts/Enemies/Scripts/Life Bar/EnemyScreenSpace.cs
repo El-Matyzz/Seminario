@@ -5,25 +5,24 @@ using UnityEngine.UI;
 
 public class EnemyScreenSpace : MonoBehaviour
 {
-    EnemyClass enemy;
+   /* EnemyClass enemy;
     float maxLife;
 
     public Canvas canvas;
     public GameObject barPrefab;
 
     GameObject healthBar;
-    Image healthFill;
+    Slider healthSlider;
 
     DepthUI depthUI;
-
-    public float offset;
+    public Renderer enemyRenderer;
 
     void Start()
     {
         enemy = GetComponent<EnemyClass>();
         healthBar = Instantiate(barPrefab);
         healthBar.transform.SetParent(canvas.transform, false);
-        healthFill = healthBar.transform.GetChild(0).GetComponent<Image>();
+        healthSlider = healthBar.GetComponent<Slider>();
 
         depthUI = healthBar.GetComponent<DepthUI>();
         canvas.GetComponent<ScreenSpaceCanvas>().AddToCanvas(healthBar);
@@ -33,8 +32,9 @@ public class EnemyScreenSpace : MonoBehaviour
 
     void Update()
     {
-        Vector3 worldPos = transform.position + (Vector3.up * offset);
+        Vector3 worldPos = transform.position + Vector3.up;
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+        healthBar.transform.position = screenPos;
 
         float distance = Vector3.Distance(worldPos, Camera.main.transform.position);
         depthUI.depth = -distance;
@@ -42,38 +42,21 @@ public class EnemyScreenSpace : MonoBehaviour
         Vector3 vp = Camera.main.WorldToViewportPoint(worldPos);
 
         if (distance < 15 && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
-        {
             healthBar.SetActive(true);
-            healthBar.transform.position = screenPos;
-        }
         else
             healthBar.SetActive(false);
     }
 
-    public IEnumerator BarSmooth(float target)
+    public void UpdateLifeBar (float val)
     {
-        bool timerRunning = true;
-        float smoothTimer = 0;
-
-        float current = healthFill.fillAmount;
-
-        if (current - target <= 0.025f)
-            healthFill.fillAmount = target;
-
-        while (timerRunning)
-        {
-            smoothTimer += Time.deltaTime * 1.5f;
-            healthFill.fillAmount = Mathf.Lerp(current, target, smoothTimer);
-            if (smoothTimer > 1)
-                timerRunning = false;
-            yield return new WaitForEndOfFrame();
-        }
+        healthSlider.value = val / maxLife;
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
         if (canvas)
             canvas.GetComponent<ScreenSpaceCanvas>().RemoveFromCanvas(healthBar);
         Destroy(healthBar);
     }
+    */
 }

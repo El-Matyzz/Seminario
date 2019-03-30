@@ -6,7 +6,7 @@ public class SearchForTarget : MonoBehaviour {
 
   
 
-   public static bool SearchTarget(Transform target, float viewDistance, float viewAngle, Transform follower, bool detector, LayerMask layer)
+   public static bool SearchTarget(Transform target, float viewDistance, float viewAngle, Transform follower, bool detector , LayerMask layer)
     {
         var _viewAngle = viewAngle;
         var _viewDistance = viewDistance;
@@ -28,7 +28,6 @@ public class SearchForTarget : MonoBehaviour {
         {         
             if (Physics.Raycast(_enemy.position, _dirToTarget , out hit, _distanceToTarget, layer))
             {
-
                 if (hit.transform.name == target.name)
                 {
                     Debug.DrawLine(_enemy.position, hit.point, Color.yellow);
@@ -40,9 +39,7 @@ public class SearchForTarget : MonoBehaviour {
                 }
                 
                 
-            }
-
-             
+            }           
         }
 
         if (_angleToTarget <= _viewAngle && _distanceToTarget <= _viewDistance && !obstaclesBetween)

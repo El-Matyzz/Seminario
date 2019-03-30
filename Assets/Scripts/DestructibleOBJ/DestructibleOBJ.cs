@@ -6,6 +6,7 @@ public class DestructibleOBJ : MonoBehaviour
 {
     public GameObject principalMesh;
     public GameObject destructibleMesh;
+    public BoxCollider myBox;
     public Animator anim;
     BoxCollider col;
     Material mat;
@@ -30,6 +31,7 @@ public class DestructibleOBJ : MonoBehaviour
             principalMesh.SetActive(false);
             destructibleMesh.SetActive(true);
             anim.SetBool("IsHit", true);
+            myBox.isTrigger = true;
             yield return new WaitForSeconds(5);
             col.isTrigger = true;
             StartCoroutine(Destroy());
@@ -42,6 +44,7 @@ public class DestructibleOBJ : MonoBehaviour
         anim = destructibleMesh.GetComponent<Animator>();
         col = destructibleMesh.GetComponent<BoxCollider>();
         mat = principalMesh.GetComponent<MeshRenderer>().materials[0];
+        myBox = GetComponent<BoxCollider>();
     }
 
     public void Update()

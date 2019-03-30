@@ -19,6 +19,7 @@ public abstract class EnemyClass : MonoBehaviour
     public bool IsOnSearching;
     public bool foundTarget;
     public bool answerCall;
+    public bool isDead;
     public float dileyToAttack;
     public float bleedingDamage;
     public float life;

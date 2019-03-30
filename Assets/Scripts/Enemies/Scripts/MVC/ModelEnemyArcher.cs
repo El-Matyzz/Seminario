@@ -9,7 +9,6 @@ public class ModelEnemyArcher : EnemyClass {
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
-    public bool isDead;
     public bool isOcuped;
     public bool isReloading;
     public bool isScape;
@@ -61,10 +60,7 @@ public class ModelEnemyArcher : EnemyClass {
     public float timeOfLook;
     public float distanceToBack;
 
-    public StateMachine sm;
-
-    EnemyScreenSpace ess;
-    float maxLife;
+    public StateMachine sm;  
 
     public override IEnumerator Bleeding(float bleedingTime)
     {
@@ -101,7 +97,7 @@ public class ModelEnemyArcher : EnemyClass {
 
         startRotation = transform.forward;
         timeToShoot = shootTime;
-        startCell = GetCloseCell(transform.position);
+       // startCell = GetCloseCell(transform.position);
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_RangePatrol(sm, this, speed));
@@ -117,8 +113,7 @@ public class ModelEnemyArcher : EnemyClass {
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);
         sm.SetState<S_RangePatrol>();
         timeOfLook = 10;
-        ess = GetComponent<EnemyScreenSpace>();
-        maxLife = life;
+        // ess = GetComponent<EnemyScreenSpace>();
     }
 	
 	// Update is called once per frame
@@ -127,9 +122,9 @@ public class ModelEnemyArcher : EnemyClass {
         WrapperStates();
         sm.Update();
 
-        var d = Vector3.Distance(startCell.transform.position, transform.position);
+        //var d = Vector3.Distance(startCell.transform.position, transform.position);
 
-        if (d > distanceToBack) isBackHome = true;
+        //if (d > distanceToBack) isBackHome = true;
 
         if (target != null && !isAttack && !isAttackMelle && !isOcuped && SearchForTarget.SearchTarget(target, viewDistanceFollow, viewAngleFollow, transform, true, obstacleLayer)) isPersuit = true;
         else isPersuit = false;
@@ -155,7 +150,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void FixedUpdate()
     {
-        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !isAttackMelle && !answerCall) BackHome();
+        //if (isBackHome && !isAttack && !isPersuit && !isOcuped && !isAttackMelle && !answerCall) BackHome();
 
         if (lostTarget && !isPersuit && !isAttack && !isBackHome && !answerCall) LookForTarget();
     }
@@ -203,7 +198,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public override void Founded()
     {
-        pathToTarget.Clear();
+       /* pathToTarget.Clear();
         currentIndex = 2;
         cellToPatrol = GetCloseCell(target.position);
         var myCell = GetCloseCell(transform.position);
@@ -212,6 +207,7 @@ public class ModelEnemyArcher : EnemyClass {
             pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
             sm.SetState<S_Patrol>();
         }
+        */
     }
 
     public void Patrol()
@@ -311,7 +307,7 @@ public class ModelEnemyArcher : EnemyClass {
 
     public void BackHome()
     {
-        if(!isDead)
+        /*if(!isDead)
         {
 
             WalkEvent();
@@ -340,6 +336,7 @@ public class ModelEnemyArcher : EnemyClass {
             }
             sm.SetState<S_BackHome>();
         }
+        */
     }
 
     public void AnswerCall()
@@ -364,7 +361,7 @@ public class ModelEnemyArcher : EnemyClass {
         }
     }
 
-    List<Cell> GetTransitableCells()
+   /* List<Cell> GetTransitableCells()
     {
         transitableCells.Clear();
         transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
@@ -395,13 +392,13 @@ public class ModelEnemyArcher : EnemyClass {
         transitableCells.Clear();
         return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
     }
-
+    */
     public override void GetDamage(float damage)
     {
         life -= damage;
-        StartCoroutine(ess.BarSmooth(life / maxLife));
+        //ess.UpdateLifeBar(life);
         TakeDamageEvent();
-        dileyToAttack += 0.25f;
+       // dileyToAttack += 0.25f;
         if (life <= 0)
         {
             isDead = true;

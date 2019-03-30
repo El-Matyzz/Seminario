@@ -64,6 +64,7 @@ public class Model : MonoBehaviour
     public bool onDash;
     public bool biz;
     public bool sleepAnim;
+    bool starChangeDirAttack;
 
     bool cdPower1;
     bool cdPower2;
@@ -94,6 +95,8 @@ public class Model : MonoBehaviour
     public Action OnDamage;
     public Action Fall;
     public Action Dead;
+
+
 
     public IEnumerator PowerColdown(float cdTime, int n)
     {
@@ -214,6 +217,8 @@ public class Model : MonoBehaviour
 
     void Update()
     {
+        ChangeDirAttack();
+
         timeOnCombat -= Time.deltaTime;
         if (timeOnCombat > 0)
         {
@@ -473,10 +478,27 @@ public class Model : MonoBehaviour
             else timeAnimCombat = 0.6f;
             countAnimAttack++;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 4);
-            Attack();
+            Attack();           
+            starChangeDirAttack = true;
         }
         if (!InActionAttack) InActionAttack = true;
 
+    }
+
+    public void ChangeDirAttack()
+    {
+        if (starChangeDirAttack)
+        {
+            Quaternion targetRotation;          
+            targetRotation = Quaternion.LookRotation(mainCamera.forward, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+        }
+        
+    }
+
+    public void FalseChangeDirForward()
+    {
+        starChangeDirAttack = false;
     }
 
     public void MakeDamage()
@@ -502,10 +524,10 @@ public class Model : MonoBehaviour
 
     public void Defence()
     {
-        stamina -= 0.25f;
+        
         InAction = true;
         InActionAttack = true;
-        view.UpdateStaminaBar(stamina / totalStamina);
+        
         onDefence = true;
     }
 
@@ -564,11 +586,18 @@ public class Model : MonoBehaviour
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
         if (angle < 90) isBehind = true;
+        if(!isBehind)
+        {
+            stamina -= 5;
+            view.UpdateStaminaBar(stamina / totalStamina);
+        }
 
         if (!onDefence || (onDefence && isBehind) || isProyectile)
         {
+            
             if (armor >= damage)
             {
+               
                 armor -= damage;
                 view.UpdateArmorBar(armor / totalArmor);
             }
@@ -583,12 +612,14 @@ public class Model : MonoBehaviour
 
             if (!onPowerState)
             {
+                
                 rb.velocity = Vector3.zero;
                 onDamage = true;
             }
             if (life > 0) OnDamage();
             else
             {
+                
                 Dead();
                 isDead = true;
                 StartCoroutine(view.YouDied());

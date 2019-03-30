@@ -5,12 +5,18 @@ using UnityEngine;
 public class CombatArea : MonoBehaviour
 {
     public List<GameObject> myNPCs = new List<GameObject>();
+    public Grid grid;
     public GameObject player;
+    public bool shutDown;
 
     IEnumerator ShutDown()
     {
         yield return new WaitForSeconds(0.5f);
-        foreach (var item in myNPCs) item.SetActive(false);
+        if (shutDown)
+        {
+            foreach (var item in myNPCs) item.SetActive(false);
+            grid.gameObject.SetActive(false);
+        }
     }
 
     public void Start()
@@ -22,7 +28,12 @@ public class CombatArea : MonoBehaviour
     {
         if(c.GetComponent<Model>())
         {
-            foreach (var item in myNPCs) item.SetActive(false);
+            grid.gameObject.SetActive(false);
+            foreach (var item in myNPCs)
+            {
+                item.SetActive(false);
+               
+            }
         }
     }
 
@@ -31,8 +42,12 @@ public class CombatArea : MonoBehaviour
 
         if (c.GetComponent<Model>())
         {
-            Debug.Log("asd");
-            foreach (var item in myNPCs) item.SetActive(true);
+            grid.gameObject.SetActive(true);
+            foreach (var item in myNPCs)
+            {
+                if (!item.GetComponent<EnemyClass>().isDead) item.SetActive(true);
+
+            }
         }
     }
 }

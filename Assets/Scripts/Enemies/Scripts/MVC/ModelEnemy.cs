@@ -12,7 +12,6 @@ public class ModelEnemy : EnemyClass
     public bool isStuned;
     public bool isKnocked;
     public bool isBleeding;
-    public bool isDead;
     public bool isOcuped;
     public bool timeToAttack;
     public bool isOnPatrol;
@@ -52,9 +51,6 @@ public class ModelEnemy : EnemyClass
     float maxDileyToAttack;
     public float timeToChangePatrol;
     public float timeOfLook;
-
-    EnemyScreenSpace ess;
-    float maxLife;
 
     public IEnumerator Resting()
     {
@@ -98,9 +94,9 @@ public class ModelEnemy : EnemyClass
     void Start()
     {
         startRotation = transform.forward;
-        transitableCells.AddRange(GetTransitableCells());
+        //transitableCells.AddRange(GetTransitableCells());
 
-        startCell = GetCloseCell(transform.position);
+        //startCell = GetCloseCell(transform.position);
         sm = new StateMachine();
         sm.AddState(new S_Persuit(sm, this, target.GetComponent<Model>(), speed));
         sm.AddState(new S_LookForTarget(sm, this, speed));
@@ -112,12 +108,11 @@ public class ModelEnemy : EnemyClass
         rb = GetComponent<Rigidbody>();
         cm = FindObjectOfType<EnemyCombatManager>();
         dileyToAttack = UnityEngine.Random.Range(2f, 3f);
-        cellToPatrol = GetRandomCell();
+        //cellToPatrol = GetRandomCell();
         timeToChangePatrol = 0;
         timeOfLook = 10;
+        
 
-        ess = GetComponent<EnemyScreenSpace>();
-        maxLife = life;
     }
 
     void Update()
@@ -126,14 +121,14 @@ public class ModelEnemy : EnemyClass
        
         avoidVectObstacles = AvoidObstacles();
 
-        var d = Vector3.Distance(startCell.transform.position, transform.position);
+        //var d = Vector3.Distance(startCell.transform.position, transform.position);
 
-        if (d > distanceToBack) isBackHome = true;
+        //if (d > distanceToBack) isBackHome = true;
 
-        if (!isAttack && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, transform, true, layerPlayer)) isPersuit = true;
+        if (!isAttack && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistancePersuit, viewAnglePersuit, transform, true, layerObst)) isPersuit = true;
         else isPersuit = false;
 
-        if (target != null && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, transform, true, layerPlayer)) isAttack = true;
+        if (target != null && !isOcuped && !isBackHome && SearchForTarget.SearchTarget(target, viewDistanceAttack, viewAngleAttack, transform, true, layerObst)) isAttack = true;
         else isAttack = false;
 
 
@@ -155,7 +150,7 @@ public class ModelEnemy : EnemyClass
             Attack();
         }
 
-        if (isBackHome && !isAttack && !isPersuit && !isOcuped && !answerCall) BackHome();
+        //if (isBackHome && !isAttack && !isPersuit && !isOcuped && !answerCall) BackHome();
      
         
     }
@@ -178,11 +173,11 @@ public class ModelEnemy : EnemyClass
 
     public override void Founded()
     {
-        pathToTarget.Clear();
+       /*/ pathToTarget.Clear();
         currentIndex = 2;
         cellToPatrol = GetCloseCell(target.position);   
         myCell = GetCloseCell(transform.position);        
-        if(cellToPatrol!=null)  pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));
+        if(cellToPatrol!=null)  pathToTarget.AddRange(myGridSearcher.Search(myCell, cellToPatrol));*/
     }
 
     public void LookForTarget()
@@ -205,7 +200,7 @@ public class ModelEnemy : EnemyClass
 
     public void BackHome()
     {
-        if (!isDead)
+        /*if (!isDead)
         {
             lostTarget = false;
             answerCall = false;
@@ -236,12 +231,13 @@ public class ModelEnemy : EnemyClass
             }
             sm.SetState<S_BackHome>();
         }
+        */
     }
 
     public void Patrol()
     {
 
-        if (!isDead)
+       /* if (!isDead)
         {
             if (currentIndex < pathToTarget.Count) IdleEventBack();
             if (currentIndex >= pathToTarget.Count) IdleEvent();
@@ -271,6 +267,7 @@ public class ModelEnemy : EnemyClass
                 sm.SetState<S_Patrol>();
             }
         }
+        */
     }
 
     public void WaitTurn()
@@ -281,8 +278,11 @@ public class ModelEnemy : EnemyClass
             answerCall = false;
             target.GetComponent<Model>().CombatState();
 
-            bool aux = false;
-            if (myFriends.Count > 0) foreach (var item in myFriends.Where(x => x.GetComponent<ModelEnemy>()).Select(x => x.GetComponent<ModelEnemy>())) if (item.flankTarget) aux = true;
+            bool aux = false;          
+            
+            var friendsMelee = FindObjectsOfType<ModelEnemy>();
+
+            foreach (var item in friendsMelee) if (item.flankTarget) aux = true;
 
             if (!resting && cm.times > 0 && !timeToAttack && !aux)
             {
@@ -366,7 +366,7 @@ public class ModelEnemy : EnemyClass
         }
     }
 
-    List<Cell> GetTransitableCells()
+   /* List<Cell> GetTransitableCells()
     {
         transitableCells.Clear();
         transitableCells.AddRange(FindObjectsOfType<Cell>().Where(x => x.transitable).Where(x =>
@@ -397,7 +397,7 @@ public class ModelEnemy : EnemyClass
         transitableCells.Clear();
         return GetTransitableCells()[UnityEngine.Random.Range(0, transitableCells.Count())];
     }
-
+    */
 
     void OnDrawGizmos()
     {
@@ -420,16 +420,15 @@ public class ModelEnemy : EnemyClass
 
     public override void GetDamage(float damage)
     {
-        dileyToAttack += 0.25f;
+       // dileyToAttack += 0.25f;
         TakeDamageEvent();
         if (dileyToAttack > maxDileyToAttack)
         {
             dileyToAttack = maxDileyToAttack;
         }
         life -= damage;
-        StartCoroutine(ess.BarSmooth(life / maxLife));
-
         if (life <= 0) Dead();
+
     }
 
     Vector3 avoidance()
@@ -458,6 +457,13 @@ public class ModelEnemy : EnemyClass
     {
         DeadEvent();       
         isDead = true;
+        if(flankTarget)
+        {
+            cm.flanTicket = false;
+            flankTarget = false;
+            
+        }
+        if (cm.times < 2) cm.times++;
         sm.SetState<S_Idle>();
     }
 

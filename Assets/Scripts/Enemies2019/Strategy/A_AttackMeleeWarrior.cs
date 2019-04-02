@@ -15,18 +15,18 @@ public class A_AttackMeleeWarrior : i_EnemyActions
         {
             if (!_e.onAttackArea && !_e.onAttack)
             {
-                Debug.Log(1);
+                _e.viewDistanceAttack = 3.79f;
                 Quaternion targetRotation;
                 var dir = (_e.target.transform.position - _e.transform.position).normalized;
                 dir.y = 0;
                 targetRotation = Quaternion.LookRotation(dir, Vector3.up);
                 _e.transform.rotation = Quaternion.Slerp(_e.transform.rotation, targetRotation, 7 * Time.deltaTime);
                 _e.rb.MovePosition(_e.rb.position + _e.transform.forward * _e.speed * Time.deltaTime);
+                _e.MoveEvent();
             }
 
-            else if(_e.onAttackArea && _e.dileyToAttack<0)
+            else if(_e.onAttackArea && _e.delayToAttack<0 && !_e.onRetreat)
             {
-
                 Quaternion targetRotation;
                 var dir = (_e.target.transform.position - _e.transform.position).normalized;
                 dir.y = 0;
@@ -40,15 +40,16 @@ public class A_AttackMeleeWarrior : i_EnemyActions
                     _e.flank = false;
                     _e.cm.flanTicket = false;
                 }
-                _e.dileyToAttack = Random.Range(4f, 6f);
-                _e.maxDileyToAttack = _e.dileyToAttack;
-
                 var player = Physics.OverlapSphere(_e.attackPivot.position, _e.radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
-                if (player != null)
+
+                if (player != null && !_e.firstAttack)
                 {
-                    _e.AttackEvent();                 
+                    _e.AttackEvent();
+                    _e.StartCoroutine(_e.Delay(1));
+                    _e.firstAttack = true;
                 }
-            }
+
+            }      
         }
     }
 

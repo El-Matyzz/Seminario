@@ -16,7 +16,7 @@ public abstract class EnemyEntity: MonoBehaviour
     public bool isAnswerCall;
     public bool isDead;
     public bool onDamage;
-    public bool onRetret;
+    public bool onRetreat;
     public float timeOnDamage;
     public Model target;
     public int currentIndex;
@@ -37,8 +37,8 @@ public abstract class EnemyEntity: MonoBehaviour
     public List<Node> myNodes = new List<Node>();
     public i_EnemyActions currentAction;
     public Rigidbody rb;
-    public float dileyToAttack;
-    public float maxDileyToAttack;
+    public float delayToAttack;
+    public float maxDelayToAttack;
     public float knockbackForce;
     public float radiusAttack;
     public float attackDamage;

@@ -260,6 +260,7 @@
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_SniperAttack.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_SniperMeleeAttack.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_SniperPatrol.cs" />
+    <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_WarriorRetreat.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\A_WarriorWait.cs" />
     <Compile Include="Assets\Scripts\Enemies2019\Strategy\i_EnemyActions.cs" />
     <Compile Include="Assets\Scripts\Environment\windmill.cs" />

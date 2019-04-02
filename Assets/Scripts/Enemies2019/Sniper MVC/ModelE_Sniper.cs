@@ -20,6 +20,7 @@ public class ModelE_Sniper : EnemyEntity
     public bool onMeleeAttack;
     public float timeToMeleeAttack;
     public bool cooldwonToGoBack;
+    
 
     public Action TakeDamageEvent;
     public Action DeadEvent;
@@ -32,7 +33,7 @@ public class ModelE_Sniper : EnemyEntity
     {
          yield return new WaitForSeconds(1);
          timeToStopBack = UnityEngine.Random.Range(3, 4);
-         onRetret = false;
+         onRetreat = false;
          StartCoroutine(Cooldwon());
     }
 
@@ -200,13 +201,13 @@ public class ModelE_Sniper : EnemyEntity
            
             currentAction = new A_SniperMeleeAttack(this);
 
-            if (!isDead && isAttack && !onRetret) SendInputToFSM(EnemyInputs.ATTACK);
+            if (!isDead && isAttack && !onRetreat) SendInputToFSM(EnemyInputs.ATTACK);
 
-            if (!isDead && !isAttack && isPersuit && !onRetret) SendInputToFSM(EnemyInputs.PERSUIT);
+            if (!isDead && !isAttack && isPersuit && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
 
-            if (!isDead && !isAttack && !isPersuit && !onRetret && timeToStopBack<=0) SendInputToFSM(EnemyInputs.FOLLOW);
+            if (!isDead && !isAttack && !isPersuit && !onRetreat && timeToStopBack<=0) SendInputToFSM(EnemyInputs.FOLLOW);
 
-            if (!isDead && onRetret) SendInputToFSM(EnemyInputs.RETREAT);
+            if (!isDead && onRetreat) SendInputToFSM(EnemyInputs.RETREAT);
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
         };
@@ -247,13 +248,13 @@ public class ModelE_Sniper : EnemyEntity
 
             currentAction = new A_GoBackFromAttack(this);
 
-            if (!isDead && isPersuit && !isAttack && !onRetret) SendInputToFSM(EnemyInputs.PERSUIT);
+            if (!isDead && isPersuit && !isAttack && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
 
-            if (!isDead && isAttack && !onRetret) SendInputToFSM(EnemyInputs.ATTACK);
+            if (!isDead && isAttack && !onRetreat) SendInputToFSM(EnemyInputs.ATTACK);
 
-            if (!isDead && onMeleeAttack && !onRetret) SendInputToFSM(EnemyInputs.MELEE_ATTACK);
+            if (!isDead && onMeleeAttack && !onRetreat) SendInputToFSM(EnemyInputs.MELEE_ATTACK);
 
-            if (!isDead && !isAttack && !isPersuit && !onMeleeAttack && !onRetret) SendInputToFSM(EnemyInputs.FOLLOW);
+            if (!isDead && !isAttack && !isPersuit && !onMeleeAttack && !onRetreat) SendInputToFSM(EnemyInputs.FOLLOW);
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
         };
@@ -445,7 +446,7 @@ public class ModelE_Sniper : EnemyEntity
 
     public override void RetreatTrue()
     {
-        if (!cooldwonToGoBack) onRetret = true;
+        if (!cooldwonToGoBack) onRetreat = true;
     }
 
     public override void OnDamageFalse()

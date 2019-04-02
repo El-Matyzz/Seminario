@@ -7,7 +7,7 @@ using System;
 public class ModelE_Melee : EnemyEntity
 {
 
-    public enum EnemyInputs { PATROL, PERSUIT, WAIT, ATTACK, FOLLOW, DIE, ANSWER }
+    public enum EnemyInputs { PATROL, PERSUIT, WAIT, ATTACK, RETREAT , FOLLOW, DIE, ANSWER }
     private EventFSM<EnemyInputs> _myFsm;
     public float timeToPatrol;
     public LayerMask layerPlayer;
@@ -20,10 +20,11 @@ public class ModelE_Melee : EnemyEntity
     public List<ModelE_Melee> myWarriorFriends = new List<ModelE_Melee>();
     public Transform attackPivot;
     public Vector3 warriorVectAvoidance;
-    ViewerE_Melee _view;
+    public ViewerE_Melee _view;
     public float distanceToHit;
     public float angleToHit;
     public bool onAttackArea;
+    public bool firstAttack;
 
     public Action TakeDamageEvent;
     public Action DeadEvent;
@@ -38,11 +39,27 @@ public class ModelE_Melee : EnemyEntity
        yield return new WaitForSeconds(2);
        timeToAttack = false;
        onAttack = false;
+       firstAttack = false;
+    }
+
+    public IEnumerator Retreat()
+    {
+        onRetreat = true;
+        yield return new WaitForSeconds(0.7f);
+        onRetreat = false;
+        delayToAttack = UnityEngine.Random.Range(4,6);
+        maxDelayToAttack = delayToAttack;
     }
  
+    public IEnumerator Delay( float time)
+    {
+        yield return new WaitForSeconds(time);
+        StartCoroutine(Retreat());
+    }
+
     public void Awake()
     {
-        dileyToAttack = UnityEngine.Random.Range(3f, 5f);
+        delayToAttack = UnityEngine.Random.Range(3f, 5f);
         rb = gameObject.GetComponent<Rigidbody>();
         _view = GetComponent<ViewerE_Melee>();
 
@@ -57,6 +74,7 @@ public class ModelE_Melee : EnemyEntity
         var persuit = new FSM_State<EnemyInputs>("PERSUIT");
         var wait = new FSM_State<EnemyInputs>("WAIT");
         var attack = new FSM_State<EnemyInputs>("ATTACK");
+        var retreat = new FSM_State<EnemyInputs>("RETREAT");
         var die = new FSM_State<EnemyInputs>("DIE");
         var follow = new FSM_State<EnemyInputs>("FOLLOW");
         var answerCall = new FSM_State<EnemyInputs>("ANSWER");
@@ -76,17 +94,25 @@ public class ModelE_Melee : EnemyEntity
 
         StateConfigurer.Create(wait)
          .SetTransition(EnemyInputs.PERSUIT, persuit)
-         .SetTransition(EnemyInputs.FOLLOW, follow)
          .SetTransition(EnemyInputs.ATTACK, attack)
          .SetTransition(EnemyInputs.DIE, die)
          .Done();
 
-         StateConfigurer.Create(attack)
+         StateConfigurer.Create(retreat)
         .SetTransition(EnemyInputs.PERSUIT, persuit)
         .SetTransition(EnemyInputs.FOLLOW, follow)
-        .SetTransition(EnemyInputs.ATTACK, attack)
+        .SetTransition(EnemyInputs.WAIT, wait)
         .SetTransition(EnemyInputs.DIE, die)
         .Done();
+
+        StateConfigurer.Create(attack)
+        .SetTransition(EnemyInputs.PERSUIT, persuit)
+        .SetTransition(EnemyInputs.FOLLOW, follow)
+        .SetTransition(EnemyInputs.WAIT, wait)
+        .SetTransition(EnemyInputs.RETREAT, retreat)
+        .SetTransition(EnemyInputs.DIE, die)
+        .Done();
+
 
         StateConfigurer.Create(follow)
          .SetTransition(EnemyInputs.PERSUIT, persuit)
@@ -107,7 +133,7 @@ public class ModelE_Melee : EnemyEntity
             timeToPatrol -= Time.deltaTime;
             currentAction = new A_Patrol(this);
 
-            if(!isDead && isPersuit && !isAttack) SendInputToFSM(EnemyInputs.PERSUIT);
+            if((!isDead && isPersuit && !isAttack) && onDamage) SendInputToFSM(EnemyInputs.PERSUIT);
 
             if (!isDead && isAnswerCall) SendInputToFSM(EnemyInputs.ANSWER);
 
@@ -122,6 +148,10 @@ public class ModelE_Melee : EnemyEntity
             timeToPatrol -= Time.deltaTime;
         };
 
+        patrol.OnExit += x =>
+        {
+            angleToPersuit = 180;
+        };
      
         answerCall.OnFixedUpdate += () =>
         {
@@ -136,6 +166,8 @@ public class ModelE_Melee : EnemyEntity
      
         persuit.OnFixedUpdate += () =>
         {
+            Debug.Log("persuit");
+
             isAnswerCall = false;
 
             if (!onDamage) MoveEvent();
@@ -161,9 +193,9 @@ public class ModelE_Melee : EnemyEntity
 
             if (!isDead && !isAttack && isPersuit) SendInputToFSM(EnemyInputs.PERSUIT);
 
-            if (!isDead && !isAttack && !isPersuit) SendInputToFSM(EnemyInputs.FOLLOW);
+            //if (!isDead && !isAttack && !isPersuit) SendInputToFSM(EnemyInputs.FOLLOW);
 
-            if (!isDead && dileyToAttack <= 0) SendInputToFSM(EnemyInputs.ATTACK);
+            if (!isDead && delayToAttack <= 0) SendInputToFSM(EnemyInputs.ATTACK);
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
         };
@@ -173,11 +205,29 @@ public class ModelE_Melee : EnemyEntity
             Debug.Log("attack");
             currentAction = new A_AttackMeleeWarrior(this);
 
-            if (!isDead && !isAttack && isPersuit && dileyToAttack > 0 && !onAttack) SendInputToFSM(EnemyInputs.PERSUIT);
+            if (!isDead && !isAttack && isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
 
-            if (!isDead && !isAttack && !isPersuit && dileyToAttack > 0 && !onAttack) SendInputToFSM(EnemyInputs.FOLLOW);
+            if (!isDead && !isAttack && !isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.FOLLOW);
 
-            if (!isDead && dileyToAttack>0) SendInputToFSM(EnemyInputs.WAIT);
+            if (!isDead && delayToAttack>0 && !onRetreat) SendInputToFSM(EnemyInputs.WAIT);
+
+            if (onRetreat) SendInputToFSM(EnemyInputs.RETREAT);
+
+            if (isDead) SendInputToFSM(EnemyInputs.DIE);
+
+        };
+
+        retreat.OnFixedUpdate += () =>
+        {
+            Debug.Log("retreat");
+
+            currentAction = new A_WarriorRetreat(this);
+
+            if (!isDead && !isAttack && isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
+
+            if (!isDead && !isAttack && !isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.FOLLOW);
+
+            if (!isDead && delayToAttack > 0 && !onRetreat) SendInputToFSM(EnemyInputs.WAIT);
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
 
@@ -190,11 +240,19 @@ public class ModelE_Melee : EnemyEntity
 
             pathToTarget = MyBFS.GetPath(start, end, myNodes);
             currentIndex = pathToTarget.Count;
+
+            angleToPersuit = 180;
         };
-      
+
+        follow.OnExit += x =>
+        {            
+            angleToPersuit = 90;
+        };
 
         follow.OnUpdate += () =>
         {
+            Debug.Log("follow");
+
             currentAction = new A_FollowTarget(this);
 
             if (!onDamage) MoveEvent();
@@ -231,21 +289,30 @@ public class ModelE_Melee : EnemyEntity
         avoidVectObstacles = ObstacleAvoidance();
         entitiesAvoidVect = EntitiesAvoidance();
 
-        if (dileyToAttack > 0 && !isAttack && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
+        if (delayToAttack > 0 && !isAttack && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
         else isPersuit = false;
 
-        if (dileyToAttack>0 && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
+        if (delayToAttack>0 && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
         else isAttack = false;
 
         if (SearchForTarget.SearchTarget(target.transform, distanceToHit, angleToHit , transform, true, layerObst)) onAttackArea = true;
         else onAttackArea = false;
 
+        if (onDamage)
+        {
+            timeOnDamage -= Time.deltaTime;
+            if (timeOnDamage <= 0)
+            {
+                onDamage = false;
+            }
+        }
     }
 
     private void FixedUpdate()
     {
         _myFsm.FixedUpdate();
         if (currentAction != null) currentAction.Actions();
+
     }
 
     public override Node GetMyNode()
@@ -342,7 +409,7 @@ public class ModelE_Melee : EnemyEntity
 
     public  Vector3 WarriorAvoidance()
     {
-        var obs = Physics.OverlapSphere(transform.position, 2, layerEntites).Where(x=> x.GetComponent<ModelE_Melee>()).Select(x=> x.GetComponent<ModelE_Melee>()).Where(x=> !x.flank);
+        var obs = Physics.OverlapSphere(transform.position, 2, layerEntites).Where(x=> x.GetComponent<ModelE_Melee>()).Select(x=> x.GetComponent<ModelE_Melee>());
         if (obs.Count() > 0)
         {
             var dir = transform.position - obs.First().transform.position;
@@ -354,8 +421,10 @@ public class ModelE_Melee : EnemyEntity
     public override void GetDamage(float damage)
     {
         isAttack = true;
-        dileyToAttack += 0.25f;
-        if (dileyToAttack >= maxDileyToAttack) dileyToAttack = maxDileyToAttack;
+        delayToAttack += 0.25f;
+        timeOnDamage = 1;
+        if (!onDamage) onDamage = true;
+        if (delayToAttack >= maxDelayToAttack) delayToAttack = maxDelayToAttack;
         TakeDamageEvent();      
         life -= damage;
         if (life <= 0) isDead = true;

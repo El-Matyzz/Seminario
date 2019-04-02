@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ViewerE_Melee : MonoBehaviour
 {
-    Animator _anim;
+    public Animator _anim;
     ModelE_Melee _model;
     public List<SkinnedMeshRenderer> myMeshes = new List<SkinnedMeshRenderer>();
     public List<Material> myMats = new List<Material>();
@@ -71,13 +71,13 @@ public class ViewerE_Melee : MonoBehaviour
 
     public void BackFromDamage()
     {
-        _model.onDamage = false;
+
         _anim.SetBool("TakeDamage", false);
+        
     }
 
     public void TakeDamageAnim()
     {
-        _model.onDamage = true;
         _anim.SetBool("TakeDamage", true);
         damaged = true;
         timeShaderDamage = 1;

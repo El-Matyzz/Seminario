@@ -13,10 +13,11 @@ public abstract class EnemyEntity: MonoBehaviour
     public bool isPersuit;
     public bool isAttack;
     public bool onAttack;
-    public bool isFollow;
     public bool isAnswerCall;
     public bool isDead;
     public bool onDamage;
+    public bool onRetret;
+    public float timeOnDamage;
     public Model target;
     public int currentIndex;
     public float speed;
@@ -30,6 +31,9 @@ public abstract class EnemyEntity: MonoBehaviour
     public List<EnemyEntity> nearEntities = new List<EnemyEntity>();
     public List<Node> pathToTarget = new List<Node>();
     public abstract void GetDamage(float damage);
+    public abstract void MakeDamage();
+    public abstract void RetreatTrue();
+    public abstract void OnDamageFalse();
     public List<Node> myNodes = new List<Node>();
     public i_EnemyActions currentAction;
     public Rigidbody rb;
@@ -38,4 +42,6 @@ public abstract class EnemyEntity: MonoBehaviour
     public float knockbackForce;
     public float radiusAttack;
     public float attackDamage;
+    public float timeToStopBack;
+    public Vector3 positionToBack;
 }

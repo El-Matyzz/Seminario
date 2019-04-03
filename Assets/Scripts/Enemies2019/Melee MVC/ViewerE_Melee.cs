@@ -10,6 +10,7 @@ public class ViewerE_Melee : MonoBehaviour
     public List<Material> myMats = new List<Material>();
     bool damaged;
     float timeShaderDamage;
+    public ParticleSystem sparks;
 
     public IEnumerator DeadCorrutine()
     {
@@ -37,6 +38,17 @@ public class ViewerE_Melee : MonoBehaviour
     {
 
         DamageShader();
+    }
+
+    public void BlockedAnim()
+    {
+        sparks.Play();
+        _anim.SetBool("Blocked", true);
+    }
+
+    public void BackFromBlocked()
+    {
+        _anim.SetBool("Blocked", false);
     }
 
     public void DeadAnim()

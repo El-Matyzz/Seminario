@@ -32,6 +32,7 @@ public class ModelE_Melee : EnemyEntity
     public Action AttackEvent;
     public Action MoveEvent;
     public Action IdleEvent;
+    public Action BlockedEvent;
 
     public IEnumerator Resting()
     {
@@ -69,7 +70,8 @@ public class ModelE_Melee : EnemyEntity
         DeadEvent += _view.DeadAnim;
         AttackEvent += _view.AttackAnim;
         IdleEvent += _view.IdleAnim;
-        MoveEvent += _view.BackFromIdle;    
+        MoveEvent += _view.BackFromIdle;
+        BlockedEvent += _view.BlockedAnim;
 
 
         var patrol = new FSM_State<EnemyInputs>("PATROL");
@@ -443,6 +445,10 @@ public class ModelE_Melee : EnemyEntity
         var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
         if (player != null)
         {
+            var dir = (target.transform.position - transform.position).normalized;
+            var angle = Vector3.Angle(dir, target.transform.forward);
+
+            if (player.onDefence && angle >= 90) BlockedEvent();
             player.GetDamage(attackDamage, transform, false);
         }
     }

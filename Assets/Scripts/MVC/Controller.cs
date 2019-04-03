@@ -37,6 +37,7 @@ public class Controller : MonoBehaviour
         model.Trot += view.TrotAnim;
         model.Run += view.RunAnim;
         model.Fall += view.Falling;
+        model.BlockEvent += view.Blocked;
     }
 
     // Update is called once per frame
@@ -75,7 +76,7 @@ public class Controller : MonoBehaviour
                 model.Defence();
                 view.Defence();
             }
-            if (Input.GetKeyUp(KeyCode.E))
+            if (!Input.GetKey(KeyCode.E))
             {
                 view.NoDefence();
                 model.StopDefence();

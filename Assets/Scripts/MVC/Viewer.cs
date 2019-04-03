@@ -82,6 +82,12 @@ public class Viewer : MonoBehaviour {
     
     }
 
+    public void Blocked()
+    {
+        anim.Play("Blocked");
+    }
+
+
     public void AwakeTrail()
     {
         trail.SetActive(true);

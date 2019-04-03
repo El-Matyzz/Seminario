@@ -12,6 +12,8 @@ public class A_WarriorRetreat : i_EnemyActions
         if (_e.onRetreat && !_e._view._anim.GetBool("Attack"))
         {
 
+            _e.MoveEvent();
+
             RaycastHit hit;
 
             if (Physics.Raycast(_e.transform.position, -_e.transform.forward, out hit, 1))

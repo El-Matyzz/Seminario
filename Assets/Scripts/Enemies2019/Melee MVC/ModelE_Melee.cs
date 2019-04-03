@@ -25,6 +25,7 @@ public class ModelE_Melee : EnemyEntity
     public float angleToHit;
     public bool onAttackArea;
     public bool firstAttack;
+    bool firstHit;
 
     public Action TakeDamageEvent;
     public Action DeadEvent;
@@ -45,7 +46,7 @@ public class ModelE_Melee : EnemyEntity
     public IEnumerator Retreat()
     {
         onRetreat = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(1f);
         onRetreat = false;
         delayToAttack = UnityEngine.Random.Range(4,6);
         maxDelayToAttack = delayToAttack;
@@ -60,6 +61,7 @@ public class ModelE_Melee : EnemyEntity
     public void Awake()
     {
         delayToAttack = UnityEngine.Random.Range(3f, 5f);
+        maxDelayToAttack = delayToAttack;
         rb = gameObject.GetComponent<Rigidbody>();
         _view = GetComponent<ViewerE_Melee>();
 
@@ -130,10 +132,11 @@ public class ModelE_Melee : EnemyEntity
 
         patrol.OnFixedUpdate += () =>
         {
+            Debug.Log("patrol");
             timeToPatrol -= Time.deltaTime;
             currentAction = new A_Patrol(this);
 
-            if((!isDead && isPersuit && !isAttack) && onDamage) SendInputToFSM(EnemyInputs.PERSUIT);
+            if ((!isDead && isPersuit && !isAttack) && onDamage) SendInputToFSM(EnemyInputs.PERSUIT);
 
             if (!isDead && isAnswerCall) SendInputToFSM(EnemyInputs.ANSWER);
 
@@ -151,6 +154,7 @@ public class ModelE_Melee : EnemyEntity
         patrol.OnExit += x =>
         {
             angleToPersuit = 180;
+            angleToAttack = 180;
         };
      
         answerCall.OnFixedUpdate += () =>
@@ -187,13 +191,13 @@ public class ModelE_Melee : EnemyEntity
         {
             isAnswerCall = false;
 
+            angleToAttack = 110;
+
             Debug.Log("wait");
 
             currentAction = new A_WarriorWait(this);
 
             if (!isDead && !isAttack && isPersuit) SendInputToFSM(EnemyInputs.PERSUIT);
-
-            //if (!isDead && !isAttack && !isPersuit) SendInputToFSM(EnemyInputs.FOLLOW);
 
             if (!isDead && delayToAttack <= 0) SendInputToFSM(EnemyInputs.ATTACK);
 
@@ -420,7 +424,11 @@ public class ModelE_Melee : EnemyEntity
 
     public override void GetDamage(float damage)
     {
-        isAttack = true;
+        if (!firstHit)
+        {
+            firstHit = true;
+            SendInputToFSM(EnemyInputs.PERSUIT);
+        }
         delayToAttack += 0.25f;
         timeOnDamage = 1;
         if (!onDamage) onDamage = true;

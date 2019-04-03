@@ -46,27 +46,30 @@ public class A_WarriorWait : i_EnemyActions
 
         if (!_e.onAttack && _e.flank && !_e.onDamage)
         { 
-             _e.MoveEvent();
+             
 
             var rotateSpeed = 0;
 
             if (flankSpeed == 1) rotateSpeed = 30;
             else rotateSpeed = -30;
-
+            
             var dir = (_e.target.transform.position - _e.transform.position).normalized;
-            var angle = Vector3.Angle(dir, _e.transform.forward);
-            if (angle < 100 && !_e.onDamage)
+            var angle = Vector3.Angle(dir, _e.target.transform.forward);
+
+            _e.transform.forward = dir;
+
+            if (angle > 80 && !_e.onDamage)
             {
+                if (angle > 80) _e.MoveEvent();
+                
+
                 var d = Vector3.Distance(_e.transform.position, _e.target.transform.position);
 
                 _e.transform.RotateAround(_e.target.transform.position, Vector3.up, rotateSpeed * Time.deltaTime);
 
                 if (_e.avoidVectObstacles != Vector3.zero && d > 3) _e.transform.position += _e.transform.forward * 4 * Time.deltaTime;
-
-                _e.transform.forward = dir;
-
             }
-
+            else  _e.IdleEvent();
         }
 
         if (_e.timeToAttack)

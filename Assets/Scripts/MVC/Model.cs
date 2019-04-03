@@ -95,6 +95,7 @@ public class Model : MonoBehaviour
     public Action OnDamage;
     public Action Fall;
     public Action Dead;
+    public Action BlockEvent;
 
 
 
@@ -592,10 +593,11 @@ public class Model : MonoBehaviour
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
         if (angle < 90) isBehind = true;
-        if(!isBehind)
+        if(!isBehind && !isProyectile)
         {
             stamina -= 5;
             view.UpdateStaminaBar(stamina / totalStamina);
+            BlockEvent();
         }
 
         if (!onDefence || (onDefence && isBehind) || isProyectile)

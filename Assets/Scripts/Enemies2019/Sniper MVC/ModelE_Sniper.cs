@@ -159,6 +159,8 @@ public class ModelE_Sniper : EnemyEntity
         {
             isAnswerCall = false;
 
+            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+
             if (!onDamage) MoveEvent();
 
             foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
@@ -180,6 +182,8 @@ public class ModelE_Sniper : EnemyEntity
 
             foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
 
+            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+
             if (!onDamage) timeToShoot -= Time.deltaTime;
 
             currentAction = new A_SniperAttack(this);
@@ -196,6 +200,8 @@ public class ModelE_Sniper : EnemyEntity
         melee_attack.OnUpdate += () =>
         {
             isAnswerCall = false;
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
 
             if (!onDamage) timeToMeleeAttack -= Time.deltaTime;
            
@@ -304,13 +310,13 @@ public class ModelE_Sniper : EnemyEntity
         avoidVectObstacles = ObstacleAvoidance();
         entitiesAvoidVect = EntitiesAvoidance();
 
-        if (!onMeleeAttack && !isAttack && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
+        if (target != null && !onMeleeAttack && !isAttack && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
         else isPersuit = false;
 
-        if (!onMeleeAttack && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
+        if (target != null && !onMeleeAttack && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
         else isAttack = false;
 
-        if (SearchForTarget.SearchTarget(target.transform, distanceToMeleeAttack, angleToMeleeAttack, transform, true, layerObst)) onMeleeAttack = true;
+        if (target != null && SearchForTarget.SearchTarget(target.transform, distanceToMeleeAttack, angleToMeleeAttack, transform, true, layerObst)) onMeleeAttack = true;
         else onMeleeAttack = false;
 
         if(onDamage)
@@ -358,8 +364,12 @@ public class ModelE_Sniper : EnemyEntity
         if (!onDamage) onDamage = true;
         TakeDamageEvent();
         life -= damage;
-        if (life <= 0) isDead = true;
-    }  
+        if (life <= 0 && !isDead)
+        {
+            isDead = true;
+            ca.myEntities--;
+        }
+    }
 
     public override Node GetMyNode()
     {

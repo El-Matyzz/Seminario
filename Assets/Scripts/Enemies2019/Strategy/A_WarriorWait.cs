@@ -13,12 +13,13 @@ public class A_WarriorWait : i_EnemyActions
         _e.target.CombatState();
 
 
-        if (!_e.timeToAttack && _e.cm.times > 0)
+        if (!_e.timeToAttack && _e.cm.times > 0 && !_e.checkTurn)
         {
-            
+
+            _e.checkTurn = true;
             _e.cm.times--;
             _e.timeToAttack = true;
-            if (!_e.cm.flanTicket)
+            if (!_e.cm.flanTicket && _e.cm.times <= 0)
             {
                 _e.flank = true;
                 _e.cm.flanTicket = true;

@@ -44,4 +44,5 @@ public abstract class EnemyEntity: MonoBehaviour
     public float attackDamage;
     public float timeToStopBack;
     public Vector3 positionToBack;
+    public CombatArea ca;
 }

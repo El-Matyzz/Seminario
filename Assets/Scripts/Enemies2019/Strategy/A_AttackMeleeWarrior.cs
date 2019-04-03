@@ -34,7 +34,7 @@ public class A_AttackMeleeWarrior : i_EnemyActions
                 _e.transform.rotation = Quaternion.Slerp(_e.transform.rotation, targetRotation, 7 * Time.deltaTime);
 
                 _e.StartCoroutine(_e.Resting());
-                _e.cm.times++;
+                //if(_e.cm.times<2) _e.cm.times++;
                 if (_e.flank)
                 {
                     _e.flank = false;

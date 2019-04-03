@@ -4,50 +4,38 @@ using UnityEngine;
 
 public class CombatArea : MonoBehaviour
 {
-    public List<GameObject> myNPCs = new List<GameObject>();
-    public Grid grid;
-    public GameObject player;
-    public bool shutDown;
+    public List<EnemyEntity> myNPCs = new List<EnemyEntity>();
+    public List<GameObject> walls = new List<GameObject>();
+    public int myEntities;
+    bool aux;
+    public bool startArea;
 
-    IEnumerator ShutDown()
+    private void Awake()
     {
-        yield return new WaitForSeconds(0.5f);
-        if (shutDown)
-        {
-            foreach (var item in myNPCs) item.SetActive(false);
-            grid.gameObject.SetActive(false);
-        }
+       
     }
 
-    public void Start()
+    void Start()
     {
-        StartCoroutine(ShutDown());
+        myEntities = myNPCs.Count;
+        if (startArea == true) foreach (var item in walls) item.SetActive(false);
     }
 
-    public void OnTriggerExit(Collider c)
+    void Update()
     {
-        if(c.GetComponent<Model>())
+        if (myEntities <= 0 && !aux)
         {
-            grid.gameObject.SetActive(false);
-            foreach (var item in myNPCs)
-            {
-                item.SetActive(false);
-               
-            }
+            foreach (var item in walls) item.SetActive(false);
+            aux = true;
         }
     }
 
     public void OnTriggerEnter(Collider c)
     {
-
-        if (c.GetComponent<Model>())
+        foreach (var item in myNPCs) item.target = FindObjectOfType<Model>();
+        foreach (var item in walls)
         {
-            grid.gameObject.SetActive(true);
-            foreach (var item in myNPCs)
-            {
-                if (!item.GetComponent<EnemyClass>().isDead) item.SetActive(true);
-
-            }
+          if(myEntities>0) item.SetActive(true);
         }
     }
 }

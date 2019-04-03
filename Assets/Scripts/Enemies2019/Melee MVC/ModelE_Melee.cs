@@ -25,6 +25,7 @@ public class ModelE_Melee : EnemyEntity
     public float angleToHit;
     public bool onAttackArea;
     public bool firstAttack;
+    public bool checkTurn;
     bool firstHit;
 
     public Action TakeDamageEvent;
@@ -134,7 +135,6 @@ public class ModelE_Melee : EnemyEntity
 
         patrol.OnFixedUpdate += () =>
         {
-            Debug.Log("patrol");
             timeToPatrol -= Time.deltaTime;
             currentAction = new A_Patrol(this);
 
@@ -172,7 +172,6 @@ public class ModelE_Melee : EnemyEntity
      
         persuit.OnFixedUpdate += () =>
         {
-            Debug.Log("persuit");
 
             isAnswerCall = false;
 
@@ -195,7 +194,7 @@ public class ModelE_Melee : EnemyEntity
 
             angleToAttack = 110;
 
-            Debug.Log("wait");
+            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
 
             currentAction = new A_WarriorWait(this);
 
@@ -208,8 +207,10 @@ public class ModelE_Melee : EnemyEntity
       
         attack.OnFixedUpdate += () =>
         {
-            Debug.Log("attack");
+
             currentAction = new A_AttackMeleeWarrior(this);
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
 
             if (!isDead && !isAttack && isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
 
@@ -225,7 +226,6 @@ public class ModelE_Melee : EnemyEntity
 
         retreat.OnFixedUpdate += () =>
         {
-            Debug.Log("retreat");
 
             currentAction = new A_WarriorRetreat(this);
 
@@ -257,7 +257,6 @@ public class ModelE_Melee : EnemyEntity
 
         follow.OnUpdate += () =>
         {
-            Debug.Log("follow");
 
             currentAction = new A_FollowTarget(this);
 
@@ -295,13 +294,13 @@ public class ModelE_Melee : EnemyEntity
         avoidVectObstacles = ObstacleAvoidance();
         entitiesAvoidVect = EntitiesAvoidance();
 
-        if (delayToAttack > 0 && !isAttack && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
+        if (target != null && delayToAttack > 0 && !isAttack && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistancePersuit, angleToPersuit, transform, true, layerObst)) isPersuit = true;
         else isPersuit = false;
 
-        if (delayToAttack>0 && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
+        if (target != null && delayToAttack >0 && !onAttackArea && SearchForTarget.SearchTarget(target.transform, viewDistanceAttack, angleToAttack, transform, true, layerObst)) isAttack = true;
         else isAttack = false;
 
-        if (SearchForTarget.SearchTarget(target.transform, distanceToHit, angleToHit , transform, true, layerObst)) onAttackArea = true;
+        if (target != null && SearchForTarget.SearchTarget(target.transform, distanceToHit, angleToHit , transform, true, layerObst)) onAttackArea = true;
         else onAttackArea = false;
 
         if (onDamage)
@@ -415,7 +414,7 @@ public class ModelE_Melee : EnemyEntity
 
     public  Vector3 WarriorAvoidance()
     {
-        var obs = Physics.OverlapSphere(transform.position, 2, layerEntites).Where(x=> x.GetComponent<ModelE_Melee>()).Select(x=> x.GetComponent<ModelE_Melee>());
+        var obs = Physics.OverlapSphere(transform.position, 1, layerEntites).Where(x=> x.GetComponent<ModelE_Melee>()).Select(x=> x.GetComponent<ModelE_Melee>()).Where(x => x.flank);
         if (obs.Count() > 0)
         {
             var dir = transform.position - obs.First().transform.position;
@@ -431,20 +430,34 @@ public class ModelE_Melee : EnemyEntity
             firstHit = true;
             SendInputToFSM(EnemyInputs.PERSUIT);
         }
+
         delayToAttack += 0.25f;
         timeOnDamage = 1;
         if (!onDamage) onDamage = true;
         if (delayToAttack >= maxDelayToAttack) delayToAttack = maxDelayToAttack;
         TakeDamageEvent();      
         life -= damage;
-        if (life <= 0) isDead = true;
+        if (life <= 0 && !isDead)
+        {
+            isDead = true;
+            ca.myEntities--;
+            if (cm.times < 2) cm.times++;
+            if (flank)
+            {
+                cm.flanTicket = false;
+                flank = false;
+            } 
+        }
     }
 
     public override void MakeDamage()
     {
+        checkTurn = false;
+
         var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
         if (player != null)
         {
+            cm.times++;
             var dir = (target.transform.position - transform.position).normalized;
             var angle = Vector3.Angle(dir, target.transform.forward);
 

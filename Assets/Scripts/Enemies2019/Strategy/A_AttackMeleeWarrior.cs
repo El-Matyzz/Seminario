@@ -45,7 +45,7 @@ public class A_AttackMeleeWarrior : i_EnemyActions
                 if (player != null && !_e.firstAttack)
                 {
                     _e.AttackEvent();
-                    _e.StartCoroutine(_e.Delay(1.25f));
+                    _e.StartCoroutine(_e.Delay(1f));
                     _e.firstAttack = true;
                 }
 

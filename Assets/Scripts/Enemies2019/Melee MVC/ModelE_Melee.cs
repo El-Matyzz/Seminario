@@ -37,10 +37,10 @@ public class ModelE_Melee : EnemyEntity
 
     public IEnumerator Resting()
     {
-       if (myWarriorFriends.Count < 0) timeToAttack = false;
+       //if (myWarriorFriends.Count < 0) timeToAttack = false;
        onAttack = true;
        yield return new WaitForSeconds(2);
-       timeToAttack = false;
+       //timeToAttack = false;      
        onAttack = false;
        firstAttack = false;
     }
@@ -50,19 +50,20 @@ public class ModelE_Melee : EnemyEntity
         onRetreat = true;
         yield return new WaitForSeconds(1f);
         onRetreat = false;
-        delayToAttack = UnityEngine.Random.Range(4,6);
+        delayToAttack = UnityEngine.Random.Range(2,5);
         maxDelayToAttack = delayToAttack;
     }
  
     public IEnumerator Delay( float time)
     {
+        checkTurn = false;
         yield return new WaitForSeconds(time);
         StartCoroutine(Retreat());
     }
 
     public void Awake()
     {
-        delayToAttack = UnityEngine.Random.Range(3f, 5f);
+        delayToAttack = UnityEngine.Random.Range(2f, 4f);
         maxDelayToAttack = delayToAttack;
         rb = gameObject.GetComponent<Rigidbody>();
         _view = GetComponent<ViewerE_Melee>();

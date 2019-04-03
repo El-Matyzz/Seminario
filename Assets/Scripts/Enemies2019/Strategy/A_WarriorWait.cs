@@ -51,8 +51,8 @@ public class A_WarriorWait : i_EnemyActions
 
             var rotateSpeed = 0;
 
-            if (flankSpeed == 1) rotateSpeed = 30;
-            else rotateSpeed = -30;
+            if (flankSpeed == 1) rotateSpeed = 35;
+            else rotateSpeed = -35;
             
             var dir = (_e.target.transform.position - _e.transform.position).normalized;
             var angle = Vector3.Angle(dir, _e.target.transform.forward);

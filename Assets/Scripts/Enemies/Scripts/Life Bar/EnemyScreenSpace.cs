@@ -47,7 +47,7 @@ public class EnemyScreenSpace : MonoBehaviour
 
         if (timer > 0)
         {
-            if (IsVisible() && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
+            if (!enemy.isDead && IsVisible() && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
                 healthBar.SetActive(true);
             else
                 healthBar.SetActive(false);

@@ -259,7 +259,6 @@ GameObject:
   - component: {fileID: 4481306498450337651}
   - component: {fileID: 984110589398890509}
   - component: {fileID: 5494003415585231804}
-  - component: {fileID: 3693098880124568040}
   - component: {fileID: 7946149331813673648}
   m_Layer: 0
   m_Name: Wall Column
@@ -327,19 +326,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3693098880124568040
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 409605918419523868}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.1349311, y: 2.2529845, z: 5.6808105}
-  m_Center: {x: 0.000000404704, y: -0.00001641709, z: 2.8404047}
 --- !u!114 &7946149331813673648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3930,14 +3916,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.72
@@ -3994,6 +3972,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 3.4853892
       objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4019,14 +4005,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (6)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.04
@@ -4082,6 +4060,14 @@ PrefabInstance:
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalScale.z
       value: 3.4853919
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled
@@ -4183,6 +4169,21 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.600005
       objectReference: {fileID: 0}
+    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.282
+      objectReference: {fileID: 0}
     - target: {fileID: 5832821492117574662, guid: 68777b75a0828484891ac87626e4db3d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4194,21 +4195,6 @@ PrefabInstance:
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5832821492117574662, guid: 68777b75a0828484891ac87626e4db3d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.282
-      objectReference: {fileID: 0}
-    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5894599397607897421, guid: 68777b75a0828484891ac87626e4db3d,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.282
@@ -4234,14 +4220,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.996674
@@ -4298,6 +4276,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.5400028
       objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4317,14 +4303,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.996674
@@ -4381,6 +4359,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.5400028
       objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4400,14 +4386,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.336672
@@ -4464,6 +4442,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.5400028
       objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4483,14 +4469,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8145470145550579736}
     m_Modifications:
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_Name
-      value: Banner (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.336672
@@ -4546,6 +4524,14 @@ PrefabInstance:
     - target: {fileID: 1311358299, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_LocalScale.z
       value: 2.5400028
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_Name
+      value: Banner (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311358298, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1311358300, guid: 63fef2eba4a726d44aef3b44933b0ab1, type: 3}
       propertyPath: m_Enabled

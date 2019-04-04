@@ -82,11 +82,20 @@ public class Viewer : MonoBehaviour {
     
     }
 
+    public void RollAnim()
+    {
+        anim.SetBool("Roll", true);
+    }
+
+    public void BackRollAnim()
+    {
+        anim.SetBool("Roll", false);
+    }
+
     public void Blocked()
     {
         anim.Play("Blocked");
     }
-
 
     public void AwakeTrail()
     {

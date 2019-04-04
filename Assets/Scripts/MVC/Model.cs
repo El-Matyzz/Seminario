@@ -96,6 +96,7 @@ public class Model : MonoBehaviour
     public Action Fall;
     public Action Dead;
     public Action BlockEvent;
+    public Action RollEvent;
 
 
 
@@ -174,7 +175,8 @@ public class Model : MonoBehaviour
         {
             stamina -= dashStamina;
             view.UpdateStaminaBar(stamina / totalStamina);
-
+            RollEvent();
+            transform.forward = dir;
             rb.velocity = Vector3.zero;
             rb.AddForce(dir * 8, ForceMode.Impulse);
             onDash = true;

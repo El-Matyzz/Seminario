@@ -38,6 +38,7 @@ public class Controller : MonoBehaviour
         model.Run += view.RunAnim;
         model.Fall += view.Falling;
         model.BlockEvent += view.Blocked;
+        model.RollEvent += view.RollAnim;
     }
 
     // Update is called once per frame

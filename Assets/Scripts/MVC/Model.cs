@@ -670,7 +670,11 @@ public class Model : MonoBehaviour
                 view.UpdateArmorBar(armor / totalArmor);
                 life -= dmg;
                 view.UpdateLifeBar(life / totalLife);
-                if (onRoll) rb.velocity = Vector3.zero;
+                if (onRoll)
+                {
+                    onRoll = false;
+                    rb.velocity = Vector3.zero;
+                }
             }
 
             if (!onPowerState)

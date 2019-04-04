@@ -20,6 +20,7 @@ public class ModelE_Melee : EnemyEntity
     public List<ModelE_Melee> myWarriorFriends = new List<ModelE_Melee>();
     public Transform attackPivot;
     public Vector3 warriorVectAvoidance;
+    public Vector3 warriorVectAvoidanceFlank;
     public ViewerE_Melee _view;
     public float distanceToHit;
     public float angleToHit;
@@ -27,6 +28,7 @@ public class ModelE_Melee : EnemyEntity
     public bool firstAttack;
     public bool checkTurn;
     public bool flankSpeed;
+    public bool testEnemy;
     bool firstHit;
 
     public Action TakeDamageEvent;
@@ -235,6 +237,13 @@ public class ModelE_Melee : EnemyEntity
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
 
+            if (onDamage)
+            {
+                _view._anim.SetBool("Attack", false);
+                StartCoroutine(Delay(1.25f));
+                firstAttack = true;
+                SendInputToFSM(EnemyInputs.RETREAT);
+            }
         };
 
         retreat.OnFixedUpdate += () =>
@@ -304,6 +313,7 @@ public class ModelE_Melee : EnemyEntity
         FillFriends();
 
         warriorVectAvoidance = WarriorAvoidance();
+        warriorVectAvoidanceFlank = WarriorAvoidanceFlank();
         avoidVectObstacles = ObstacleAvoidance();
         entitiesAvoidVect = EntitiesAvoidance();
 
@@ -425,7 +435,7 @@ public class ModelE_Melee : EnemyEntity
         else return Vector3.zero;
     }
 
-    public  Vector3 WarriorAvoidance()
+    public  Vector3 WarriorAvoidanceFlank()
     {
         var obs = Physics.OverlapSphere(transform.position, 1, layerEntites).Where(x=> x.GetComponent<ModelE_Melee>()).Select(x=> x.GetComponent<ModelE_Melee>()).Where(x => x.flank);
         if (obs.Count() > 0)
@@ -436,14 +446,26 @@ public class ModelE_Melee : EnemyEntity
         else return Vector3.zero;
     }
 
+    public Vector3 WarriorAvoidance()
+    {
+        var obs = Physics.OverlapSphere(transform.position, 1, layerEntites).Where(x => x.GetComponent<ModelE_Melee>()).Select(x => x.GetComponent<ModelE_Melee>()).Where(x => !x.flank);
+        if (obs.Count() > 0)
+        {
+            var dir = transform.position - obs.First().transform.position;
+            return dir.normalized;
+        }
+        else return Vector3.zero;
+    }
+
     public override void GetDamage(float damage)
     {
+        
         if (!firstHit)
         {
             firstHit = true;
             SendInputToFSM(EnemyInputs.PERSUIT);
         }
-
+        
         delayToAttack += 0.25f;
         timeOnDamage = 1;
         if (!onDamage) onDamage = true;

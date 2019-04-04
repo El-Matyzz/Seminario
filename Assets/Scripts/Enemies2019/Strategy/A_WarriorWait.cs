@@ -18,7 +18,7 @@ public class A_WarriorWait : i_EnemyActions
             _e.checkTurn = true;
             _e.cm.times--;
             _e.timeToAttack = true;
-            if (!_e.cm.flanTicket && _e.cm.times <= 1)
+            if (!_e.cm.flanTicket && _e.cm.times <= 1 && !_e.testEnemy)
             {
                 _e.flank = true;
                 _e.cm.flanTicket = true;
@@ -34,7 +34,7 @@ public class A_WarriorWait : i_EnemyActions
             _dir.y = 0;
             targetRotation = Quaternion.LookRotation(_dir, Vector3.up);
             _e.transform.rotation = Quaternion.Slerp(_e.transform.rotation, targetRotation, 7 * Time.deltaTime);
-            if (_e.warriorVectAvoidance != Vector3.zero)
+            if (_e.warriorVectAvoidanceFlank != Vector3.zero)
             {
                 _e.viewDistanceAttack = 7;
                 _e.MoveEvent();

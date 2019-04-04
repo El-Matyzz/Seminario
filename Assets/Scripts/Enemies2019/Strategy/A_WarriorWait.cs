@@ -19,7 +19,7 @@ public class A_WarriorWait : i_EnemyActions
             _e.checkTurn = true;
             _e.cm.times--;
             _e.timeToAttack = true;
-            if (!_e.cm.flanTicket && _e.cm.times <= 0)
+            if (!_e.cm.flanTicket && _e.cm.times <= 1)
             {
                 _e.flank = true;
                 _e.cm.flanTicket = true;

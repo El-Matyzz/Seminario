@@ -353,7 +353,7 @@ public class ModelE_Melee : EnemyEntity
 
     public override Vector3 ObstacleAvoidance()
     {     
-       var obs = Physics.OverlapSphere(transform.position, 2, layerObst);
+       var obs = Physics.OverlapSphere(transform.position, 2, layerObst).Where(x=> !x.GetComponent<Model>());
        if (obs.Count() > 0)
        {
            var dir = transform.position - obs.First().transform.position;
@@ -442,7 +442,12 @@ public class ModelE_Melee : EnemyEntity
         {
             isDead = true;
             ca.myEntities--;
-            if (cm.times < 2) cm.times++;
+            if (cm.times < 2)
+            {
+                Debug.Log("asda");
+                cm.times++;
+            }
+           
             if (flank)
             {
                 cm.flanTicket = false;
@@ -458,7 +463,7 @@ public class ModelE_Melee : EnemyEntity
         var player = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
         if (player != null)
         {
-            cm.times++;
+           // cm.times++;
             var dir = (target.transform.position - transform.position).normalized;
             var angle = Vector3.Angle(dir, target.transform.forward);
 

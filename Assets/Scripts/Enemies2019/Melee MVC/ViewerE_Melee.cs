@@ -11,6 +11,7 @@ public class ViewerE_Melee : MonoBehaviour
     bool damaged;
     float timeShaderDamage;
     public ParticleSystem sparks;
+    public ParticleSystem blood;
     EnemyScreenSpace ess;
 
     public IEnumerator DeadCorrutine()
@@ -44,6 +45,7 @@ public class ViewerE_Melee : MonoBehaviour
 
     public void BlockedAnim()
     {
+        sparks.gameObject.SetActive(true);
         sparks.Play();
         _anim.SetBool("Blocked", true);
     }
@@ -95,6 +97,9 @@ public class ViewerE_Melee : MonoBehaviour
         _anim.SetBool("TakeDamage", true);
         damaged = true;
         timeShaderDamage = 1;
+        blood.gameObject.SetActive(true);
+        blood.Stop();
+        blood.Play();
     }
 
     public void DamageShader()

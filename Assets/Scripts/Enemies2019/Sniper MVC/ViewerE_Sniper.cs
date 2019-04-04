@@ -11,6 +11,7 @@ public class ViewerE_Sniper : MonoBehaviour
     public List<Material> myMats = new List<Material>();
     bool damaged;
     float timeShaderDamage;
+    public ParticleSystem blood;
 
     public IEnumerator DeadCorrutine()
     {
@@ -94,6 +95,9 @@ public class ViewerE_Sniper : MonoBehaviour
         _anim.SetBool("TakeDamage", true);
         damaged = true;
         timeShaderDamage = 1;
+        blood.gameObject.SetActive(true);
+        blood.Stop();
+        blood.Play();
     }
 
     public void DamageShader()

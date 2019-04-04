@@ -72,7 +72,7 @@ public class DestructibleOBJ : MonoBehaviour
     public void SetSpawn()
     {
         Collider[] destructiblesInRange = Physics.OverlapSphere(principalMesh.transform.position, range, lm);
-        print(destructiblesInRange.Length);
+        //print(destructiblesInRange.Length);
         int random = Random.Range(0, destructiblesInRange.Length - 1);
         for (int i = 0; i < destructiblesInRange.Length; i++)
         {

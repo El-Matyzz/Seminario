@@ -48,21 +48,24 @@ public class Controller : MonoBehaviour
 
         if (!model.isPlatformJumping)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && pushD && !pushW && !pushS) model.StartCoroutine(model.Dash(transform.right));
+            if (Input.GetKeyDown(KeyCode.Space) && pushD && !pushW && !pushS && !model.onRoll) model.Roll(transform.right);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushA && !pushW && !pushS) model.StartCoroutine(model.Dash(-transform.right));
+            if (Input.GetKeyDown(KeyCode.Space) && pushA && !pushW && !pushS && !model.onRoll) model.Roll(-transform.right);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushW && !pushS && !pushD && !pushA) model.StartCoroutine(model.Dash(transform.forward));
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && !pushS && !pushD && !pushA && !model.onRoll) model.Roll(transform.forward);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushS && !pushW && !pushD && !pushA) model.StartCoroutine(model.Dash(-transform.forward));
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && !pushW && !pushD && !pushA && !model.onRoll)
+            {
+                print(1);
+                model.Roll(-model.transform.forward);
+            }
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushD && !pushS && !model.onRoll) model.Roll(transform.forward);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushD && !pushS) model.StartCoroutine(model.Dash(transform.forward));
+            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushA && !pushS && !model.onRoll) model.Roll(transform.forward);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushW && pushA && !pushS) model.StartCoroutine(model.Dash(transform.forward));
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushD && !pushW && !model.onRoll) model.Roll(-transform.forward);
 
-            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushD && !pushW) model.StartCoroutine(model.Dash(-transform.forward));
-
-            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushA && !pushW) model.StartCoroutine(model.Dash(-transform.forward));
+            if (Input.GetKeyDown(KeyCode.Space) && pushS && pushA && !pushW && !model.onRoll) model.Roll(-transform.forward);
 
             /*  if (Input.GetKeyUp(KeyCode.Alpha1)) model.CastPower1();
 

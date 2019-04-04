@@ -96,6 +96,7 @@ public class Viewer : MonoBehaviour {
     public void BackRollAnim()
     {
         anim.SetBool("Roll", false);
+        model.onRoll = false;
     }
 
     public void Blocked()

@@ -26,6 +26,7 @@ public class ModelE_Melee : EnemyEntity
     public bool onAttackArea;
     public bool firstAttack;
     public bool checkTurn;
+    public bool flankSpeed;
     bool firstHit;
 
     public Action TakeDamageEvent;
@@ -190,6 +191,14 @@ public class ModelE_Melee : EnemyEntity
             if (!isDead && !isAttack && !isPersuit) SendInputToFSM(EnemyInputs.FOLLOW);
 
             if (isDead) SendInputToFSM(EnemyInputs.DIE);
+        };
+
+        wait.OnEnter += x =>
+        {
+            int r = UnityEngine.Random.Range(0, 1);
+            if (r <1) flankSpeed = true;
+            if (r >= 1) flankSpeed = false;
+
         };
 
         wait.OnUpdate += () => 

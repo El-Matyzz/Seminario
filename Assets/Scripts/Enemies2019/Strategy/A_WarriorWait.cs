@@ -6,7 +6,6 @@ using System.Linq;
 public class A_WarriorWait : i_EnemyActions
 {
     ModelE_Melee _e;
-    int flankSpeed;
 
     public void Actions()
     {
@@ -51,7 +50,7 @@ public class A_WarriorWait : i_EnemyActions
 
             var rotateSpeed = 0;
 
-            if (flankSpeed == 1) rotateSpeed = 35;
+            if (_e.flankSpeed) rotateSpeed = 35;
             else rotateSpeed = -35;
             
             var dir = (_e.target.transform.position - _e.transform.position).normalized;
@@ -75,7 +74,6 @@ public class A_WarriorWait : i_EnemyActions
 
         if (_e.timeToAttack)
         {
-            flankSpeed = Random.Range(0, 2);
             _e.delayToAttack -= Time.deltaTime;
         }
     }

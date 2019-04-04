@@ -35,6 +35,8 @@ public class ModelE_Melee : EnemyEntity
     public Action IdleEvent;
     public Action BlockedEvent;
 
+    float maxLife;
+
     public IEnumerator Resting()
     {
        //if (myWarriorFriends.Count < 0) timeToAttack = false;
@@ -67,6 +69,7 @@ public class ModelE_Melee : EnemyEntity
         maxDelayToAttack = delayToAttack;
         rb = gameObject.GetComponent<Rigidbody>();
         _view = GetComponent<ViewerE_Melee>();
+        maxLife = life;
 
         TakeDamageEvent += _view.TakeDamageAnim;
         DeadEvent += _view.DeadAnim;
@@ -438,6 +441,8 @@ public class ModelE_Melee : EnemyEntity
         if (delayToAttack >= maxDelayToAttack) delayToAttack = maxDelayToAttack;
         TakeDamageEvent();      
         life -= damage;
+        _view.LifeBar(life / maxLife);
+
         if (life <= 0 && !isDead)
         {
             isDead = true;

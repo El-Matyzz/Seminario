@@ -62,11 +62,13 @@ public class CamShake : MonoBehaviour
             shakeAmount = startAmount * shakePercentage;//Set the amount of shake (% * startAmount).
             shakeDuration = Mathf.Lerp(shakeDuration, 0, Time.deltaTime * 4);//Lerp the time, so it is less and tapers off towards the end.
 
-
-            if (smooth)
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(rotationAmount), Time.deltaTime * smoothAmount);
-            else
-                transform.localRotation = Quaternion.Euler(rotationAmount);//Set the local rotation the be the rotation amount.
+            if (Time.timeScale != 0)
+            {
+                if (smooth)
+                    transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(rotationAmount), Time.deltaTime * smoothAmount);
+                else
+                    transform.localRotation = Quaternion.Euler(rotationAmount);//Set the local rotation the be the rotation amount.
+            }
 
             yield return null;
         }

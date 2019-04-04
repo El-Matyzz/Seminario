@@ -14,7 +14,7 @@ public class Potion : MonoBehaviour {
         {
             Model model = c.gameObject.GetComponent<Model>();
             int i = Convert.ToInt32(type);
-            if (model.potions[i] < 3)
+            if (model.potions[i] < 1)
             {
                 model.potions[i]++;
                 model.view.UpdatePotions(i);

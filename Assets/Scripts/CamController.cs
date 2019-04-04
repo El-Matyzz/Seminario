@@ -30,7 +30,7 @@ public class CamController : MonoBehaviour {
         transform.position = player.position;
         transform.forward = player.transform.forward;
         mainCam.transform.forward = model.transform.forward;
-
+        currentX = -90;
     }
 
     void Update () {

@@ -11,6 +11,7 @@ public class ViewerE_Melee : MonoBehaviour
     bool damaged;
     float timeShaderDamage;
     public ParticleSystem sparks;
+    EnemyScreenSpace ess;
 
     public IEnumerator DeadCorrutine()
     {
@@ -23,6 +24,7 @@ public class ViewerE_Melee : MonoBehaviour
         _anim = GetComponent<Animator>();
         _model = GetComponent<ModelE_Melee>();
         myMeshes.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>());
+        ess = GetComponent<EnemyScreenSpace>();
 
         _anim.SetBool("Idle", true);
 
@@ -106,5 +108,11 @@ public class ViewerE_Melee : MonoBehaviour
             if (timeShaderDamage <= 0) damaged = false;
 
         }
+    }
+
+    public void LifeBar(float val)
+    {
+        ess.timer = 3;
+        StartCoroutine(ess.UpdateLifeBar(val));
     }
 }

@@ -14,6 +14,8 @@ public class Viewer : MonoBehaviour {
     bool melleCombo2;
     bool melleCombo3;
     CamShake camShake;
+    public Transform head;
+    Quaternion headBaseRot;
 
     public Image power1;
     public Image power2;
@@ -36,6 +38,9 @@ public class Viewer : MonoBehaviour {
     public List<GameObject> particlesSowrd;
 
     public int currentAttackAnimation;
+
+    CamController cam;
+    public GameObject pauseMenu;
 
     public IEnumerator DestroyParticles(GameObject p)
     {
@@ -71,7 +76,7 @@ public class Viewer : MonoBehaviour {
         anim.SetFloat("VelX", velocityX);
         anim.SetFloat("VelZ", velocityZ);
 
-       
+       //LookAtEnemy();
     }
 
     public void Awake()
@@ -79,7 +84,8 @@ public class Viewer : MonoBehaviour {
         trail.SetActive(false);
         anim.SetLayerWeight(1, 0);
         camShake = GameObject.Find("FreeLookCameraRig").GetComponentInChildren<CamShake>();
-    
+        cam = GameObject.Find("FreeLookCameraRig").GetComponent<CamController>();
+        headBaseRot = head.transform.rotation;
     }
 
     public void RollAnim()
@@ -152,40 +158,41 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("WalkA", false);
         
     }
+
     public void UpdateLifeBar(float val)
     {
-        StartCoroutine(BarSmooth(val));
+        StartCoroutine(BarSmooth(val, lifeBar));
     }
 
     public void UpdateStaminaBar(float val)
     {
-        staminaBar.fillAmount = val;
+        StartCoroutine(BarSmooth(val, staminaBar));
     }
 
     public void UpdateManaBar(float val)
     {
-        manaBar.fillAmount = val;
+        StartCoroutine(BarSmooth(val, manaBar));
     }
 
     public void UpdateArmorBar(float val)
     {
-        armor.fillAmount = val;
+        StartCoroutine(BarSmooth(val, armor));
     }
 
-    public IEnumerator BarSmooth(float target)
+    public IEnumerator BarSmooth(float target, Image barToAffect)
     {
         bool timerRunning = true;
         float smoothTimer = 0;
 
-        float current = lifeBar.fillAmount;
+        float current = barToAffect.fillAmount;
 
         if (current - target <= 0.025f)
-            lifeBar.fillAmount = target;
+            barToAffect.fillAmount = target;
 
         while (timerRunning)
         {
             smoothTimer += Time.deltaTime * 1.5f;
-            lifeBar.fillAmount = Mathf.Lerp(current, target, smoothTimer);
+            barToAffect.fillAmount = Mathf.Lerp(current, target, smoothTimer);
             if (smoothTimer > 1)
                 timerRunning = false;
             yield return new WaitForEndOfFrame();
@@ -204,6 +211,33 @@ public class Viewer : MonoBehaviour {
     public void UpdateTimer(string val = "")
     {
         potionTimer.text = val.ToString();
+    }
+
+    public void TogglePause()
+    {
+        if (!youWin.activeSelf && !youDied.activeSelf)
+        {
+            if (pauseMenu.activeSelf)
+            {
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+                cam.blockMouse = true;
+            }
+            else
+            {
+                pauseMenu.SetActive(true);
+                Time.timeScale = 0;
+                cam.blockMouse = false;
+            }
+        }
+    }
+
+    public void LookAtEnemy()
+    {
+        if (model.closestEnemy != null)
+            head.LookAt(model.closestEnemy);
+        else
+            head.rotation = headBaseRot;
     }
 
     public IEnumerator SlowSpeed()
@@ -377,13 +411,11 @@ public class Viewer : MonoBehaviour {
             youDied.GetComponent<Image>().color = tempColor;
             if (alpha >= 1)
             {
-                SceneManager.LoadScene(2);
-                /*
-                camController.blockMouse = false;
+                //SceneManager.LoadScene(2);
                 for (int i = 0; i < youDied.transform.childCount; i++)
                     youDied.transform.GetChild(i).gameObject.SetActive(true);
                 Time.timeScale = 0;
-                */
+                cam.blockMouse = false;
             }
             yield return new WaitForEndOfFrame();
         }
@@ -400,7 +432,13 @@ public class Viewer : MonoBehaviour {
             tempColor.a = alpha;
             youWin.GetComponent<Image>().color = tempColor;
             if (alpha >= 1)
-                SceneManager.LoadScene(3);
+            {
+                //SceneManager.LoadScene(3);
+                for (int i = 0; i < youDied.transform.childCount; i++)
+                    youWin.transform.GetChild(i).gameObject.SetActive(true);
+                Time.timeScale = 0;
+                cam.blockMouse = false;
+            }
             yield return new WaitForEndOfFrame();
         }
     }

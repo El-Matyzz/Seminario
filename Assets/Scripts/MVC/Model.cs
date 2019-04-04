@@ -98,7 +98,9 @@ public class Model : MonoBehaviour
     public Action BlockEvent;
     public Action RollEvent;
 
-
+    public Transform closestEnemy;
+    public LayerMask enemyLM;
+    bool checking;
 
     public IEnumerator PowerColdown(float cdTime, int n)
     {
@@ -216,6 +218,7 @@ public class Model : MonoBehaviour
             view.UpdatePotions(i);
         potionEffects[1] = new ExtraHealth(this, 60);
         currentPotionEffect = null;
+        checking = false;
     }
 
     void Update()
@@ -282,6 +285,8 @@ public class Model : MonoBehaviour
                 view.anim.SetInteger("AttackAnim", 0);
             }
         }
+
+        //StartCoroutine(CheckClosestEnemy());
     }
 
     public void DrinkPotion(int i)
@@ -635,6 +640,37 @@ public class Model : MonoBehaviour
                 StartCoroutine(view.YouDied());
             }
         }
+    }
+
+    public IEnumerator CheckClosestEnemy()
+    {
+        if (!checking)
+        {
+            checking = true;
+            Collider[] col = Physics.OverlapSphere(transform.position, 20, enemyLM);
+            float d = 9999999;
+            bool picked = false;
+
+            foreach (var i in col)
+            {
+                float dist = Vector3.Distance(transform.position, i.transform.position);
+                float angle = Vector3.Angle(transform.forward, i.transform.position);
+                if (dist < d)
+                {
+                    closestEnemy = i.transform;
+                    picked = true;
+                    d = dist;
+                }
+                else
+                {
+                    if (!picked)
+                        closestEnemy = null;
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+            checking = false;
+        }
+        yield return null;
     }
 
     public Powers PowersFactory()

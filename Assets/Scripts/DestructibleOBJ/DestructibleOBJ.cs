@@ -15,6 +15,11 @@ public class DestructibleOBJ : MonoBehaviour
     bool change;
     public Rigidbody rb;
 
+    public List<GameObject> itemPrefabs;
+    bool spawnItem = false;
+    public LayerMask lm;
+    bool alreadySelected = false;
+    public float range;
 
     public IEnumerator Destroy()
     {
@@ -26,7 +31,7 @@ public class DestructibleOBJ : MonoBehaviour
     {
         if (!first)
         {
-           
+            SpawnItem();
             first = true;
             principalMesh.SetActive(false);
             destructibleMesh.SetActive(true);
@@ -45,6 +50,7 @@ public class DestructibleOBJ : MonoBehaviour
         col = destructibleMesh.GetComponent<BoxCollider>();
         mat = principalMesh.GetComponent<MeshRenderer>().materials[0];
         myBox = GetComponent<BoxCollider>();
+        SetSpawn();
     }
 
     public void Update()
@@ -63,5 +69,34 @@ public class DestructibleOBJ : MonoBehaviour
         mat.SetFloat("_Opacity", time);
     }
 
+    public void SetSpawn()
+    {
+        Collider[] destructiblesInRange = Physics.OverlapSphere(principalMesh.transform.position, range, lm);
+        print(destructiblesInRange.Length);
+        int random = Random.Range(0, destructiblesInRange.Length - 1);
+        for (int i = 0; i < destructiblesInRange.Length; i++)
+        {
+            DestructibleOBJ comp = destructiblesInRange[i].GetComponent<DestructibleOBJ>();
+            if (!comp.alreadySelected)
+            {
+                comp.spawnItem = i == random;
+                comp.alreadySelected = true;
+            }
+        }
+    }
 
+    private void OnDrawGizmos()
+    {
+        //Gizmos.color = Color.white;
+        //Gizmos.DrawWireSphere(principalMesh.transform.position, range);
+    }
+
+    public void SpawnItem()
+    {
+        if (spawnItem)
+        {
+            GameObject item = Instantiate(itemPrefabs[Random.Range(0, itemPrefabs.Count)]);
+            item.transform.position = principalMesh.transform.position;
+        }
+    }
 }

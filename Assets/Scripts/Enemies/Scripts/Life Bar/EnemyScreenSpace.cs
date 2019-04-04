@@ -5,34 +5,38 @@ using UnityEngine.UI;
 
 public class EnemyScreenSpace : MonoBehaviour
 {
-   /* EnemyClass enemy;
-    float maxLife;
+    EnemyEntity enemy;
 
     public Canvas canvas;
     public GameObject barPrefab;
 
+    public LayerMask lm;
+
     GameObject healthBar;
-    Slider healthSlider;
+    Image healthFill;
 
     DepthUI depthUI;
-    public Renderer enemyRenderer;
+
+    public float timer;
 
     void Start()
     {
-        enemy = GetComponent<EnemyClass>();
+        enemy = GetComponent<EnemyEntity>();
         healthBar = Instantiate(barPrefab);
         healthBar.transform.SetParent(canvas.transform, false);
-        healthSlider = healthBar.GetComponent<Slider>();
+        healthFill = healthBar.transform.GetChild(0).GetComponent<Image>();
 
         depthUI = healthBar.GetComponent<DepthUI>();
         canvas.GetComponent<ScreenSpaceCanvas>().AddToCanvas(healthBar);
 
-        maxLife = enemy.life;
+        timer = 0;
     }
 
     void Update()
     {
-        Vector3 worldPos = transform.position + Vector3.up;
+        timer -= Time.deltaTime;
+
+        Vector3 worldPos = transform.position + (Vector3.up * 2);
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
         healthBar.transform.position = screenPos;
 
@@ -41,15 +45,35 @@ public class EnemyScreenSpace : MonoBehaviour
 
         Vector3 vp = Camera.main.WorldToViewportPoint(worldPos);
 
-        if (distance < 15 && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
-            healthBar.SetActive(true);
+        if (timer > 0)
+        {
+            if (IsVisible() && (vp.x >= 0 && vp.x <= 1 && vp.y >= 0 && vp.y <= 1 && vp.z > 0))
+                healthBar.SetActive(true);
+            else
+                healthBar.SetActive(false);
+        }
         else
             healthBar.SetActive(false);
     }
 
-    public void UpdateLifeBar (float val)
+    public IEnumerator UpdateLifeBar(float target)
     {
-        healthSlider.value = val / maxLife;
+        bool timerRunning = true;
+        float smoothTimer = 0;
+
+        float current = healthFill.fillAmount;
+
+        if (current - target <= 0.025f)
+            healthFill.fillAmount = target;
+
+        while (timerRunning)
+        {
+            smoothTimer += Time.deltaTime * 1.5f;
+            healthFill.fillAmount = Mathf.Lerp(current, target, smoothTimer);
+            if (smoothTimer > 1)
+                timerRunning = false;
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     void OnDestroy()
@@ -58,5 +82,11 @@ public class EnemyScreenSpace : MonoBehaviour
             canvas.GetComponent<ScreenSpaceCanvas>().RemoveFromCanvas(healthBar);
         Destroy(healthBar);
     }
-    */
+
+    bool IsVisible()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, enemy.target.transform.position - transform.position, out hit, 15, lm);
+        return hit.collider.gameObject.GetComponent<Model>();
+    }
 }

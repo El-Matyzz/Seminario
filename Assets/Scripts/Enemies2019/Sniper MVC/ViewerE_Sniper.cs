@@ -12,6 +12,7 @@ public class ViewerE_Sniper : MonoBehaviour
     bool damaged;
     float timeShaderDamage;
     public ParticleSystem blood;
+	EnemyScreenSpace ess;
 
     public IEnumerator DeadCorrutine()
     {
@@ -25,6 +26,7 @@ public class ViewerE_Sniper : MonoBehaviour
         _model = GetComponent<ModelE_Sniper>();
         _rb = GetComponent<Rigidbody>();
         myMeshes.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>());
+		ess = GetComponent<EnemyScreenSpace>();
 
         _anim.SetBool("Idle", true);
 
@@ -111,5 +113,11 @@ public class ViewerE_Sniper : MonoBehaviour
             if (timeShaderDamage <= 0) damaged = false;
 
         }
+    }
+	
+	public void LifeBar(float val)
+    {
+        ess.timer = 3;
+        StartCoroutine(ess.UpdateLifeBar(val));
     }
 }

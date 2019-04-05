@@ -28,6 +28,8 @@ public class ModelE_Sniper : EnemyEntity
     public Action AttackMeleeEvent;
     public Action MoveEvent;
     public Action IdleEvent;
+	
+	public float maxLife;
 
     public IEnumerator RotateToTarget()
     {
@@ -52,6 +54,7 @@ public class ModelE_Sniper : EnemyEntity
         timeToShoot = UnityEngine.Random.Range(5, 8);
         timeToMeleeAttack = UnityEngine.Random.Range(2, 4);
         timeToStopBack = UnityEngine.Random.Range(3, 4);
+		maxLife = life;
 
         var patrol = new FSM_State<EnemyInputs>("PATROL");
         var persuit = new FSM_State<EnemyInputs>("PERSUIT");
@@ -366,6 +369,7 @@ public class ModelE_Sniper : EnemyEntity
         if (!onDamage) onDamage = true;
         TakeDamageEvent();
         life -= damage;
+		_view.LifeBar(life / maxLife);
         if (life <= 0 && !isDead)
         {
             isDead = true;

@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class Viewer : MonoBehaviour {
+public class Viewer : MonoBehaviour
+{
 
     public Model model;
     public Controller controller;
@@ -56,13 +57,13 @@ public class Viewer : MonoBehaviour {
 
     public void Update()
     {
-        
 
-        var velocityX = Input.GetAxis("Vertical") ;
-        var velocityZ = Input.GetAxis("Horizontal") ;
+
+        var velocityX = Input.GetAxis("Vertical");
+        var velocityZ = Input.GetAxis("Horizontal");
 
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat) velocityZ = 0;
-   
+
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat) velocityZ = 0;
 
         if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D) && !model.isDead && model.isInCombat) velocityZ = 0;
@@ -70,13 +71,13 @@ public class Viewer : MonoBehaviour {
         if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.A) && !model.isDead && model.isInCombat) velocityZ = 0;
 
 
-        if (velocityX >1) velocityX = 1;
-        if (velocityZ >1) velocityZ = 1;
+        if (velocityX > 1) velocityX = 1;
+        if (velocityZ > 1) velocityZ = 1;
 
         anim.SetFloat("VelX", velocityX);
         anim.SetFloat("VelZ", velocityZ);
 
-       //LookAtEnemy();
+        //LookAtEnemy();
     }
 
     public void Awake()
@@ -107,7 +108,7 @@ public class Viewer : MonoBehaviour {
     public void AwakeTrail()
     {
         trail.SetActive(true);
-    } 
+    }
 
     public void SleepTrail()
     {
@@ -130,7 +131,7 @@ public class Viewer : MonoBehaviour {
     }
 
     public void RunAnim()
-    {      
+    {
         anim.SetBool("runAnim", true);
         anim.SetBool("WalkW", false);
         anim.SetBool("WalkS", false);
@@ -140,7 +141,7 @@ public class Viewer : MonoBehaviour {
 
     public void FalseRunAnim()
     {
-        
+
         anim.SetBool("runAnim", false);
     }
 
@@ -148,7 +149,7 @@ public class Viewer : MonoBehaviour {
     {
         anim.SetBool("runSword", false);
     }
-  
+
 
     public void FalseAnimWalk()
     {
@@ -157,7 +158,7 @@ public class Viewer : MonoBehaviour {
         anim.SetBool("WalkS", false);
         anim.SetBool("WalkD", false);
         anim.SetBool("WalkA", false);
-        
+
     }
 
     public void UpdateLifeBar(float val)
@@ -230,6 +231,7 @@ public class Viewer : MonoBehaviour {
                 pauseMenu.SetActive(true);
                 Time.timeScale = 0;
                 cam.blockMouse = false;
+                model.rb.velocity = Vector3.zero;
             }
         }
     }
@@ -304,7 +306,7 @@ public class Viewer : MonoBehaviour {
     }
 
     public void NoBackEstocada()
-    {    
+    {
         anim.SetBool("BackEstocada", false);
     }
 
@@ -321,7 +323,7 @@ public class Viewer : MonoBehaviour {
         //  anim.SetLayerWeight(1, 0);
         if (!model.mySkills.secondRotate) anim.SetBool("GolpeGiratorio2", false);
 
-        else anim.SetBool("GolpeGiratorio",false);
+        else anim.SetBool("GolpeGiratorio", false);
     }
 
     public void Defence()
@@ -390,11 +392,11 @@ public class Viewer : MonoBehaviour {
     public void BasicAttack()
     {
         //if(!model.sleepAnim)
-            currentAttackAnimation ++;
+        currentAttackAnimation++;
         Mathf.Clamp(currentAttackAnimation, 0, 4);
         anim.SetInteger("AttackAnim", currentAttackAnimation);
     }
-     
+
 
     public void Dead()
     {
@@ -445,4 +447,5 @@ public class Viewer : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
     }
+
 }

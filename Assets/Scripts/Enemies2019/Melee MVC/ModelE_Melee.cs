@@ -179,12 +179,14 @@ public class ModelE_Melee : EnemyEntity
      
         persuit.OnFixedUpdate += () =>
         {
+          
+            if (!onDamage) MoveEvent();
 
             isAnswerCall = false;
 
-            if (!onDamage) MoveEvent();
+            firstSaw = true;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             currentAction = new A_Persuit(this);
 
@@ -205,11 +207,15 @@ public class ModelE_Melee : EnemyEntity
 
         wait.OnUpdate += () => 
         {
-            isAnswerCall = false;
+           
 
             angleToAttack = 110;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            isAnswerCall = false;
+
+            firstSaw = true;
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             currentAction = new A_WarriorWait(this);
 
@@ -225,7 +231,11 @@ public class ModelE_Melee : EnemyEntity
 
             currentAction = new A_AttackMeleeWarrior(this);
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            isAnswerCall = false;
+
+            firstSaw = true;
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             if (!isDead && !isAttack && isPersuit && delayToAttack > 0 && !onAttack && !onRetreat) SendInputToFSM(EnemyInputs.PERSUIT);
 
@@ -242,6 +252,13 @@ public class ModelE_Melee : EnemyEntity
                 _view._anim.SetBool("Attack", false);
                 StartCoroutine(Delay(1.25f));
                 firstAttack = true;
+                if(cm.times<2)cm.times++;
+                if (flank)
+                {
+                    flank = false;
+                    cm.flanTicket = false;
+                }
+                
                 SendInputToFSM(EnemyInputs.RETREAT);
             }
         };

@@ -17,6 +17,7 @@ public abstract class EnemyEntity: MonoBehaviour
     public bool isDead;
     public bool onDamage;
     public bool onRetreat;
+    public bool firstSaw;
     public float timeOnDamage;
     public Model target;
     public int currentIndex;

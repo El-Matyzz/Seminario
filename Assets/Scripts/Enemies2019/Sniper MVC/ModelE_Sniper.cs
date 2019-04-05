@@ -159,11 +159,11 @@ public class ModelE_Sniper : EnemyEntity
         {
             isAnswerCall = false;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            firstSaw = true;
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             if (!onDamage) MoveEvent();
-
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
 
             currentAction = new A_Persuit(this);
 
@@ -180,9 +180,9 @@ public class ModelE_Sniper : EnemyEntity
         {
             isAnswerCall = false;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            firstSaw = true;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             if (!onDamage) timeToShoot -= Time.deltaTime;
 
@@ -201,7 +201,9 @@ public class ModelE_Sniper : EnemyEntity
         {
             isAnswerCall = false;
 
-            foreach (var item in nearEntities) if (!item.isAnswerCall) item.isAnswerCall = true;
+            firstSaw = true;
+
+            foreach (var item in nearEntities) if (!item.isAnswerCall && !item.firstSaw) item.isAnswerCall = true;
 
             if (!onDamage) timeToMeleeAttack -= Time.deltaTime;
            

@@ -197,6 +197,12 @@ public class Model : MonoBehaviour
         onPowerState = true;
     }
 
+    public IEnumerator OnDamageDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        onDamage = false;
+    }
+
     public IEnumerator CountAttack()
     {
         yield return new WaitForSeconds(0.7f);
@@ -285,30 +291,45 @@ public class Model : MonoBehaviour
             }
         }
 
-        if(onRoll)
+        if (onRoll)
         {
             if (isInCombat && timeToRotate)
             {
+                if (onDamage)
+                {
+                    onRoll = false;
+                    onRollCombat = false;
+                }
+                sleepAnim = false;
                 transform.forward = dirToDahs;
                 Quaternion targetRotation;
                 targetRotation = Quaternion.LookRotation(dirToDahs, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
                 if (transform.forward == dirToDahs) timeToRotate = false;
             }
-            else if(isInCombat && !timeToRotate && onRollCombat)
+            else if (isInCombat && !timeToRotate && onRollCombat)
             {
-                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward / 7, 2);
+                if (onDamage)
+                {
+                    onRoll = false;
+                    onRollCombat = false;
+                }
+                sleepAnim = false;
+                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 5, 2);
             }
 
-            if(!isInCombat)
+            if (!isInCombat)
             {
-                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward / 7, 2);
+                if (onDamage) onRoll = false;
+                sleepAnim = false;
+                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 5, 2);
             }
         }
 
-        if(impulse)
+        if (impulse)
         {
-            transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward / impulseForce, 2);
+            if (onDamage) impulse = false;
+            transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * impulseForce * Time.deltaTime, 2);
         }
 
     }
@@ -326,8 +347,8 @@ public class Model : MonoBehaviour
                 dirToDahs = dir;
                 timeToRotate = true;
             }
-             else RollEvent();
-            
+            else RollEvent();
+
             lastPosition = transform.position;
         }
     }
@@ -539,14 +560,14 @@ public class Model : MonoBehaviour
 
     public void NormalAttack()
     {
-        if (!isDead && stamina - attackStamina >= 0 && !sleepAnim)
-        {      
-            if(countAnimAttack==1) timeAnimCombat = 0.9f;
+        if (!isDead && stamina - attackStamina >= 0 && !sleepAnim && !onRoll && !onRollCombat)
+        {
+            if (countAnimAttack == 1) timeAnimCombat = 0.9f;
             else timeAnimCombat = 0.6f;
             countAnimAttack++;
             sleepAnim = true;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 4);
-            Attack();           
+            Attack();
             starChangeDirAttack = true;
         }
         if (!InActionAttack) InActionAttack = true;
@@ -558,12 +579,12 @@ public class Model : MonoBehaviour
         if (starChangeDirAttack)
         {
             var camDir = mainCamera.forward.normalized;
-            camDir.y =0;
-            Quaternion targetRotation;          
+            camDir.y = 0;
+            Quaternion targetRotation;
             targetRotation = Quaternion.LookRotation(camDir, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
         }
-        
+
     }
 
     public void FalseChangeDirForward()
@@ -576,7 +597,7 @@ public class Model : MonoBehaviour
         stamina -= attackStamina;
         view.UpdateStaminaBar(stamina / totalStamina);
 
-        
+
         var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyEntity>()).Select(x => x.GetComponent<EnemyEntity>());
         var desMesh = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<DestructibleOBJ>()).Select(x => x.GetComponent<DestructibleOBJ>()); ;
         foreach (var item in col)
@@ -594,10 +615,10 @@ public class Model : MonoBehaviour
 
     public void Defence()
     {
-        
+
         InAction = true;
         InActionAttack = true;
-        
+
         onDefence = true;
     }
 
@@ -647,7 +668,7 @@ public class Model : MonoBehaviour
     {
         impulse = true;
     }
-    
+
     public void StopImpulse()
     {
         impulse = false;
@@ -662,13 +683,16 @@ public class Model : MonoBehaviour
     {
         impulse = false;
         onRoll = false;
+        onRollCombat = false;
+        view.anim.SetBool("Roll", false);
         rb.velocity = Vector3.zero;
         sleepAnim = false;
         bool isBehind = false;
+        StartCoroutine(OnDamageDelay());
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
         if (angle < 90) isBehind = true;
-        if(!isBehind && !isProyectile && onDefence)
+        if (!isBehind && !isProyectile && onDefence)
         {
             stamina -= 5;
             view.UpdateStaminaBar(stamina / totalStamina);
@@ -677,10 +701,10 @@ public class Model : MonoBehaviour
 
         if (!onDefence || (onDefence && isBehind) || isProyectile)
         {
-            
+
             if (armor >= damage)
             {
-               
+
                 armor -= damage;
                 view.UpdateArmorBar(armor / totalArmor);
             }
@@ -691,24 +715,34 @@ public class Model : MonoBehaviour
                 view.UpdateArmorBar(armor / totalArmor);
                 life -= dmg;
                 view.UpdateLifeBar(life / totalLife);
-               
+                sleepAnim = false;
+                impulse = false;
+                onRoll = false;
+                rb.velocity = Vector3.zero;
+
             }
 
             if (!onPowerState)
             {
-                
+
                 rb.velocity = Vector3.zero;
                 onDamage = true;
             }
             if (life > 0) OnDamage();
             else
             {
-                
+
                 Dead();
                 isDead = true;
                 StartCoroutine(view.YouDied());
             }
+
+            onRoll = false;
+            onRollCombat = false;
         }
+
+        onRoll = false;
+        onRollCombat = false;
     }
 
     public IEnumerator CheckClosestEnemy()
@@ -870,7 +904,10 @@ public class Model : MonoBehaviour
 
     public void WraperAction()
     {
-        if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead || onDamage || onRoll) InAction = true;
-        else InAction = false;
+        // if (stocadaState || WraperInAction || chargeTankeState || jumpAttackWarriorState || InActionAttack || onAir || isDead || onDamage || onRoll) InAction = false;
+        //else InAction = true;
+        if (!onRoll && !isDead && !InActionAttack && !onDamage) InAction = false;
+        else InAction = true;
     }
 }
+

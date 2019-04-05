@@ -204,6 +204,7 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
+    <Compile Include="Assets\Scenes\Main Menu\SwordMainMenu.cs" />
     <Compile Include="Assets\Scripts\AStar\AStar.cs" />
     <Compile Include="Assets\Scripts\AStar\Cell.cs" />
     <Compile Include="Assets\Scripts\AStar\Grid.cs" />
@@ -469,6 +470,7 @@
     <None Include="Assets\AmplifyShaderEditor\Examples\Official\SimpleBlur\SimpleBlur.shader" />
     <None Include="Assets\KriptoFX\Realistic Effects Pack v4\Shaders\Bloom\Resources\RFX4_Bloom_Inc.cginc" />
     <None Include="Assets\AmplifyShaderEditor\Plugins\EditorResources\Previews\Preview_TFHCCompareNotEqual.shader" />
+    <None Include="Assets\OBJ\_Shaders\Orb\Orb.shader" />
     <None Include="Assets\PostProcessing\Resources\Bluenoise64\LICENSE.txt" />
     <None Include="Assets\AmplifyShaderEditor\Plugins\EditorResources\Previews\Preview_TexCoordVertexDataNode.shader" />
     <None Include="Assets\AmplifyShaderEditor\Plugins\EditorResources\Previews\Preview_ColorSpaceDouble.shader" />

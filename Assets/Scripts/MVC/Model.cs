@@ -653,6 +653,11 @@ public class Model : MonoBehaviour
         impulse = false;
     }
 
+    public void EndCombo()
+    {
+        timeAnimCombat = 0;
+    }
+
     public void GetDamage(float damage, Transform enemy, bool isProyectile)
     {
         impulse = false;
@@ -663,7 +668,7 @@ public class Model : MonoBehaviour
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
         if (angle < 90) isBehind = true;
-        if(!isBehind && !isProyectile)
+        if(!isBehind && !isProyectile && onDefence)
         {
             stamina -= 5;
             view.UpdateStaminaBar(stamina / totalStamina);

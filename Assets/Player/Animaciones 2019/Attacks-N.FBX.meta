@@ -581,6 +581,13 @@ ModelImporter:
       curves: []
       events:
       - time: 0
+        functionName: Impulse
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
         functionName: FalseActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -589,6 +596,13 @@ ModelImporter:
         messageOptions: 0
       - time: 0.016203787
         functionName: AwakeTrail
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.40079537
+        functionName: StopImpulse
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -608,22 +622,15 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9984577
+      - time: 1
         functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0
-        functionName: Impulse
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.40079537
-        functionName: StopImpulse
+      - time: 1
+        functionName: EndCombo
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

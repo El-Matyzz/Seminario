@@ -332,6 +332,7 @@ public class Model : MonoBehaviour
             transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * impulseForce * Time.deltaTime, 2);
         }
 
+        
     }
 
     public void Roll(Vector3 dir)

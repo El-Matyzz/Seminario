@@ -333,7 +333,7 @@ public class ModelE_Sniper : EnemyEntity
             }
         }
 
-     
+        if (life <= 0) isDead = true;
     }
 
     private void FixedUpdate()

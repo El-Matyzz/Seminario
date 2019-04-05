@@ -30,6 +30,8 @@ public class ModelE_Melee : EnemyEntity
     public bool flankSpeed;
     public bool testEnemy;
     bool firstHit;
+    bool impulse;
+    Vector3 lastPosition;
 
     public Action TakeDamageEvent;
     public Action DeadEvent;
@@ -351,6 +353,13 @@ public class ModelE_Melee : EnemyEntity
                 onDamage = false;
             }
         }
+
+        if (life <= 0) isDead = true;
+
+        if(impulse)
+        {
+            transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * 2 * Time.deltaTime, 2);
+        }
     }
 
     private void FixedUpdate()
@@ -472,6 +481,18 @@ public class ModelE_Melee : EnemyEntity
             return dir.normalized;
         }
         else return Vector3.zero;
+    }
+
+    public void Impulse()
+    {
+        impulse = true;
+        lastPosition = transform.position;
+        
+    }
+
+    public void StopImpulse()
+    {
+        impulse = false;
     }
 
     public override void GetDamage(float damage)

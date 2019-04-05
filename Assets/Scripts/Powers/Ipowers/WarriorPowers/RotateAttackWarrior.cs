@@ -51,7 +51,7 @@ public class RotateAttackWarrior : Ipower {
                 if (_model.mySkills.healRotateAttack)
                 {
                     _model.life += (_damage * 30) / 100;
-                    if (_model.life >= _model.totalLife) _model.life = _model.totalLife;
+                    if (_model.life >= _model.maxLife) _model.life = _model.maxLife;
                 }
             }
         }

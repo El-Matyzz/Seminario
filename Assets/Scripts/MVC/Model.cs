@@ -18,19 +18,19 @@ public class Model : MonoBehaviour
     public float extraSlameDamage;
     public float skillPoints;
     public float life;
-    public float totalLife;
+    public float maxLife;
     public float speed;
     public float runSpeed;
     public float acceleration;
     public float maxAcceleration;
     public float timeOnCombat;
     public float stamina;
-    public float totalStamina;
+    public float maxStamina;
     public float mana;
-    public float totalMana;
+    public float maxMana;
     public float recoveryMana;
     public float armor;
-    public float totalArmor;
+    public float maxArmor;
     public bool armorActive;
 
     public float runStamina;
@@ -257,18 +257,18 @@ public class Model : MonoBehaviour
         {
             float prevS = stamina;
             stamina += recoveryStamina * Time.deltaTime;
-            if (stamina > totalStamina)
-                stamina = totalStamina;
+            if (stamina > maxStamina)
+                stamina = maxStamina;
             if (prevS != stamina)
-                view.UpdateStaminaBar(stamina / totalStamina);
+                view.UpdateStaminaBar(stamina / maxStamina);
         }
 
         float prevM = mana;
         mana += recoveryMana * Time.deltaTime;
-        if (mana > totalMana)
-            mana = totalMana;
+        if (mana > maxMana)
+            mana = maxMana;
         if (prevM != mana)
-            view.UpdateManaBar(mana / totalMana);
+            view.UpdateManaBar(mana / maxMana);
 
         if (stamina <= 0)
         {
@@ -339,7 +339,7 @@ public class Model : MonoBehaviour
         if (!onRoll && stamina - dashStamina >= 0 && !view.anim.GetBool("Roll"))
         {
             stamina -= dashStamina;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
             if (isInCombat)
             {
                 onRoll = true;
@@ -367,23 +367,39 @@ public class Model : MonoBehaviour
 
     public void DrinkPotion(int i)
     {
+        bool isFull = false;
         i -= 1;
 
         if (potions[i] == 0 || currentPotionEffect != null)
             return;
 
         if (i == (int)PotionName.Health)
-            potionEffects[i] = new Health(this, life, totalLife);
+        {
+            isFull = life == maxLife;
+            if(!isFull)
+                potionEffects[i] = new Health(this, life, maxLife);
+        }
         else
             if (i == (int)PotionName.Stamina)
-            potionEffects[i] = new Stamina(this, stamina, totalStamina);
-        else
+            {
+                isFull = stamina == maxStamina;
+                if (!isFull)
+                    potionEffects[i] = new Stamina(this, stamina, maxStamina);
+            }
+            else
                 if (i == (int)PotionName.Mana)
-            potionEffects[i] = new Mana(this, mana, totalMana);
+                {
+                    isFull = mana == maxMana;
+                    if (!isFull)
+                        potionEffects[i] = new Mana(this, mana, maxMana);
+                }
 
-        potions[i]--;
-        view.UpdatePotions(i);
-        currentPotionEffect = potionEffects[i];
+        if (!isFull)
+        {
+            potions[i]--;
+            view.UpdatePotions(i);
+            currentPotionEffect = potionEffects[i];
+        }
     }
 
     public void CastPower1()
@@ -391,7 +407,7 @@ public class Model : MonoBehaviour
         if (!cdPower1 && !onPowerState && !onDamage && !isDead && !onRoll && stamina - powerStamina >= 0)
         {
             stamina -= powerStamina;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
 
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -406,7 +422,7 @@ public class Model : MonoBehaviour
         if (!cdPower2 && !onPowerState && !onDamage && !isDead && !onRoll && stamina - powerStamina >= 0)
         {
             stamina -= powerStamina;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
 
             Powers newPower = powerPool.GetObjectFromPool();
             newPower.myCaller = transform;
@@ -421,7 +437,7 @@ public class Model : MonoBehaviour
         if (!cdPower3 && !onPowerState && !onDamage && !isDead && !onRoll && stamina - powerStamina >= 0)
         {
             stamina -= powerStamina;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
 
             CombatState();
             Uppercut();
@@ -445,7 +461,7 @@ public class Model : MonoBehaviour
         if (isRuning)
         {
             stamina -= runStamina * Time.deltaTime;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
         }
 
         biz = false;
@@ -595,7 +611,7 @@ public class Model : MonoBehaviour
     public void MakeDamage()
     {
         stamina -= attackStamina;
-        view.UpdateStaminaBar(stamina / totalStamina);
+        view.UpdateStaminaBar(stamina / maxStamina);
 
 
         var col = Physics.OverlapSphere(attackPivot.position, radiusAttack).Where(x => x.GetComponent<EnemyEntity>()).Select(x => x.GetComponent<EnemyEntity>());
@@ -696,7 +712,7 @@ public class Model : MonoBehaviour
         if (!isBehind && !isProyectile && onDefence)
         {
             stamina -= 5;
-            view.UpdateStaminaBar(stamina / totalStamina);
+            view.UpdateStaminaBar(stamina / maxStamina);
             BlockEvent();
         }
 
@@ -707,15 +723,15 @@ public class Model : MonoBehaviour
             {
 
                 armor -= damage;
-                view.UpdateArmorBar(armor / totalArmor);
+                view.UpdateArmorBar(armor / maxArmor);
             }
             else
             {
                 float dmg = damage - armor;
                 armor = 0;
-                view.UpdateArmorBar(armor / totalArmor);
+                view.UpdateArmorBar(armor / maxArmor);
                 life -= dmg;
-                view.UpdateLifeBar(life / totalLife);
+                view.UpdateLifeBar(life / maxLife);
                 sleepAnim = false;
                 impulse = false;
                 onRoll = false;
@@ -841,9 +857,9 @@ public class Model : MonoBehaviour
 
         if (c.gameObject.layer == LayerMask.NameToLayer("Life"))
         {
-            if (life < totalLife) life += 30;
-            else life = totalLife;
-            view.UpdateLifeBar(life / totalLife);
+            if (life < maxLife) life += 30;
+            else life = maxLife;
+            view.UpdateLifeBar(life / maxLife);
             var col = Physics.OverlapSphere(c.transform.position, 1);
             foreach (var i in col)
                 if (i.transform.parent)

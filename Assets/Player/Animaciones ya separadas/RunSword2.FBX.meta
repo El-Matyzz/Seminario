@@ -303,6 +303,34 @@ ModelImporter:
       curves: []
       events:
       - time: 0
+        functionName: SleepTrail
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: AwakeCombo
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: StopRoll
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: NewEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
         functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -310,7 +338,14 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0
-        functionName: SleepTrail
+        functionName: StopImpulse
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: FalseChangeDirForward
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

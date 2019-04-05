@@ -637,6 +637,7 @@ public class Model : MonoBehaviour
         isInCombat = true;
     }
 
+  
     public void ActiveAttack()
     {
         InActionAttack = false;

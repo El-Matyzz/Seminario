@@ -13,6 +13,9 @@ public class ViewerE_Sniper : MonoBehaviour
     float timeShaderDamage;
     public ParticleSystem blood;
 	EnemyScreenSpace ess;
+    Material fireHandsMat;
+    public SkinnedMeshRenderer fireHandsRenderer;
+    public float timeFireHands;
 
     public IEnumerator DeadCorrutine()
     {
@@ -27,6 +30,7 @@ public class ViewerE_Sniper : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         myMeshes.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>());
 		ess = GetComponent<EnemyScreenSpace>();
+        fireHandsMat = fireHandsRenderer.materials[2];
 
         _anim.SetBool("Idle", true);
 
@@ -42,7 +46,7 @@ public class ViewerE_Sniper : MonoBehaviour
     {
 
         DamageShader();
-
+        FireHands();
     }
 
     public void DeadAnim()
@@ -114,8 +118,27 @@ public class ViewerE_Sniper : MonoBehaviour
 
         }
     }
-	
-	public void LifeBar(float val)
+
+    public void FireHands()
+    {
+        if (_model.timeToShoot < 1)
+        {
+            timeFireHands += Time.deltaTime * 2;
+            if (timeFireHands > 1) timeFireHands = 1;
+
+            fireHandsMat.SetFloat("_GlobalOpacity", timeFireHands);
+        }
+
+        if (_model.timeToShoot > 1)
+        {
+            timeFireHands -= Time.deltaTime * 2;
+            if (timeFireHands < 0) timeFireHands = 0;
+
+            fireHandsMat.SetFloat("_GlobalOpacity", timeFireHands);
+        }
+    }
+
+    public void LifeBar(float val)
     {
         ess.timer = 3;
         StartCoroutine(ess.UpdateLifeBar(val));

@@ -9,16 +9,20 @@ public class CombatArea : MonoBehaviour
     public int myEntities;
     bool aux;
     public bool startArea;
+    EnemyCombatManager cm;
 
     private void Awake()
     {
-       
+        cm = FindObjectOfType<EnemyCombatManager>();
     }
 
     void Start()
     {
         myEntities = myNPCs.Count;
-        if (startArea == true) foreach (var item in walls) item.SetActive(false);
+        if (startArea == true)
+        {
+            foreach (var item in walls) item.SetActive(false);
+        }
     }
 
     void Update()
@@ -26,6 +30,8 @@ public class CombatArea : MonoBehaviour
         if (myEntities <= 0 && !aux)
         {
             foreach (var item in walls) item.SetActive(false);
+            cm.times = 2;
+            cm.flanTicket = false;
             aux = true;
         }
     }

@@ -40,6 +40,7 @@ public class Model : MonoBehaviour
     public float recoveryStamina;
     public float timeAnimCombat;
 
+
     public int[] potions = new int[5];
     public IPotionEffect currentPotionEffect;
     IPotionEffect[] potionEffects = new IPotionEffect[5];
@@ -67,6 +68,7 @@ public class Model : MonoBehaviour
     public bool onRollCombat;
     public bool biz;
     public bool sleepAnim;
+    bool impulse;
     bool starChangeDirAttack;
 
     bool cdPower1;
@@ -107,6 +109,7 @@ public class Model : MonoBehaviour
     bool delayForDash;
     bool timeToRotate;
     Vector3 dirToDahs;
+    public float impulseForce;
 
     public IEnumerator PowerColdown(float cdTime, int n)
     {
@@ -301,6 +304,11 @@ public class Model : MonoBehaviour
             {
                 transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward / 7, 2);
             }
+        }
+
+        if(impulse)
+        {
+            transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward / impulseForce, 2);
         }
 
     }
@@ -536,6 +544,7 @@ public class Model : MonoBehaviour
             if(countAnimAttack==1) timeAnimCombat = 0.9f;
             else timeAnimCombat = 0.6f;
             countAnimAttack++;
+            sleepAnim = true;
             countAnimAttack = Mathf.Clamp(countAnimAttack, 0, 4);
             Attack();           
             starChangeDirAttack = true;
@@ -636,13 +645,20 @@ public class Model : MonoBehaviour
 
     public void Impulse()
     {
-        if (countAnimAttack==2) rb.AddForce(transform.forward * 3, ForceMode.Impulse);
-        else rb.AddForce(transform.forward * 2, ForceMode.Impulse);
+        impulse = true;
+    }
+    
+    public void StopImpulse()
+    {
+        impulse = false;
     }
 
     public void GetDamage(float damage, Transform enemy, bool isProyectile)
     {
-
+        impulse = false;
+        onRoll = false;
+        rb.velocity = Vector3.zero;
+        sleepAnim = false;
         bool isBehind = false;
         Vector3 dir = transform.position - enemy.position;
         float angle = Vector3.Angle(dir, transform.forward);
@@ -670,11 +686,7 @@ public class Model : MonoBehaviour
                 view.UpdateArmorBar(armor / totalArmor);
                 life -= dmg;
                 view.UpdateLifeBar(life / totalLife);
-                if (onRoll)
-                {
-                    onRoll = false;
-                    rb.velocity = Vector3.zero;
-                }
+               
             }
 
             if (!onPowerState)

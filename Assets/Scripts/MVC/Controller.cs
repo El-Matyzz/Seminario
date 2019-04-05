@@ -56,7 +56,6 @@ public class Controller : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space) && pushS && !pushW && !pushD && !pushA && !model.onRoll)
             {
-                print(1);
                 model.Roll(-model.transform.forward);
             }
             if (Input.GetKeyDown(KeyCode.Space) && pushW && pushD && !pushS && !model.onRoll) model.Roll(transform.forward);
@@ -132,9 +131,9 @@ public class Controller : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.LeftShift)) model.acceleration = 0;
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !smashBool && !model.onAir && model.countAnimAttack<4)
+            if (Input.GetKey(KeyCode.Mouse0) && !smashBool && !model.onAir && model.countAnimAttack<4)
             {
-                StartCoroutine(DelaySmash());
+                //StartCoroutine(DelaySmash());
                 useSword = true;
                 model.NormalAttack();
             }

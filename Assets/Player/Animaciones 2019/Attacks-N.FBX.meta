@@ -322,7 +322,21 @@ ModelImporter:
       curves: []
       events:
       - time: 0
+        functionName: SleepCombo
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
         functionName: CombatState
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: AwakeTrail
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -335,22 +349,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9922848
+      - time: 1
         functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.013890279
-        functionName: AwakeTrail
+      - time: 1
+        functionName: FalseChangeDirForward
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.99459743
-        functionName: FalseChangeDirForward
+      - time: 0.7042224
+        functionName: AwakeCombo
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -392,6 +406,20 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0
+        functionName: AwakeTrail
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: Impulse
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
         functionName: SleepCombo
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -405,36 +433,29 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9976703
-        functionName: ActiveAttack
+      - time: 0.6431381
+        functionName: StopImpulse
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.5897432
+      - time: 0.6704834
+        functionName: FalseChangeDirForward
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.68589705
         functionName: AwakeCombo
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.39393872
-        functionName: Impulse
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.01851901
-        functionName: AwakeTrail
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9945988
-        functionName: FalseChangeDirForward
+      - time: 1
+        functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -469,34 +490,62 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: MakeDamage
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.62004685
         functionName: Impulse
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.97299516
-        functionName: ActiveAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.009260172
+      - time: 0
         functionName: AwakeTrail
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9907398
+      - time: 0
+        functionName: FalseActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: SleepCombo
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.50941086
+        functionName: StopImpulse
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.58508605
+        functionName: MakeDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6712528
+        functionName: AwakeCombo
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.98711586
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
         functionName: FalseChangeDirForward
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -531,29 +580,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.7226109
-        functionName: MakeDamage
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 0
         functionName: FalseActiveAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.24708566
-        functionName: Impulse
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9984577
-        functionName: ActiveAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -566,8 +594,36 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.98379624
+      - time: 0.7226109
+        functionName: MakeDamage
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.73140615
         functionName: FalseChangeDirForward
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9984577
+        functionName: ActiveAttack
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: Impulse
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.40079537
+        functionName: StopImpulse
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -223,6 +223,7 @@ public class Viewer : MonoBehaviour {
                 pauseMenu.SetActive(false);
                 Time.timeScale = 1;
                 cam.blockMouse = true;
+                model.rb.velocity = Vector3.zero;
             }
             else
             {
@@ -388,7 +389,8 @@ public class Viewer : MonoBehaviour {
 
     public void BasicAttack()
     {
-        currentAttackAnimation ++;
+        //if(!model.sleepAnim)
+            currentAttackAnimation ++;
         Mathf.Clamp(currentAttackAnimation, 0, 4);
         anim.SetInteger("AttackAnim", currentAttackAnimation);
     }

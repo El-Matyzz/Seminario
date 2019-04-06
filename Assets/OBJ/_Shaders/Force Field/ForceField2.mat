@@ -67,6 +67,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 19ccfdaff4245fb42850b62f3440c776, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Squaregradient:
+        m_Texture: {fileID: 2800000, guid: 930025c3e4704d743be2f964226b026b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Waves:
         m_Texture: {fileID: 2800000, guid: faaa54b5537f89c4b8ac7b11c506428e, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -80,14 +84,15 @@ Material:
     - _BGSpeedX: 0.1
     - _BGSpeedY: -0.1
     - _BorderAmount: 0.05327978
-    - _BorderOpacity: 0.369
+    - _BorderOpacity: 0.354
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DepthFadeAmount: 0.2
+    - _DepthFadeAmount: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EdgeLength: 50
-    - _FillAmount: 0.5285062
+    - _EdgeLength: 37.1
+    - _EmissionIntensity: 2
+    - _FillAmount: 1
     - _FlowMapIntensity: 0.47
     - _GlobalOpacity: 0.664
     - _GlossMapScale: 1
@@ -95,11 +100,12 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
-    - _MovementIntensity: 0
+    - _MovementIntensity: 0.375
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SquareGradientBlackAmount: 0.124
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1

@@ -253,10 +253,14 @@ public class Model : MonoBehaviour
             isDead = true;
         }
 
-        if (!isRuning && !onPowerState && !onDamage && !isDead && !onRoll)
+        if (!isRuning && !onPowerState && !onDamage && !isDead && !onRoll && !onDefence)
         {
             float prevS = stamina;
-            stamina += recoveryStamina * Time.deltaTime;
+
+            if(isInCombat) stamina += recoveryStamina * Time.deltaTime;
+
+            else stamina += recoveryStamina * Time.deltaTime * 2;
+
             if (stamina > maxStamina)
                 stamina = maxStamina;
             if (prevS != stamina)
@@ -315,14 +319,14 @@ public class Model : MonoBehaviour
                     onRollCombat = false;
                 }
                 sleepAnim = false;
-                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 5, 2);
+                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 6, 2);
             }
 
             if (!isInCombat)
             {
                 if (onDamage) onRoll = false;
                 sleepAnim = false;
-                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 5, 2);
+                transform.position = Vector3.Lerp(lastPosition, transform.position + transform.forward * Time.deltaTime * 6, 2);
             }
         }
 
@@ -457,7 +461,7 @@ public class Model : MonoBehaviour
         }
     }
 
-    public void Movement(Vector3 direction, bool key, bool backward, bool rotate)
+    public void Movement(Vector3 dir)
     {
         if (isRuning)
         {
@@ -465,50 +469,80 @@ public class Model : MonoBehaviour
             view.UpdateStaminaBar(stamina / maxStamina);
         }
 
-        biz = false;
+        acceleration += 3f * Time.deltaTime;
+        if (acceleration > maxAcceleration) acceleration = maxAcceleration;
+
+        if (!InAction && !onDamage && countAnimAttack == 0 && !onRoll)
+        {          
+            Quaternion targetRotation;
+
+            if (!isRuning)
+            {
+               Trot();          
+              
+               dir.y = 0;
+               targetRotation = Quaternion.LookRotation(dir, Vector3.up);
+               transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+               rb.MovePosition(rb.position + dir * acceleration * speed * Time.deltaTime);
+            }
+
+            else
+            {
+                Run();
+                dir.y = 0;
+                targetRotation = Quaternion.LookRotation(dir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+                rb.MovePosition(rb.position + dir * acceleration * runSpeed * Time.deltaTime);
+            }
+        }
+        
+    }
+
+    public void CombatMovement(Vector3 dir, bool key, bool rotate)
+    {
+        if (isRuning)
+        {
+            stamina -= runStamina * Time.deltaTime;
+            view.UpdateStaminaBar(stamina / maxStamina);
+        }
+
         acceleration += 3f * Time.deltaTime;
         if (acceleration > maxAcceleration) acceleration = maxAcceleration;
 
         if (!InAction && !onDamage && countAnimAttack == 0 && !onRoll)
         {
             Quaternion targetRotation;
-            direction.y = 0;
-            if (key)
-            {
-                targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
-            }
 
-            if (backward)
-            {
-                var turnDir = -direction;
-                turnDir.y = 0;
-                targetRotation = Quaternion.LookRotation(turnDir, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
-            }
-
-            if (rotate)
-            {
-                var camDir = mainCamera.forward;
-                camDir.y = 0;
-                targetRotation = Quaternion.LookRotation(camDir, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
-            }
-
-            if (!isRuning && !isInCombat)
+            if (!isRuning)
             {
                 Trot();
-                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
+
+                if (key)
+                {
+                   
+                    dir.y = 0;
+                    targetRotation = Quaternion.LookRotation(dir, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+                }
+
+                if(rotate)
+                {
+                    var camDir = mainCamera.forward;
+                    camDir.y = 0;
+                    targetRotation = Quaternion.LookRotation(camDir, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+                }
+
+                rb.MovePosition(rb.position + dir * acceleration * speed * Time.deltaTime);
             }
-            else if (!isRuning && isInCombat)
-            {
-                Trot();
-                rb.MovePosition(rb.position + direction * acceleration * speed * Time.deltaTime);
-            }
+
             else
             {
                 Run();
-                rb.MovePosition(rb.position + direction * acceleration * runSpeed * Time.deltaTime);
+                dir.y = 0;
+                targetRotation = Quaternion.LookRotation(dir, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 7 * Time.deltaTime);
+                rb.MovePosition(rb.position + dir * acceleration * runSpeed * Time.deltaTime);
             }
         }
     }
@@ -712,7 +746,7 @@ public class Model : MonoBehaviour
         if (angle < 90) isBehind = true;
         if (!isBehind && !isProyectile && onDefence)
         {
-            stamina -= 5;
+            stamina -= 10;
             view.UpdateStaminaBar(stamina / maxStamina);
             BlockEvent();
         }

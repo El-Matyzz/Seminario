@@ -294,8 +294,23 @@ public class ModelE_Sniper : EnemyEntity
         die.OnEnter += x =>
         {
             DeadEvent();
-            currentAction = null;         
-            foreach (var item in nearEntities) item.nearEntities.Remove(this);
+            currentAction = null;
+
+            if (nearEntities.Count > 0)
+            {
+                foreach (var item in nearEntities)
+                {
+                    RemoveNearEntity(item);
+                }
+            }
+
+            if (nearEntities.Count <= 0)
+            {
+                target.timeOnCombat = 0;
+                target.isInCombat = false;
+            }
+
+            ca.myEntities--;
         };
 
 
@@ -324,16 +339,20 @@ public class ModelE_Sniper : EnemyEntity
         if (target != null && SearchForTarget.SearchTarget(target.transform, distanceToMeleeAttack, angleToMeleeAttack, transform, true, layerObst)) onMeleeAttack = true;
         else onMeleeAttack = false;
 
-        if(onDamage)
+        if (onDamage)
         {
             timeOnDamage -= Time.deltaTime;
-            if(timeOnDamage<=0)
+            if (timeOnDamage <= 0)
             {
                 onDamage = false;
             }
         }
 
-        if (life <= 0) isDead = true;
+        if (life <= 0)
+        {
+            isDead = true;
+            SendInputToFSM(EnemyInputs.DIE);
+        }
     }
 
     private void FixedUpdate()
@@ -370,11 +389,7 @@ public class ModelE_Sniper : EnemyEntity
         TakeDamageEvent();
         life -= damage;
 		_view.LifeBar(life / maxLife);
-        if (life <= 0 && !isDead)
-        {
-            isDead = true;
-            ca.myEntities--;
-        }
+        
     }
 
     public override Node GetMyNode()
@@ -468,5 +483,10 @@ public class ModelE_Sniper : EnemyEntity
     public override void OnDamageFalse()
     {
         onDamage = false;
+    }
+
+    public override void RemoveNearEntity(EnemyEntity e)
+    {
+        nearEntities.Remove(e);
     }
 }

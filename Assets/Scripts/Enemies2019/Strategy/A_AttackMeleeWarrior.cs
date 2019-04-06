@@ -23,32 +23,24 @@ public class A_AttackMeleeWarrior : i_EnemyActions
                 avoid.y = 0;
                 targetRotation = Quaternion.LookRotation(dir + avoid, Vector3.up);
                 _e.transform.rotation = Quaternion.Slerp(_e.transform.rotation, targetRotation, 7 * Time.deltaTime);
-                _e.rb.MovePosition(_e.rb.position + _e.transform.forward * _e.speed * Time.deltaTime);
+                _e.rb.MovePosition(_e.rb.position + _e.transform.forward * _e.speed * 2 * Time.deltaTime);
                 _e.MoveEvent();
             }
 
             else if(_e.onAttackArea && _e.delayToAttack<0 && !_e.onRetreat)
             {
-                Quaternion targetRotation;
-                var dir = (_e.target.transform.position - _e.transform.position).normalized;
-                dir.y = 0;
-                targetRotation = Quaternion.LookRotation(dir, Vector3.up);
-                _e.transform.rotation = Quaternion.Slerp(_e.transform.rotation, targetRotation, 7 * Time.deltaTime);
 
-                _e.StartCoroutine(_e.Resting());
-                if(_e.cm.times<2) _e.cm.times++;
-                if (_e.flank)
-                {
-                    _e.flank = false;
-                    _e.cm.flanTicket = false;
-                }
+                if (!_e.isPersuit && !_e.isAttack) _e.FollowState();
+
+                _e.transform.LookAt(_e.target.transform.position);
+               
                 var player = Physics.OverlapSphere(_e.attackPivot.position, _e.radiusAttack).Where(x => x.GetComponent<Model>()).Select(x => x.GetComponent<Model>()).FirstOrDefault();
 
                 if (player != null && !_e.firstAttack)
                 {
                     _e.AttackEvent();
-                    _e.StartCoroutine(_e.Delay(1.25f));
-                    _e.firstAttack = true;
+                    _e.onRetreat = true;
+                   
                 }
 
             }      

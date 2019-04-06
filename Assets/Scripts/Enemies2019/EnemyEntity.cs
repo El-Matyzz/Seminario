@@ -46,4 +46,5 @@ public abstract class EnemyEntity: MonoBehaviour
     public float timeToStopBack;
     public Vector3 positionToBack;
     public CombatArea ca;
+    public abstract void RemoveNearEntity(EnemyEntity e);
 }

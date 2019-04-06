@@ -12,20 +12,18 @@ public class A_WarriorWait : i_EnemyActions
         _e.target.CombatState();
 
 
-        if (!_e.timeToAttack && _e.cm.times > 0 && !_e.checkTurn)
-        {
-
-            _e.checkTurn = true;
+        if (!_e.timeToAttack && _e.cm.times > 0)
+        {            
             _e.cm.times--;
             _e.timeToAttack = true;
-            if (!_e.cm.flanTicket && _e.cm.times <= 1 && !_e.testEnemy)
+            if (!_e.cm.flanTicket && !_e.testEnemy)
             {
                 _e.flank = true;
                 _e.cm.flanTicket = true;
             }
         }
 
-        if (!_e.onAttack && !_e.flank)
+        if (!_e.flank)
         {
             if (!_e.onDamage) _e.IdleEvent();
 
@@ -44,10 +42,9 @@ public class A_WarriorWait : i_EnemyActions
 
         }
 
-        if (!_e.onAttack && _e.flank && !_e.onDamage)
+        if (_e.flank && !_e.onDamage)
         { 
              
-
             var rotateSpeed = 0;
 
             if (_e.flankSpeed) rotateSpeed = 35;
@@ -72,10 +69,7 @@ public class A_WarriorWait : i_EnemyActions
             else  _e.IdleEvent();
         }
 
-        if (_e.timeToAttack)
-        {
-            _e.delayToAttack -= Time.deltaTime;
-        }
+        
     }
 
     public A_WarriorWait(ModelE_Melee e)
